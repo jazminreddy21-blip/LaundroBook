@@ -1,0 +1,20 @@
+* I've used varchar for booking reference, we have to ensure that our string generation method is robust enough to ensure that no clashes occur
+
+*The datatypes in the database were made to be flexible on purpose since we don't have examples that we can directly use for testing. That can be changed later
+
+* I've deliberately skipped specifying any default values for now too
+what was duration_slots again? And how is it meant to be represented in the database again?
+
+* For consistency, I've stuck to using timestamps instead of individual time objects. In future, this can be changed
+
+* Default values for time objects have been inconsistently set to the current timestamp wherever applicable. 
+
+* When relationships were being established for foreign keys, I defaulted to using ON DELETE - RESTRICT and ON UPDATE - CASCADE
+Be careful of naming mismatches.
+
+BUSINESS RULES ISSUES:
+* having unique on email means that a user is unable to send multiple enquiries using the same email. Do we want that or not? 
+does a manger get assigned to an enquiry immediately when it's created or later? If it's later, manager_id could be null in the enquiry table
+
+* int(3) is for display padding, and doesn't limit the numbers that can be stored in int
+not sure what duration_slots data type is, need clarification
