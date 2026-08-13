@@ -290,6 +290,29 @@ function validateBooking(){
 
 }
 
+//show or hide validation message
+
+function showValidationMessage(errors){
+    
+    validationMessage.innerHTML = "";
+
+    const list = document.createElement("ul"); 
+
+    errors.forEach(function(error){
+        const item = document.createdElement("li");
+        item.textContent = error; 
+        list.appendChild(item);
+    });
+
+    validationMessage.appendChild(list); 
+    validationMessage.classList.add("visible"); 
+
+}
+function hideValidationMessage(){
+    validationMessage.innerHTML = ""; 
+    validationMessage.classList.remove("visible"); 
+}
+
 /* ==========================================
         POPULATE BOOKING SUMMARY
 ========================================== */
