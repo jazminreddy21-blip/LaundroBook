@@ -211,6 +211,44 @@ function validateCustomerName(){
     }
     return "";
  }
+
+ //this will change since I believe that the system
+ //decides the machine for the client
+ function validateMachineNumber(){
+
+    if(machineNumber.value === ""){
+        return "Please select a washing machine"; 
+    }
+    return ""; 
+ }
+
+ function validateServiceType(){
+
+    if(serviceType.value === ""){
+        return "Please select a laundry service.";
+    }
+    return ""; 
+ }
+
+ function validateCollectionMethod(){
+
+    if(collectionMethod.value === ""){
+        return "Please select a collection method";
+    }
+    return "";
+ }
+
+ function validateDeliveryAddress(){
+
+    if(collectionMethod.value === "delivery" && 
+        deliveryAddress.value.trim() === ""
+    ){
+        return "Please enter a delivery address."; 
+    }
+    return ""; 
+ }
+
+
 function validateBooking(){
     //
     if(customerName.value.trim() === "")
