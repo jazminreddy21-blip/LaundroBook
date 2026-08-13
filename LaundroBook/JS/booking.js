@@ -140,8 +140,28 @@ console.log("Submit event fired");
             VALIDATE BOOKING
 ========================================== */
 
-function validateBooking(){
+function validateCustomerName(){
+    const value = customerName.value.trim();
 
+
+    if(value === ""){
+        return "Please enter your full name."; 
+    }
+    if(value.length < 2){
+        return "Full name must be at least 2 characters.";
+    }
+    if(value.length > 60){
+        return "Full name must be under 60 characters."
+    }
+    if(!/^[A-Za-z\s'-]+$/.test(value)){
+        return "Full name can only contain letters, spaces, hyphens, and apostrophes."
+    }
+    return "";
+}
+
+
+function validateBooking(){
+    //
     if(customerName.value.trim() === "")
     {
         validationMessage.textContent =
