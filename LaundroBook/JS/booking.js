@@ -166,14 +166,6 @@ function validateBooking(){
         return false;
     }
 
-    if(branch.value === "")
-    {
-        validationMessage.textContent =
-        "Please select a branch.";
-
-        return false;
-    }
-
     if(bookingDate.value === "")
     {
         validationMessage.textContent =
@@ -233,8 +225,7 @@ function validateBooking(){
 
 function populateBookingSummary(){
 
-    summaryBranch.textContent =
-    branch.options[branch.selectedIndex].text;
+    
 
     summaryDate.textContent =
     bookingDate.value;
