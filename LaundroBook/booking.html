@@ -389,17 +389,6 @@ Special Instructions (Optional)
 <textarea name="special_instructions" id="special_instructions" rows="5" placeholder="Enter any additional information here."> </textarea>
 
 
-
-
-<!-- Booking Summary -->
-<!-- PHP:
-     Display the customer's selected booking details.
-
-     The summary should be populated using
-     the saved booking record after the booking
-     has been successfully processed.
--->
-
 <div class="booking-summary hidden" id="bookingSummary">
 
 <h3>Booking Summary</h3>
@@ -408,7 +397,6 @@ Special Instructions (Optional)
 
 <div class="summary-item"> <p> <strong>Booking Date:</strong>
 
-    <!-- PHP: Display the selected booking date. -->
 
     <span id="summary-date">Not selected</span>
 </p>
@@ -416,36 +404,24 @@ Special Instructions (Optional)
 </div>
 
 <div class="summary-item"> <p> <strong>Time Slot:</strong>
-
-    <!-- PHP: Display the selected booking time slot. -->
-
     <span id="summary-time">Not selected</span>
 </p>
 
 </div>
 
 <div class="summary-item"> <p> <strong>Machine Number:</strong>
-
-    <!-- PHP: Display the selected washing machine. -->
-
     <span id="summary-machine">Not selected</span>
 </p>
 
 </div>
 
 <div class="summary-item"> <p> <strong>Laundry Service:</strong>
-
-    <!-- PHP: Display the selected laundry service. -->
-
     <span id="summary-service">Not selected</span>
 </p>
 
 </div>
 
 <div class="summary-item"> <p> <strong>Collection Method:</strong>
-
-    <!-- PHP: Display the selected collection method. -->
-
     <span id="summary-collection">Not selected</span>
 </p>
 
@@ -454,9 +430,6 @@ Special Instructions (Optional)
 
 
 <div class="summary-item"> <p> <strong>Special Instructions:</strong>
-
-    <!-- PHP: Display any special instructions entered by the customer. -->
-
     <span id="summary-instructions">None</span>
 </p>
 
@@ -477,28 +450,6 @@ Special Instructions (Optional)
     </p>
 
 </div>
-
-<!-- ==================================================
-
-BACKEND INTEGRATION
-
-When Confirm Booking is clicked:
-
-1. Validate booking again using PHP.
-
-2. Check machine availability.
-
-3. Check selected slot availability.
-
-4. Save customer details.
-
-5. Save booking.
-
-6. Generate Booking Reference.
-
-7. Store Booking Status.
-
-================================================== -->
 
 <div class="summary-buttons">
 
@@ -530,14 +481,6 @@ When Confirm Booking is clicked:
 </div>
 
 </div>
-<!-- ==================================================
-
-BACKEND INTEGRATION
-
-After the booking has been successfully saved,
-PHP should populate the following fields.
-
-================================================== -->
 
 <div
 id="bookingSuccess"

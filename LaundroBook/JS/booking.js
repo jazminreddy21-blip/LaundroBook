@@ -299,7 +299,7 @@ function showValidationMessage(errors){
     const list = document.createElement("ul"); 
 
     errors.forEach(function(error){
-        const item = document.createdElement("li");
+        const item = document.createElement("li");
         item.textContent = error; 
         list.appendChild(item);
     });
