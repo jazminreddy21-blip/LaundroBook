@@ -189,6 +189,28 @@ function validateCustomerName(){
     return ""; 
  }
 
+ function validateBookingDate(){
+    const value = bookingDate.value; 
+
+    if(value === ""){
+        return "Please select a booking date.";
+    }
+    const selectedDate = new Date(value); 
+    const today = new Date(); 
+    today.setHours(0, 0, 0, 0);
+
+    if(selectedDate < today){
+        return "Booking date cannot be in the past."; 
+    }
+    return ""; 
+ }
+
+ function validateBookingTime(){
+    if(bookingTime.value === ""){
+        return "Please select a time slot."; 
+    }
+    return "";
+ }
 function validateBooking(){
     //
     if(customerName.value.trim() === "")
