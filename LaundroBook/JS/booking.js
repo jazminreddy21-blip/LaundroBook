@@ -248,83 +248,45 @@ function validateCustomerName(){
     return ""; 
  }
 
+ //responsible for running all the other modules
+ //for validation when the user clicks book
 
 function validateBooking(){
-    //
-    if(customerName.value.trim() === "")
-    {
-        validationMessage.textContent =
-        "Please enter your full name.";
+    //using the technique of storing errors in array
+    const errors = [];
 
-        return false;
+    const nameError = validateCustomerName(); 
+    if(nameError !== "") errors.push(nameError); 
+
+    const emailError = validateCustomerEmail(); 
+    if(emailError !== "") errors.push(emailError); 
+    
+    const phoneError = validateCustomerPhone(); 
+    if(phoneError !== "") errors.push(phoneError); 
+    
+    const dateError = validateBookingDate(); 
+    if(dateError !== "") errors.push(dateError); 
+    
+    const timeError = validateBookingTime(); 
+    if(timeError !== "") errors.push(timeError); 
+    
+    const machineError = validateMachineNumber();
+    if(machineError !== "") errors.push(machineError);
+
+    const serviceError = validateServiceType();
+    if(serviceError !== "") errors.push(serviceError);
+
+    const collectionError = validateCollectionMethod();
+    if(collectionError !== "") errors.push(collectionError);
+
+    const addressError = validateDeliveryAddress();
+    if(addressError !== "") errors.push(addressError);
+
+    if(errors.length > 0){
+        showValidationMessage(errors); 
+        return false; 
     }
-
-    if(customerEmail.value.trim() === "")
-    {
-        validationMessage.textContent =
-        "Please enter your email address.";
-
-        return false;
-    }
-
-    if(customerPhone.value.trim() === "")
-    {
-        validationMessage.textContent =
-        "Please enter your phone number.";
-
-        return false;
-    }
-
-    if(bookingDate.value === "")
-    {
-        validationMessage.textContent =
-        "Please select a booking date.";
-
-        return false;
-    }
-
-    if(bookingTime.value === "")
-    {
-        validationMessage.textContent =
-        "Please select a time slot.";
-
-        return false;
-    }
-
-    if(machineNumber.value === "")
-    {
-        validationMessage.textContent =
-        "Please select a washing machine.";
-
-        return false;
-    }
-
-    if(serviceType.value === "")
-    {
-        validationMessage.textContent =
-        "Please select a laundry service.";
-
-        return false;
-    }
-
-    if(collectionMethod.value === "")
-    {
-        validationMessage.textContent =
-        "Please select a collection method.";
-
-        return false;
-    }
-
-    if(collectionMethod.value === "delivery" &&
-       deliveryAddress.value.trim() === "")
-    {
-        validationMessage.textContent =
-        "Please enter a delivery address.";
-
-        return false;
-    }
-
-    return true;
+    return true; 
 
 }
 
