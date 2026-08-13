@@ -527,6 +527,16 @@ Pending
 </div>
 
 <!-- Submit Button -->
+ <!--There's an inflection point worth considering here. Once the customer clicks book now, that supposedly sends a request to the server,
+  which will query the db for the pricing model and calculates the cost.
+  Then this value is displayed in the booking summary on the frontend. If we're already going to query the db, let's do it once only. Instead
+   of doing it twice. 
+ This means we either get rid of the booking summary or we just store the prices in the page itself instead of the database.
+ The pricing model is something that can be calculated locally within the main page, we just need to  store the json which will 
+ have all the possible combinations (wash_dry_duration_loadsize) and calculate cost, instead of doing this on the server. 
+ Then once the customer has confirmed their booking, we can then truly calculate their cost in the server, more securely. 
+ The one thing we would have to watch out for is browsers that have javascript disabled and price tampering
+ -->
 
 <!-- PHP: Validate all booking information before saving the booking to the database and generating a booking confirmation. -->
 <button
