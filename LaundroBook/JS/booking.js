@@ -140,6 +140,7 @@ console.log("Submit event fired");
             VALIDATE BOOKING
 ========================================== */
 
+//full name validation
 function validateCustomerName(){
     const value = customerName.value.trim();
 
@@ -159,6 +160,34 @@ function validateCustomerName(){
     return "";
 }
 
+//customer email validation
+ function validateCustomerEmail(){
+    const value = customerEmail.value.trim(); 
+
+    if(value === ""){
+        return "Please enter your email address."; 
+    }
+
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)){
+        return "Please enter a valid email address.";
+    }
+
+    return "";
+ }
+
+ function validateCustomerPhone(){
+    const value = customerPhone.value.trim(); 
+
+    if(value === ""){
+        return "Please enter your phone number.";
+    }
+
+    // 10 number regex
+    if(!/^[0-9]{10}$/.test(value)){
+        return "Please enter a valid phone number (10 digits long)."; 
+    }
+    return ""; 
+ }
 
 function validateBooking(){
     //
