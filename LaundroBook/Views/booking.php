@@ -1,3 +1,19 @@
+<?php
+    require_once __DIR__. "/../controllers/BookingController.php"; 
+    require_once __DIR__ . '/../repositories/SlotRepository.php';
+    require_once __DIR__ . '/../repositories/MachineRepository.php';
+
+    //then we can create an instance of a booking controller here
+    //and then use the method that lists all the available machines
+    //before using html to display everything in this page
+    $slotRepository = new SlotRepository(); // real class, hardcoded body for now
+    $machineRepository = new MachineRepository(); 
+
+    $bookingController = new BookingController($slotRepository, $machineRepository);
+
+    $availableSlots = $bookingController->availableSlots(); 
+    $availableMachines = $bookingController->availableMachines(); 
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -72,7 +88,7 @@
                  9. Generate Booking Reference Number.
                  10. Send booking confirmation email.
             ================================================== -->
-            <form action="#" method="POST" class="booking-form" id="bookingForm" novalidate>
+            <form action="/LaundroBook/LaundroBook/LaundroBook/controllers/BookingController.php" method="POST" class="booking-form" id="bookingForm" novalidate>
 
                 <!-- ==================================================
                      CLIENT SIDE VALIDATION
@@ -288,47 +304,27 @@
                     </div>
 
                     <!-- Service Summary -->
-                    <!--
-                         JS populates these values from the service pricing table.
-                         Backend should also verify these server-side.
-
-                         Service Pricing (from Service table):
-
-                         Quick  + Clothes = R30, 25 min, 1 slot
-                         Quick  + Bedding = R40, 25 min, 1 slot
-                         Quick  + Towels  = R35, 25 min, 1 slot
-                         Normal + Clothes = R40, 35 min, 1 slot
-                         Normal + Bedding = R50, 35 min, 1 slot
-                         Normal + Towels  = R45, 35 min, 1 slot
-                         Heavy  + Clothes = R55, 65 min, 2 slots
-                         Heavy  + Bedding = R70, 65 min, 2 slots
-                         Heavy  + Towels  = R65, 65 min, 2 slots
-                    -->
                     <div class="service-result">
                         <h4>Selected Service</h4>
                         <div class="service-result-grid">
 
-                            <!-- JS populates from #wash_type -->
                             <div class="service-result-item">
                                 <span>Wash Type</span>
                                 <strong id="selectedWashType">-</strong>
                             </div>
 
-                            <!-- JS populates from #load_type -->
                             <div class="service-result-item">
                                 <span>Load Type</span>
                                 <strong id="selectedLoadType">-</strong>
                             </div>
 
-                            <!-- JS populates from service pricing table.
-                                 Backend verifies from Service table. -->
+                            
                             <div class="service-result-item">
                                 <span>Price</span>
                                 <strong>R<span id="servicePrice">0.00</span></strong>
                             </div>
 
-                            <!-- JS populates from service pricing table.
-                                 Backend verifies from Service table. -->
+                            
                             <div class="service-result-item">
                                 <span>Duration</span>
                                 <strong id="serviceDuration">-</strong>
@@ -369,10 +365,18 @@
 
                         <!-- BACKEND: Populate from Machine table.
                              Field ID: #machineSelect | Form Name: machine_id -->
-                        <div class="form-group">
+                     <!--initially, I'll hardcode the available slots because we already know which slots
+                     available for the test. But this has to be populated by JS dynamically because 
+                     the slots are not fixed and so are the machines-->
+                             <div class="form-group">
                             <label for="machineSelect">Available Washing Machine</label>
                             <select id="machineSelect" name="machine_id">
                                 <option value="">Select an available machine</option>
+                                <?php foreach ($availableMachines as $machine): ?>
+                                <option value="<?php echo htmlspecialchars($machine); ?>">
+                                <?php echo htmlspecialchars($machine); ?>
+                                </option>
+                                <?php endforeach; ?>
                                 <!-- Backend populates available machines here -->
                             </select>
                         </div>
@@ -383,6 +387,11 @@
                             <label for="slotSelect">Available Time Slot</label>
                             <select id="slotSelect" name="slot_id">
                                 <option value="">Select an available time slot</option>
+                                <?php foreach ($availableSlots as $slot): ?>
+                                <option value="<?php echo htmlspecialchars($slot); ?>">
+                                <?php echo htmlspecialchars($slot); ?>
+                                </option>
+                                <?php endforeach; ?>
                                 <!-- Backend populates available slots here -->
                             </select>
                         </div>

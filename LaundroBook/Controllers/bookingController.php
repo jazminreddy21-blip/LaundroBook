@@ -1,6 +1,54 @@
 <?php
-    class bookingController{
-        /*
+    class BookingController{
+        private $slotRepository;
+        private $machineRepository; 
+        private $customerRepository; 
+        private $bookingRepository;
+
+        public function __construct(SlotRepositoryInterface $slotRepository,
+         MachineRepositoryInterface $machineRepository,
+          CustomerRepositoryInterface $customerRepository, 
+          BookingRepositoryInterface $bookingRepository){
+            $this->slotRepository = $slotRepository; 
+            $this->machineRepository = $machineRepository; 
+            $this->customerRepository = $customerRepository; 
+            $this->bookingRepository = $bookingRepository; 
+        }
+            
+        public function validate_input(){
+            //Yashin has already implemented this function
+            //now it only has to return the values so they can 
+            //be reused by the other functions here
+        }
+        //once input has been validated, then we can proceed with the routing process
+        //we'll then use the slot time var which has the slot id?
+        public function findSlot($SlotId){
+            return $this->slotRepository->findAvailableSlot($SlotId); 
+        }
+
+        public function findMachine($MachineId){
+            return $this->machineRepository->findAvailableMachine($MachineId); 
+        }
+
+        public function availableSlots(){
+            return $this->slotRepository->returnAvailableSlots(); 
+        }
+
+        public function availableMachines(){
+            return $this->machineRepository->returnAvailableMachines(); 
+        }
+        //after all the checks: validation, slot check and machine availability checks, 
+        //we can now create the customer here, then create the booking 
+        public function createCustomerObject($customer_name, $customer_email, $customer_phone, $customer_address){
+            
+            return $this->customerRepository->createCustomer($customer_name, $customer_email, $customer_phone, $customer_address); 
+        }
+        public function createBooking(){
+            
+        }
+
+    };
+    /*
             behaviors within this controller:
             -> validate input
             -> check for slot availability (only future slots where start_time >= current time)
@@ -23,48 +71,3 @@
 
 
         */
-        public function validate_input(){
-            if($_POST){
-            //error handling as a backup could be implemented server-side
-            //in case the JS missed something in frontend
-            //we also need to perform data sanitization to prevent XSS
-            //this has to be done for all inputs
-
-            //inputs:
-            $customer_name = $_POST['customer_name'];
-            $customer_email = $_POST['customer_email'];
-            $customer_phone = $_POST['customer_phone']; 
-            
-
-            
-            //selects: 
-            $booking_date = $_POST['booking_date'];
-            $wash_type = $_POST['wash_type'];
-            $load_type = $_POST['load_type']; 
-            $collection_method = $_POST["collection_method"]; 
-            $delivery_address = $_POST['delivery_address'];
-            $machine_number = $_POST["machine_id"];
-            $slot_time = $_POST['slot_id'];
-
-
-            
-
-
-
-            //next would be to check all of the other fields before
-            //we create the booking object. Entities such as slots, 
-            //machine etc. 
-            //these need to be free, otherwise, we won't create the 
-            //booking object successfully
-            //we will not be accessing them directly
-            //instead we will use their controllers, which will then
-            //lead us to the repositories which holds all the SQL queries
-            //associated with that particular controller
-            //for example: customerController -> customerRepository -> Database
-            //and then the db sends back a result which can then be displayed 
-
-
-
-        }
-        }
-    };
