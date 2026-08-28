@@ -2,15 +2,18 @@
     class BookingController{
         private $slotRepository;
         private $machineRepository; 
-        //private $customerRepository; 
+        private $customerRepository; 
         //private $bookingRepository;
         private $serviceRepository; 
+        private $systemManagerRepository;
+
 
         public function __construct(SlotRepositoryInterface $slotRepository,
          MachineRepositoryInterface $machineRepository,//,
           CustomerRepositoryInterface $customerRepository, 
           //BookingRepositoryInterface $bookingRepository, 
-          ServiceRepositoryInterface $serviceRepository
+          ServiceRepositoryInterface $serviceRepository, 
+          SystemManagerRepository $systemManagerRepository
           )
           {
             $this->slotRepository = $slotRepository; 
@@ -18,12 +21,10 @@
             $this->customerRepository = $customerRepository; 
             //$this->bookingRepository = $bookingRepository; 
             $this->serviceRepository = $serviceRepository; 
+            $this->systemManagerRepository = $systemManagerRepository; 
         }
             
         public function validate_input(){
-            //Yashin has already implemented this function
-            //now it only has to return the values so they can 
-            //be reused by the other functions here
         }
         //once input has been validated, then we can proceed with the routing process
         //we'll then use the slot time var which has the slot id?
@@ -68,6 +69,11 @@
             //compare it with the one selected by the customer
         }
 
+        //manager_id param is used for testing purposes
+        public function retrieveManager($manager_id){
+
+            return $this->systemManagerRepository->getSystemManager();
+        }
 
 
         public function createBooking(){

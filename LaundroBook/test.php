@@ -6,6 +6,7 @@ require_once __DIR__ . '/controllers/BookingController.php';
 require_once __DIR__ . '/repositories/MachineRepository.php'; 
 require_once __DIR__ . '/repositories/CustomerRepository.php';
 require_once __DIR__ . '/repositories/ServiceRepository.php';
+require_once __DIR__ . '/repositories/SystemManagerRepository.php';
 
 
 
@@ -28,16 +29,20 @@ $slotRepository = new SlotRepository(); // real class, hardcoded body for now
 $machineRepository = new MachineRepository(); 
 $customerRepository = new CustomerRepository(); 
 $serviceRepository = new ServiceRepository(); 
-$bookingController = new BookingController($slotRepository, $machineRepository, $customerRepository, $serviceRepository);
+$systemManagerRepository = new SystemManagerRepository(); 
+$bookingController = new BookingController($slotRepository, $machineRepository, $customerRepository, $serviceRepository, $systemManagerRepository);
 
 $slot_list = $bookingController->availableSlots(); 
 $customer = $bookingController->createCustomerObject("Mabutho", "mabuthosiyanda83@gmail.com", "0789108501", "116 Currie Rd"); 
+$systemManager = $bookingController->retrieveManager(1); 
+
+
 
 //should simply just print the retrieved service here
 echo "<br>"; 
 echo "<br>"; 
 
-$bookingController->retrieveService("quick", "clothes", 30.00, 25.00);
+//$bookingController->retrieveService("quick", "clothes", 30.00, 25.00);
 
 /*
 foreach($slot_list as $slot){
@@ -46,6 +51,10 @@ foreach($slot_list as $slot){
 */
 echo "<br>"; 
 echo "<br>"; 
+
+//system manager unit test
+assertEqual(true, $systemManager, "Manager exists"); 
+
 
 //testing if the customer creation returns the customer object and their id assigned 
 
