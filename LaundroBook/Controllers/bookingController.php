@@ -2,17 +2,22 @@
     class BookingController{
         private $slotRepository;
         private $machineRepository; 
-        private $customerRepository; 
-        private $bookingRepository;
+        //private $customerRepository; 
+        //private $bookingRepository;
+        private $serviceRepository; 
 
         public function __construct(SlotRepositoryInterface $slotRepository,
-         MachineRepositoryInterface $machineRepository,
+         MachineRepositoryInterface $machineRepository,//,
           CustomerRepositoryInterface $customerRepository, 
-          BookingRepositoryInterface $bookingRepository){
+          //BookingRepositoryInterface $bookingRepository, 
+          ServiceRepositoryInterface $serviceRepository
+          )
+          {
             $this->slotRepository = $slotRepository; 
             $this->machineRepository = $machineRepository; 
             $this->customerRepository = $customerRepository; 
-            $this->bookingRepository = $bookingRepository; 
+            //$this->bookingRepository = $bookingRepository; 
+            $this->serviceRepository = $serviceRepository; 
         }
             
         public function validate_input(){
@@ -43,6 +48,28 @@
             
             return $this->customerRepository->createCustomer($customer_name, $customer_email, $customer_phone, $customer_address); 
         }
+
+        public function retrieveService($wash_type, $load_type, $price, $duration_minutes){
+            //verification can work through simply retrieving 
+            // all the services data from the db (service objects)
+            //then checking if the user selected services are there
+
+            //this function has to be responsible for verifying 
+            //that the service selected by the customer was
+            //valid and the prices were not tinkered with
+            $services_retrieved = $this->serviceRepository->getServices();
+
+            
+            //verification 
+
+
+
+            //retrieve the original service in the database and 
+            //compare it with the one selected by the customer
+        }
+
+
+
         public function createBooking(){
             
         }

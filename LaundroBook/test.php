@@ -3,11 +3,10 @@
     //echo __DIR__; 
 require_once __DIR__ . '/repositories/SlotRepository.php';
 require_once __DIR__ . '/controllers/BookingController.php';
-
-
 require_once __DIR__ . '/repositories/MachineRepository.php'; 
+require_once __DIR__ . '/repositories/CustomerRepository.php';
+require_once __DIR__ . '/repositories/ServiceRepository.php';
 
-require_once __DIR__ . '/repositories/CustomerRepository.php'; 
 
 
 
@@ -28,10 +27,17 @@ function assertEqual($expected, $actual, $testName)
 $slotRepository = new SlotRepository(); // real class, hardcoded body for now
 $machineRepository = new MachineRepository(); 
 $customerRepository = new CustomerRepository(); 
-$bookingController = new BookingController($slotRepository, $machineRepository, $customerRepository);
+$serviceRepository = new ServiceRepository(); 
+$bookingController = new BookingController($slotRepository, $machineRepository, $customerRepository, $serviceRepository);
 
 $slot_list = $bookingController->availableSlots(); 
 $customer = $bookingController->createCustomerObject("Mabutho", "mabuthosiyanda83@gmail.com", "0789108501", "116 Currie Rd"); 
+
+//should simply just print the retrieved service here
+echo "<br>"; 
+echo "<br>"; 
+
+$bookingController->retrieveService("quick", "clothes", 30.00, 25.00);
 
 /*
 foreach($slot_list as $slot){
@@ -43,7 +49,7 @@ echo "<br>";
 
 //testing if the customer creation returns the customer object and their id assigned 
 
-$customer->printCustomerDetails(); 
+//$customer->printCustomerDetails(); 
 
 //slot list then returns all the available slots as an array
 //using unit tests to check if the slotRepo Works properly and it does :)
