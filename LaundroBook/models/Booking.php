@@ -36,4 +36,20 @@
             $this->total_price = $total_price; 
             $this->status = $status;
         }
+        public function getId(){
+            return $this->booking_id; 
+        }
+
+        public function __toString(){
+        return "Booking id: ". $this->booking_id . "Customer id: ". $this->customer_id.
+        "Machine id: ". $this->machine_id.
+         "Slot id: ". $this->slot_id.
+         "Service id: ". $this->service_id. 
+         "Manager id: " . $this->manager_id. 
+         "Booking ref: " . $this->booking_reference. 
+         "Booking date: " . $this->bookingDate->format('Y-m-d H:i:s').
+         "Machine free at: " . $this->machine_free_at->format('H:i:s'). 
+         "Total price: " . $this->total_price.
+        "Status: " .  $this->status;
+        }
     }

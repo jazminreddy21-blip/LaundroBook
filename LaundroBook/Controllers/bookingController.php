@@ -3,7 +3,7 @@
         private $slotRepository;
         private $machineRepository; 
         private $customerRepository; 
-        //private $bookingRepository;
+        private $bookingRepository;
         private $serviceRepository; 
         private $systemManagerRepository;
 
@@ -11,7 +11,7 @@
         public function __construct(SlotRepositoryInterface $slotRepository,
          MachineRepositoryInterface $machineRepository,//,
           CustomerRepositoryInterface $customerRepository, 
-          //BookingRepositoryInterface $bookingRepository, 
+          BookingRepositoryInterface $bookingRepository, 
           ServiceRepositoryInterface $serviceRepository, 
           SystemManagerRepository $systemManagerRepository
           )
@@ -19,7 +19,7 @@
             $this->slotRepository = $slotRepository; 
             $this->machineRepository = $machineRepository; 
             $this->customerRepository = $customerRepository; 
-            //$this->bookingRepository = $bookingRepository; 
+            $this->bookingRepository = $bookingRepository; 
             $this->serviceRepository = $serviceRepository; 
             $this->systemManagerRepository = $systemManagerRepository; 
         }
@@ -75,9 +75,9 @@
             return $this->systemManagerRepository->getSystemManager();
         }
 
-
-        public function createBooking(){
-            
+        //passing input params from the other created objects
+        public function createBooking($customer_id, $machine_id, $slot_id, $service_id, $manager_id, $total_price){
+            return $this->bookingRepository->createBooking($customer_id, $machine_id, $slot_id, $service_id, $manager_id, $total_price);    
         }
 
     };

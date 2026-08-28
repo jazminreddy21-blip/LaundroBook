@@ -14,6 +14,10 @@
             $this->password_hash = $password_hash; 
         }
 
+        public function getId(){
+            return $this->manager_id; 
+        }
+
 
 
     }

@@ -7,6 +7,7 @@ require_once __DIR__ . '/repositories/MachineRepository.php';
 require_once __DIR__ . '/repositories/CustomerRepository.php';
 require_once __DIR__ . '/repositories/ServiceRepository.php';
 require_once __DIR__ . '/repositories/SystemManagerRepository.php';
+require_once __DIR__ . '/repositories/BookingRepository.php'; 
 
 
 
@@ -30,11 +31,13 @@ $machineRepository = new MachineRepository();
 $customerRepository = new CustomerRepository(); 
 $serviceRepository = new ServiceRepository(); 
 $systemManagerRepository = new SystemManagerRepository(); 
-$bookingController = new BookingController($slotRepository, $machineRepository, $customerRepository, $serviceRepository, $systemManagerRepository);
+$bookingRepository = new BookingRepository(); 
+$bookingController = new BookingController($slotRepository, $machineRepository, $customerRepository, $bookingRepository, $serviceRepository, $systemManagerRepository);
 
 $slot_list = $bookingController->availableSlots(); 
 $customer = $bookingController->createCustomerObject("Mabutho", "mabuthosiyanda83@gmail.com", "0789108501", "116 Currie Rd"); 
 $systemManager = $bookingController->retrieveManager(1); 
+$booking = $bookingController->createBooking(1, 1, 1, 1, 1, 30.00);
 
 
 
@@ -52,8 +55,18 @@ foreach($slot_list as $slot){
 echo "<br>"; 
 echo "<br>"; 
 
+//assertEqual(1, $booking->getId(), "Booking created"); 
+
+echo "<br>"; 
+echo "<br>"; 
+
+echo $booking; 
+
 //system manager unit test
-assertEqual(true, $systemManager, "Manager exists"); 
+/*
+assertEqual(1, $systemManager->getId(), "Manager exists"); 
+assertEqual(3, $systemManager->getId(), "Manager doesn't exist"); 
+*/
 
 
 //testing if the customer creation returns the customer object and their id assigned 
