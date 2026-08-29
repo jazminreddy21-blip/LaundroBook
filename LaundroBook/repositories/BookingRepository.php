@@ -25,8 +25,6 @@
                 $slot_id, $service_id, $manager_id, $booking_reference, 
                 $booking_date, $machine_free_at, $total_price, $status
             ); 
-            
-        
         }
         //find booking
         public function findBooking($booking_id){

@@ -43,8 +43,7 @@
         public function availableMachines(){
             return $this->machineRepository->returnAvailableMachines(); 
         }
-        //after all the checks: validation, slot check and machine availability checks, 
-        //we can now create the customer here, then create the booking 
+       
         public function createCustomerObject($customer_name, $customer_email, $customer_phone, $customer_address){
             
             return $this->customerRepository->createCustomer($customer_name, $customer_email, $customer_phone, $customer_address); 
@@ -100,7 +99,4 @@
             -> commit transaction
             -> send confirmation email
             -> return confirmation to booking page
-
-
-
         */
