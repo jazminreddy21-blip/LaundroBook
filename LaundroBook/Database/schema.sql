@@ -3,7 +3,6 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 06, 2026 at 10:29 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -51,7 +50,7 @@ CREATE TABLE `customer` (
   `customer_name` varchar(60) NOT NULL,
   `customer_email` varchar(60) NOT NULL,
   `customer_phone` varchar(15) NOT NULL,
-  `address` varchar(100) NOT NULL
+  `address` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

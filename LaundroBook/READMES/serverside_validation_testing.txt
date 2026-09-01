@@ -1,30 +1,56 @@
 This document provides a guideline on how to test the server side validation for the LaundroBook system on your device.
-This is the first iteration of this document, please make updates in future if needed.
+This is the second iteration of this document, please make updates in future if needed.
 
 Run down:
-The testing will be done with javascript turned off in the browser, this allows the data to pass client side validation.
+The testing will be done with JavaScript turned off in the browser, this allows the data to pass through without client side validation.
 
-Please run the web site via localhost with Apachee from the Xampp control pannel turned on.
+Please make sure that both Apache and MySQL are running from the XAMPP control panel, as the booking controller now requires a database connection.
 
-The "process-booking.php" file is a temporary file and can be removed in the future if needed. It is only used for testing purposes-
-in order to see messages.
+The "process-booking.php" file is a temporary file and can be removed in the future if needed. It is only used for testing purposes - 
+in order to see the server side validation messages.
 
 
 The actual process:
 
-step 1 - Make sure the form action in the "booking.html" file which is found in the Views folder is set to "../Controllers/process-booking.php" 
-e.g: <form action = "../Controllers/process-booking.php"...>
+step 1 - Make sure the form action in the "booking.php" file which is found in the Views folder is set to "../Controllers/process-booking.php"
+e.g: <form action="../Controllers/process-booking.php" method="POST"...>
 
-step 2 - In the same booking file, temporary remove the hidden keyword in the class for the section tag where id = "availabilitySection",
-this will allow the "Confirm booking" button to appear where you can then submit your data. 
+step 2 - In the same booking file, temporarily remove the hidden keyword in the class for the section tag where id = "availabilitySection",
+this will allow the "Confirm booking" button to appear where you can then submit your data.
 e.g: <section id="availabilitySection" class="availability-section">
 
-step 3 - Open developer tools in the browser of your choosing and disable javascript, if you are using microsoft edge, you can open dev tools by
-clicking Fn then F12 on you keyboard. Once dev tools are open, click Ctrl + Shift + p to open the terminal. Enter "Disable JavaScript".
+step 3 - Make sure the database connection has been established and that MySQL is running in the XAMPP control panel.
+The server side validation currently creates the booking controller, which requires the database connection to be available.
 
-step 4 - Enter your testing details, when you are done click "Confim booking", you will be routed to the process-booking.php page where server side-
-messages will be disaplayed.
+step 4 - Open developer tools in the browser of your choosing and disable JavaScript, if you are using Microsoft Edge, you can open dev tools by
+clicking Fn then F12 on your keyboard. Once dev tools are open, click Ctrl + Shift + P to open the terminal. Enter "Disable JavaScript".
+
+step 5 - Enter your testing details, when you are done click "Confirm booking", you will be routed to the process-booking.php page where server side
+validation messages will be displayed.
+
+step 6 - Test different invalid inputs to make sure the server side validation is working correctly.
+For example:
+- Leave the full name empty.
+- Enter an invalid email address.
+- Enter a phone number containing letters.
+- Enter a phone number that is not 10 digits.
+- Leave the booking date empty.
+- Enter a booking date in the past.
+- Select an invalid wash type.
+- Select an invalid load type.
+- Select an invalid collection method.
+- Select delivery without entering a delivery address.
+- Leave the machine selection empty.
+- Leave the time slot selection empty.
+
+If the entered information is invalid, the appropriate error messages should be displayed on the process-booking.php page.
 
 
 Note:
 As of now, there are no time slots or machine numbers to select, error messages will stay for these two selects for now.
+
+Note:
+JavaScript is being disabled only for testing purposes. In the actual system, JavaScript will still be used for the client side validation and booking process.
+
+Note:
+A database connection is currently required for the booking controller to run successfully, even when testing the server side validation. This is because the booking controller establishes the database connection when the controller is created.
