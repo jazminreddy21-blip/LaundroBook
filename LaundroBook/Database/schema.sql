@@ -299,14 +299,18 @@ ALTER TABLE `booking`
   ADD CONSTRAINT `booking_ibfk_2` FOREIGN KEY (`machine_id`) REFERENCES `machine` (`machine_id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `booking_ibfk_3` FOREIGN KEY (`manager_id`) REFERENCES `system_manager` (`manager_id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `booking_ibfk_4` FOREIGN KEY (`service_id`) REFERENCES `service` (`service_id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `booking_ibfk_5` FOREIGN KEY (`slot_id`) REFERENCES `slot` (`slot_id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `booking_ibfk_5` FOREIGN KEY (`slot_id`) REFERENCES `slot` (`slot_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `check_total_price` CHECK (`total_price` > 0),
+  ADD CONSTRAINT `check_booking_status` CHECK (`status` IN ('pending', 'in_progress', 'completed', 'cancelled'));
 
 --
 -- Constraints for table `delivery`
 --
 ALTER TABLE `delivery`
   ADD CONSTRAINT `delivery_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`booking_id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `delivery_ibfk_2` FOREIGN KEY (`groundworker_id`) REFERENCES `groundworker` (`groundworker_id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `delivery_ibfk_2` FOREIGN KEY (`groundworker_id`) REFERENCES `groundworker` (`groundworker_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `check_delivery_type` CHECK (`delivery_type` IN ('collection', 'delivery')),
+  ADD CONSTRAINT `check_delivery_status` CHECK (`delivery_status` IN ('pending', 'in_progress', 'completed'));
 
 --
 -- Constraints for table `enquiry`
@@ -318,13 +322,17 @@ ALTER TABLE `enquiry`
 -- Constraints for table `machine`
 --
 ALTER TABLE `machine`
-  ADD CONSTRAINT `machine_ibfk_1` FOREIGN KEY (`manager_id`) REFERENCES `system_manager` (`manager_id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `machine_ibfk_1` FOREIGN KEY (`manager_id`) REFERENCES `system_manager` (`manager_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `check_machine_status` CHECK (`machine_status` IN ('available', 'in_use', 'under_maintenance'));
 
 --
 -- Constraints for table `service`
 --
 ALTER TABLE `service`
-  ADD CONSTRAINT `service_ibfk_1` FOREIGN KEY (`manager_id`) REFERENCES `system_manager` (`manager_id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `service_ibfk_1` FOREIGN KEY (`manager_id`) REFERENCES `system_manager` (`manager_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `check_wash_type` CHECK (`wash_type` IN ('quick', 'normal', 'heavy')),
+  ADD CONSTRAINT `check_load_type` CHECK (`load_type` IN ('clothes', 'beddings', 'towels')),
+  ADD CONSTRAINT `check_service_price` CHECK (`price` > 0);
 
 --
 -- Constraints for table `slot`
