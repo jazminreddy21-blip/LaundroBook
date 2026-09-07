@@ -4,19 +4,16 @@ require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
 require_once __DIR__ . '/AvailabilityService.php';
 require_once __DIR__ . '/../Database/Connection.php';
 
-/*
-  BookingService
- 
-  This is the class that coordinates Machine, Slot, Customer, Booking, and Service
-  together, and the only place the transaction lives. bookingController
-  should only ever call createBooking() and relay whatever comes back,
-  it should never touch a repository directly.
- 
-   This existed as a private method inside bookingController for a
-   while, since nothing else needed to create a booking.
-   it depends on five different repositories and runs a real
-   transaction, squarely business logic, not something a
-   controller should be holding onto.
+/**
+ * BookingService
+ *
+ * This is the only class that coordinates Machine, Slot, Customer, Booking, and Service
+ * together, and the only place the transaction lives. bookingController
+ * should only ever call createBooking() and relay whatever comes back -
+ * it should never touch a repository directly.
+ *
+ * This existed as a private method inside bookingController for a
+ * while, since nothing else needed to create a booking. 
  */
 class BookingService
 {
@@ -63,10 +60,21 @@ class BookingService
             return ['success' => false, 'errors' => ['Selected machine does not exist']];
         }
 
-        // Final race-condition guard, re-check right before writing,
+        // Final race-condition guard - re-check right before writing,
         // since time has passed since the customer saw this as available.
         if (!$this->availability->isComboStillFree($data['machine_id'], $data['slot_id'], $data['booking_date'])) {
             return ['success' => false, 'errors' => ['Selected slot was just taken, please choose another']];
+        }
+
+        // Heavy Wash needs its second slot re-checked too - previously
+        // only the first slot was verified here, and the second slot's
+        // insert relied entirely on the active_combo_key constraint to
+        // catch a stale request, which works but opens a transaction
+        // and rolls it back unnecessarily. This check catches it early,
+        // before any transaction is opened at all.
+        if (!empty($data['second_slot_id'])
+            && !$this->availability->isComboStillFree($data['machine_id'], (int)$data['second_slot_id'], $data['booking_date'])) {
+            return ['success' => false, 'errors' => ['Second slot required for Heavy Wash was just taken, please choose another']];
         }
 
         $manager = $this->bookingRepo->getPrimaryManager();
@@ -96,18 +104,37 @@ class BookingService
                 );
             }
 
+            // This flip is now genuinely accurate and actively
+            // maintained - AvailabilityService::releaseExpiredMachines()
+            // flips it back to 'available' once this booking's slot has
+            // finished, so an admin dashboard can trust it as a live
+            // status. It still doesn't gate whether THIS machine can be
+            // booked for a different date, since machine_status has no
+            // date attached - that per-date decision is always made
+            // separately by AvailabilityService against real booking rows.
             $this->machineRepo->updateStatus($data['machine_id'], 'in_use');
 
             $this->db->commit();
         } catch (Exception $e) {
             $this->db->rollback();
+
+            // MySQL error 1062 = duplicate entry, this is what fires if
+            // active_combo_key's UNIQUE constraint catches a genuine
+            // race condition - two requests both passing the earlier
+            // isComboStillFree() check before either one's INSERT
+            // completes. Everything else falls through to the generic
+            // message below.
+            if ((int)$e->getCode() === 1062) {
+                return ['success' => false, 'errors' => ['Selected slot was just taken, please choose another']];
+            }
+
             return ['success' => false, 'errors' => ['Booking could not be saved, please try again']];
         }
 
         $reference = 'LB-' . str_pad((string)$bookingId, 5, '0', STR_PAD_LEFT);
 
         // Looked up here, after the transaction commits, purely for the
-        // receipt page, none of this affects whether the booking
+        // receipt page - none of this affects whether the booking
         // itself succeeded.
         $machine = $this->machineRepo->getMachineById($data['machine_id']);
         $slot = $this->slotRepo->getSlotById($data['slot_id']);
