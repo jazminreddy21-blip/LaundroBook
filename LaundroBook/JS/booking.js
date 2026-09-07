@@ -258,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 loadType.charAt(0).toUpperCase() + loadType.slice(1);
             document.getElementById("selectedBookingDate").textContent = bookingDate;
             document.getElementById("selectedCollectionMethod").textContent =
-                collection === "pickup" ? "Self Pickup" : "Home Delivery";
+                collectionMethod.options[collectionMethod.selectedIndex].text;
 
             // contrary to the comment that was here, we're using JS 
             // to populate the booking summary, instead of using the db
