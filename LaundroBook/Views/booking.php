@@ -172,8 +172,8 @@ if ($hasErrors) {
                     <label for="collection_method">Collection Method</label>
                     <select name="collection_method" id="collection_method" required>
                         <option value="">Select Collection Method</option>
-                        <option value="pickup">Self Pickup</option>
-                        <option value="delivery">Home Delivery</option>
+                        <option value="pickup">Self Drop off and Pickup</option>
+                        <option value="delivery">Home Pickup and Delivery</option>
                     </select>
 
                     <div id="addressSection" class="hidden">
