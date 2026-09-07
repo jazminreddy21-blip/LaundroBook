@@ -290,6 +290,7 @@ if(($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && basename($_SERVER['SCRIPT_NA
     require_once __DIR__ . '/../Repositories/BookingRepo.php';
     require_once __DIR__ . '/../Repositories/ServiceRepo.php';
     require_once __DIR__ . '/../Services/AvailabilityService.php';
+    require_once __DIR__ . '/../Services/EmailService.php';
 
     $machineRepo = new MachineRepo();
     $slotRepo = new SlotRepo();
@@ -297,8 +298,11 @@ if(($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && basename($_SERVER['SCRIPT_NA
     $bookingRepo = new BookingRepo();
     $serviceRepo = new ServiceRepo();
 
+    $emailConfig = require __DIR__ . '/../Config/EmailConfig.php';
+    $emailService = new EmailService($emailConfig);
+
     $availability = new AvailabilityService($machineRepo, $slotRepo, $bookingRepo);
-    $bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability);
+    $bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability, $emailService);
 
     $controller = new bookingController($bookingService);
     $controller->confirmBooking();
