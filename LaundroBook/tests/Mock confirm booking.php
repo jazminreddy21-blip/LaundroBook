@@ -2,19 +2,19 @@
 /*
     Mock confirm booking.php
 
-    Full stand-in for bookingControllers real wiring, using stub
-    repositories, exercises the ENTIRE confirmBooking() flow
+    Full stand-in for bookingController's real wiring, using stub
+    repositories - exercises the ENTIRE confirmBooking() flow
     (validation, price lookup, availability re-check, the
     "transaction", customer/booking creation, and now the receipt
     lookups for machine name and slot label) with zero real database
     connection. Nothing here ever calls Connection::getConnection().
 
-    HOW TO USE: temporarily point your booking form action at this
+    HOW TO USE: temporarily point your booking form's action at this
     file instead of the real bookingController.php:
 
         <form action="../tests/Mock confirm booking.php" ...>
 
-    Submit the form as normal. On "success" it will redirect to
+    Submit the form as normal. On "success" it'll redirect to
     BookingConfirm.php exactly like the real flow would, with fake but
     complete receipt data. Switch the form action back to
     bookingController.php once you're ready to test against a real
@@ -32,15 +32,26 @@ require_once __DIR__ . '/../Services/BookingService.php';
 
 class StubMachineRepo implements MachineRepoInterface
 {
-    
+    //added Machine 2 (in_use) and Machine 4 (under_maintenance)
+    // to mirror the real MachineRepo fix - getAvailableMachines() should
+    // now still return an in_use machine (since being busy for one
+    // booking doesn't mean it should vanish from every other date), but
+    // correctly exclude the under_maintenance one.
     private array $machines = [
         1 => ['machine_id' => 1, 'machine_name' => 'Machine 1', 'machine_status' => 'available'],
+        2 => ['machine_id' => 2, 'machine_name' => 'Machine 2', 'machine_status' => 'in_use'],
         3 => ['machine_id' => 3, 'machine_name' => 'Machine 3', 'machine_status' => 'available'],
+        4 => ['machine_id' => 4, 'machine_name' => 'Machine 4', 'machine_status' => 'under_maintenance'],
     ];
 
+    // FIXED to match the real MachineRepo::getAvailableMachines() fix -
+    // excludes only under_maintenance, no longer excludes in_use.
     public function getAvailableMachines(): array
     {
-        return array_values($this->machines);
+        return array_values(array_filter(
+            $this->machines,
+            fn($m) => $m['machine_status'] !== 'under_maintenance'
+        ));
     }
     public function getMachineById(int $machineId): ?array
     {
@@ -55,7 +66,9 @@ class StubMachineRepo implements MachineRepoInterface
 
 class StubSlotRepo implements SlotRepoInterface
 {
-    
+    // FIXED: was returning null unconditionally, ignoring $slotId -
+    // this is why the receipt showed "Time Slot: Not Available" no
+    // matter which slot was actually picked.
     private array $slots = [
         1 => ['slot_id' => 1, 'slot_label' => '08:00 - 08:45', 'start_time' => '08:00', 'end_time' => '08:45', 'is_active' => 1],
         2 => ['slot_id' => 2, 'slot_label' => '08:45 - 09:30', 'start_time' => '08:45', 'end_time' => '09:30', 'is_active' => 1],
@@ -97,6 +110,14 @@ class StubBookingRepo implements BookingRepoInterface
     public function getBookedCombosForDate(string $bookingDate): array { return []; }
     public function getPrimaryManager(): array { return ['manager_id' => 1]; }
     public function findBooking(int $bookingId): ?array { return null; }
+
+    // No fake bookings past their end time in this stub, so
+    // AvailabilityService::releaseExpiredMachines() has nothing to do
+    // during a plain test run - kept deliberately empty here since
+    // testing the release mechanism itself happens in its own
+    // dedicated test, not this general booking-flow mock.
+    public function getBookingsPastEndTime(): array { return []; }
+    public function markCompleted(int $bookingId): bool { return true; }
 }
 
 class StubServiceRepo implements ServiceRepoInterface
@@ -138,7 +159,6 @@ $serviceRepo = new StubServiceRepo();
 $availability = new AvailabilityService($machineRepo, $slotRepo, $bookingRepo);
 $bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability);
 
-// bookingController takes one BookingService
-
+// bookingController takes one BookingService 
 $controller = new bookingController($bookingService);
 $controller->confirmBooking();
