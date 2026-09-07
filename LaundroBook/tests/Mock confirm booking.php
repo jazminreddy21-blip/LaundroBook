@@ -35,12 +35,18 @@ class StubMachineRepo implements MachineRepoInterface
     
     private array $machines = [
         1 => ['machine_id' => 1, 'machine_name' => 'Machine 1', 'machine_status' => 'available'],
+        2 => ['machine_id' => 2, 'machine_name' => 'Machine 2', 'machine_status' => 'in_use'],
         3 => ['machine_id' => 3, 'machine_name' => 'Machine 3', 'machine_status' => 'available'],
+        4 => ['machine_id' => 4, 'machine_name' => 'Machine 4', 'machine_status' => 'under_maintenance'],
     ];
 
+    
     public function getAvailableMachines(): array
     {
-        return array_values($this->machines);
+        return array_values(array_filter(
+            $this->machines,
+            fn($m) => $m['machine_status'] !== 'under_maintenance'
+        ));
     }
     public function getMachineById(int $machineId): ?array
     {
@@ -97,6 +103,14 @@ class StubBookingRepo implements BookingRepoInterface
     public function getBookedCombosForDate(string $bookingDate): array { return []; }
     public function getPrimaryManager(): array { return ['manager_id' => 1]; }
     public function findBooking(int $bookingId): ?array { return null; }
+
+    // No fake bookings past their end time in this stub, so
+    // AvailabilityService::releaseExpiredMachines() has nothing to do
+    // during a plain test run - kept deliberately empty here since
+    // testing the release mechanism itself happens in its own
+    // dedicated test, not this general booking-flow mock.
+    public function getBookingsPastEndTime(): array { return []; }
+    public function markCompleted(int $bookingId): bool { return true; }
 }
 
 class StubServiceRepo implements ServiceRepoInterface
@@ -127,6 +141,22 @@ class StubServiceRepo implements ServiceRepoInterface
     public function getServiceById(int $serviceId): ?array { return null; }
 }
 
+class StubEmailService implements EmailServiceInterface
+{
+    // Never touches real SMTP - just proves createBooking() actually
+    // calls this (and that doing so doesn't break anything), without
+    // needing real credentials or a real network connection during a
+    // test run. Prints to the console so you can see it fired.
+    public function sendBookingConfirmation(
+        string $customerEmail, string $bookingReference, array $service,
+        string $bookingDate, string $machineName, string $slotLabel,
+        ?string $secondSlotLabel
+    ): bool {
+        echo "<p><em>[StubEmailService] Would have emailed {$customerEmail} for booking {$bookingReference}</em></p>";
+        return true;
+    }
+}
+
 //Build the controller with fakes and run it, same as real wiring
 
 $machineRepo = new StubMachineRepo();
@@ -134,11 +164,11 @@ $slotRepo = new StubSlotRepo();
 $customerRepo = new StubCustomerRepo();
 $bookingRepo = new StubBookingRepo();
 $serviceRepo = new StubServiceRepo();
+$emailService = new StubEmailService();
 
 $availability = new AvailabilityService($machineRepo, $slotRepo, $bookingRepo);
-$bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability);
+$bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability, $emailService);
 
 // bookingController takes one BookingService
-
 $controller = new bookingController($bookingService);
 $controller->confirmBooking();
