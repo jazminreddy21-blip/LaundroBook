@@ -26,13 +26,28 @@ class MachineRepo implements MachineRepoInterface{
     }
 
 
-    // Returns every machine currently marked as available. This is
+    // Returns every machine not administratively taken offline. This is
     // what AvailabilityService uses to figure out which machines a
     // customer is even allowed to consider booking.
+    //
+    // UPDATED REASONING: this deliberately excludes only
+    // 'under_maintenance', not 'in_use' - but for a different reason
+    // than "the flag doesn't matter." Since AvailabilityService now
+    // runs releaseExpiredMachines() before every check, machine_status
+    // genuinely IS accurate again (an 'in_use' machine really is busy
+    // right now, an 'available' one really isn't). The reason 'in_use'
+    // still can't gate this query is structural, not a data-quality
+    // problem: machine_status is one global flag with no date
+    // attached, while bookings are per-date. A machine correctly
+    // showing 'in_use' for its booking today says nothing about
+    // whether it's free for a booking next Tuesday - that per-date
+    // decision has to come from AvailabilityService cross-referencing
+    // real booking rows via getBookedCombosForDate(), which is exactly
+    // what happens after this method returns its machine list.
     public function getAvailableMachines(): array{
         $sql = "SELECT machine_id, machine_name, machine_status
                 FROM machine
-                WHERE machine_status = 'available'
+                WHERE machine_status != 'under_maintenance'
                 ORDER BY machine_id";
 
         $result = $this->db->query($sql);
@@ -55,11 +70,17 @@ class MachineRepo implements MachineRepoInterface{
 
 
     // Flips a machine's status, e.g. 'available' to 'in_use' once a
-    // booking is confirmed. Called by BookingService after a
-    // successful insert, and later by the admin panel for manual
-    // maintenance toggles. Throws an exception if someone passes a
-    // status that isn't one of the three allowed values, instead of
-    // silently writing bad data to the database.
+    // booking is confirmed, or back to 'available' via
+    // AvailabilityService::releaseExpiredMachines() once that
+    // booking's slot has genuinely finished. Called by BookingService
+    // after a successful insert, by AvailabilityService's release
+    // check, and later by the admin panel for manual maintenance
+    // toggles.
+    //
+    //
+    // Throws an exception if someone passes a status that isn't one of
+    // the three allowed values, instead of silently writing bad data
+    // to the database.
     public function updateStatus(int $machineId, string $status):bool{
         $valid = ['available', 'in_use', 'under_maintenance'];
         if(!in_array($status, $valid, true)){
