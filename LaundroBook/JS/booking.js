@@ -36,9 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // filtering (further down) has something to filter against.
     let availableCombos = [];
 
-    // ADDED: TEST MODE SWITCH, point this at the real AvailabilityController.php
-    // once the backend is connected. Swap this one line only.
-    const AVAILABILITY_ENDPOINT = "../tests/test.php";
+    const AVAILABILITY_ENDPOINT = "../Controllers/availabilityController.php";
 
     async function loadPricingData(){
         if(pricingData) return pricingData;
