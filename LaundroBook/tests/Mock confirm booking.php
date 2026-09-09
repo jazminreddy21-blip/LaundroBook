@@ -87,7 +87,7 @@ class StubSlotRepo implements SlotRepoInterface
 class StubCustomerRepo implements CustomerRepoInterface
 {
     public function findByEmail(string $email): ?Customer { return null; }
-    public function createCustomer(string $name, string $email, string $phone, string $address): Customer
+    public function createCustomer(string $name, string $email, string $phone, ?string $address): Customer
     {
         return new Customer(1, $name, $email, $phone, $address);
     }

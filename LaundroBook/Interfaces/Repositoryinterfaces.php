@@ -28,7 +28,7 @@ interface SlotRepoInterface
 interface CustomerRepoInterface
 {
     public function findByEmail(string $email): ?Customer;
-    public function createCustomer(string $name, string $email, string $phone, string $address): Customer;
+    public function createCustomer(string $name, string $email, string $phone, ?string $address): Customer;
 
     // Reuses an existing customer by email, or creates a new one.
     public function findOrCreate(array $data): Customer;
