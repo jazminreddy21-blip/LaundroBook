@@ -12,9 +12,8 @@
  *
  * These are PLACEHOLDER values. Replace them with real credentials
  * before the email feature will actually send anything. A Gmail
- * account with an "App Password" (not your normal login password) is
- * the simplest option for a student project - Google requires this
- * for any app using plain SMTP login instead of full OAuth.
+ * account with an "App Password" (not your normal login password)
+ * Google requires this for any app using plain SMTP login instead of full OAuth.
  */
 
 return [
