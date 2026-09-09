@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
+require_once __DIR__ . '/../Interfaces/EmailServiceInterface.php';
 require_once __DIR__ . '/AvailabilityService.php';
 require_once __DIR__ . '/../Database/Connection.php';
 
@@ -23,6 +24,7 @@ class BookingService
     private BookingRepoInterface $bookingRepo;
     private ServiceRepoInterface $serviceRepo;
     private AvailabilityService $availability;
+    private EmailServiceInterface $emailService;
     private mysqli $db;
 
     public function __construct(
@@ -31,7 +33,8 @@ class BookingService
         CustomerRepoInterface $customerRepo,
         BookingRepoInterface $bookingRepo,
         ServiceRepoInterface $serviceRepo,
-        AvailabilityService $availability
+        AvailabilityService $availability,
+        EmailServiceInterface $emailService
     ) {
         $this->machineRepo = $machineRepo;
         $this->slotRepo = $slotRepo;
@@ -39,6 +42,7 @@ class BookingService
         $this->bookingRepo = $bookingRepo;
         $this->serviceRepo = $serviceRepo;
         $this->availability = $availability;
+        $this->emailService = $emailService;
         $this->db = Connection::getConnection();
     }
 
@@ -141,6 +145,24 @@ class BookingService
         $secondSlot = !empty($data['second_slot_id'])
             ? $this->slotRepo->getSlotById($data['second_slot_id'])
             : null;
+
+        // Fire-and-forget, as required by Function 5 in Section 4.6 -
+        // this runs AFTER commit, so nothing it does can affect whether
+        // the booking itself succeeded. EmailService catches its own
+        // exceptions and always returns a bool rather than throwing,
+        // but the result is deliberately ignored here anyway - a
+        // customer's booking is successful the moment this method
+        // returns success, independent of whether the email happens to
+        // send.
+        $this->emailService->sendBookingConfirmation(
+            $data['customer_email'],
+            $reference,
+            $service,
+            $data['booking_date'],
+            $machine['machine_name'] ?? '',
+            $slot['slot_label'] ?? '',
+            $secondSlot['slot_label'] ?? null
+        );
 
         return [
             'success' => true,

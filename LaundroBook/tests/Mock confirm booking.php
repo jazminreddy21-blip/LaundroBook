@@ -44,8 +44,7 @@ class StubMachineRepo implements MachineRepoInterface
         4 => ['machine_id' => 4, 'machine_name' => 'Machine 4', 'machine_status' => 'under_maintenance'],
     ];
 
-    // FIXED to match the real MachineRepo::getAvailableMachines() fix -
-    // excludes only under_maintenance, no longer excludes in_use.
+    
     public function getAvailableMachines(): array
     {
         return array_values(array_filter(
@@ -148,6 +147,22 @@ class StubServiceRepo implements ServiceRepoInterface
     public function getServiceById(int $serviceId): ?array { return null; }
 }
 
+class StubEmailService implements EmailServiceInterface
+{
+    // Never touches real SMTP - just proves createBooking() actually
+    // calls this (and that doing so doesn't break anything), without
+    // needing real credentials or a real network connection during a
+    // test run. Prints to the console so you can see it fired.
+    public function sendBookingConfirmation(
+        string $customerEmail, string $bookingReference, array $service,
+        string $bookingDate, string $machineName, string $slotLabel,
+        ?string $secondSlotLabel
+    ): bool {
+        echo "<p><em>[StubEmailService] Would have emailed {$customerEmail} for booking {$bookingReference}</em></p>";
+        return true;
+    }
+}
+
 //Build the controller with fakes and run it, same as real wiring
 
 $machineRepo = new StubMachineRepo();
@@ -155,10 +170,11 @@ $slotRepo = new StubSlotRepo();
 $customerRepo = new StubCustomerRepo();
 $bookingRepo = new StubBookingRepo();
 $serviceRepo = new StubServiceRepo();
+$emailService = new StubEmailService();
 
 $availability = new AvailabilityService($machineRepo, $slotRepo, $bookingRepo);
-$bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability);
+$bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability, $emailService);
 
-// bookingController takes one BookingService 
+// bookingController takes one BookingService
 $controller = new bookingController($bookingService);
 $controller->confirmBooking();
