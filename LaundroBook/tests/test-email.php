@@ -1,4 +1,5 @@
 <?php
+/*
 require_once __DIR__ . '/../Services/EmailService.php';
 
 $sent = null;
@@ -25,3 +26,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['test_email'])) {
 <?php if ($sent !== null): ?>
     <p><?= $sent ? "Email sent successfully!" : "Email failed to send." ?></p>
 <?php endif; ?>
+*/
