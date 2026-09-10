@@ -216,21 +216,16 @@ class EmailService implements EmailServiceInterface
         return implode("\n", $lines);
     }
 
-    //email log, writes to email_debug.log
+    // No AuditLogRepository/audit_log table exists yet in this project
+    // (that's part of the Audit Trail functional requirement, not yet
+    // built). this logs to PHP's own error log for now as a
+    // lightweight stand-in.
     private function logResult(string $reference, bool $success, ?string $error): void
     {
         if ($success) {
             error_log("CONFIRMATION_EMAIL_SENT: {$reference}");
-            $line = "CONFIRMATION_EMAIL_SENT: {$reference}";
         } else {
             error_log("CONFIRMATION_EMAIL_FAILED: {$reference} - {$error}");
-            $line = "CONFIRMATION_EMAIL_FAILED: {$reference} - {$error}";
         }
-
-        file_put_contents(
-            __DIR__ . '/../email_debug.log',
-            date('Y-m-d H:i:s') . ' - ' . $line . "\n",
-            FILE_APPEND
-        );
     }
 }
