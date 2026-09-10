@@ -7,7 +7,6 @@ require_once __DIR__ . '/../Database/Connection.php';
 
 /**
  * BookingService
- *
  * This is the only class that coordinates Machine, Slot, Customer, Booking, and Service
  * together, and the only place the transaction lives. bookingController
  * should only ever call createBooking() and relay whatever comes back -
@@ -108,15 +107,14 @@ class BookingService
                 );
             }
 
-            // This flip is now genuinely accurate and actively
-            // maintained - AvailabilityService::releaseExpiredMachines()
-            // flips it back to 'available' once this booking's slot has
-            // finished, so an admin dashboard can trust it as a live
-            // status. It still doesn't gate whether THIS machine can be
-            // booked for a different date, since machine_status has no
-            // date attached - that per-date decision is always made
-            // separately by AvailabilityService against real booking rows.
-            $this->machineRepo->updateStatus($data['machine_id'], 'in_use');
+            // This flip is actively maintained by
+            // AvailabilityService::releaseExpiredMachines() once the
+            // booking's slot has finished. It only fires for a booking
+            // happening TODAY, a booking made for a future date doesn't
+            // make the machine busy right now. 
+            if ($data['booking_date'] === date('Y-m-d')) {
+                $this->machineRepo->updateStatus($data['machine_id'], 'in_use');
+            }
 
             $this->db->commit();
         } catch (Exception $e) {
