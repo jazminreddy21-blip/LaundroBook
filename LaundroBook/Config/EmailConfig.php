@@ -20,7 +20,7 @@ return [
     'smtp_host' => 'smtp.gmail.com',
     'smtp_port' => 587,
     'smtp_username' => 'laundrobook@gmail.com',
-    'smtp_password' => '',
+    'smtp_password' => '16-digit-password',
     'smtp_secure' => 'tls',
     'from_email' => 'laundrobook@gmail.com',
     'from_name' => 'LaundroBook',
