@@ -61,3 +61,10 @@ interface ServiceRepoInterface
     public function findByType(string $washType, string $loadType): ?array;
     public function getServiceById(int $serviceId): ?array;
 }
+
+interface EnquiryRepoInterface
+{
+    // Subject and message are combined into one value before this is
+    // called, see EnquiryRepo::insert() for exactly how.
+    public function insert(string $name, string $email, string $message): int;
+}
