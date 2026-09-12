@@ -1,3 +1,30 @@
+<?php
+/*
+    Converted from contact.html to contact.php, matching booking.php's
+    pattern - session-stashed errors from enquiryController need a PHP
+    page to read and display them on reload.
+*/
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$enquiryErrors = $_SESSION['enquiry_errors'] ?? [];
+unset($_SESSION['enquiry_errors']);
+
+$enquirySuccess = $_SESSION['enquiry_success'] ?? false;
+unset($_SESSION['enquiry_success']);
+
+$hasErrors = !empty($enquiryErrors);
+
+$errorsHtml = '';
+if ($hasErrors) {
+    $errorsHtml .= '<ul>';
+    foreach ($enquiryErrors as $error) {
+        $errorsHtml .= '<li>' . htmlspecialchars($error, ENT_QUOTES, 'UTF-8') . '</li>';
+    }
+    $errorsHtml .= '</ul>';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -151,20 +178,25 @@
 
         <div class="contact-form">
 
-            <!--
-                PHP Notes:
+            <?php if ($enquirySuccess): ?>
+            <div class="validation-message success">
+                <p>Thank you - your message has been sent. We'll get back to you soon.</p>
+            </div>
+            <?php endif; ?>
 
-                This form should:
+            <!-- CHANGED: class/contents now set from
+                 $_SESSION['enquiry_errors'] on page load, same pattern
+                 as booking.php's validationMessage div. -->
+            <div id="validationMessage" class="validation-message<?php echo $hasErrors ? ' error' : ''; ?>">
+                <?php echo $errorsHtml; ?>
+            </div>
 
-                1. Validate all fields.
-                2. Store enquiries in the database.
-                3. Prevent empty submissions.
-                4. Optionally send a confirmation email.
-            -->
-
+            <!-- CHANGED: was action="contact-process.php", now posts to
+                 the real controller, matching bookingController.php's
+                 relative path and lowercase-first-letter naming. -->
             <form
             id="contact-form"
-            action="contact-process.php"
+            action="../Controllers/enquiryController.php"
             method="POST">
 
 
