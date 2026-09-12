@@ -77,7 +77,7 @@ if ($hasErrors) {
 
             <li><a href="about.html">About</a></li>
 
-            <li><a href="contact.html" class="active">Contact</a></li>
+            <li><a href="contact.php" class="active">Contact</a></li>
 
         </ul>
 
@@ -208,7 +208,7 @@ if ($hasErrors) {
                 name="full_name"
                 placeholder="Your Full Name"
                 maxlength="50"
-                required>
+                >
 
 
 
@@ -220,7 +220,7 @@ if ($hasErrors) {
                 name="email_address"
                 placeholder="Email Address"
                 maxlength="100"
-                required>
+                >
 
 
 
@@ -232,7 +232,7 @@ if ($hasErrors) {
                 name="message_subject"
                 placeholder="Subject"
                 maxlength="100"
-                required>
+                >
 
 
 
@@ -244,7 +244,7 @@ if ($hasErrors) {
                 placeholder="Enter your message here..."
                 rows="6"
                 maxlength="500"
-                required>
+                >
 
                 </textarea>
 
@@ -272,5 +272,6 @@ if ($hasErrors) {
 
 </section>
 
+<script src="../JS/contact.js"></script>
 </body>
 </html>
