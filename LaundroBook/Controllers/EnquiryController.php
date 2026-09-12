@@ -65,11 +65,28 @@ class enquiryController
             exit;
         }
 
-        $this->enquiryRepo->insert(
-            $this->data['name'],
-            $this->data['email'],
-            $this->data['message']
-        );
+        try {
+            $this->enquiryRepo->insert(
+                $this->data['name'],
+                $this->data['email'],
+                $this->data['message']
+            );
+        } catch (Exception $e) {
+            // enquiry.email has a UNIQUE constraint, so a repeat sender
+            // hits MySQL error 1062 specifically - give them an honest
+            // reason rather than the generic message below, since
+            // "try again" would fail identically every time for them.
+            if ((int)$e->getCode() === 1062) {
+                $_SESSION['enquiry_errors'] = ['An enquiry with this email address already exists. Please contact us directly if you need to follow up.'];
+            } else {
+                // A genuine database failure (connection issue, etc.) -
+                // different from a validation error above, but the customer
+                // still needs a clear message rather than a blank/broken page.
+                $_SESSION['enquiry_errors'] = ['Your message could not be sent, please try again.'];
+            }
+            header('Location: ../Views/contact.php');
+            exit;
+        }
 
         $_SESSION['enquiry_success'] = true;
         header('Location: ../Views/contact.php');
