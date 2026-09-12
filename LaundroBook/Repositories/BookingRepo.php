@@ -117,12 +117,25 @@ class BookingRepo implements BookingRepoInterface{
         return $result ?: null;
     }
 
-    // This is the actual fix for the Polling-Based Machine Release
-    // weakness (Analysis Phase Section 3.5). It finds every still-
-    // "Pending" booking whose slot has genuinely finished, so the
-    // caller (AvailabilityService) can flip the machine back to
-    // available and mark the booking completed.
-    //
+    /*This is the fix for the Polling-Based Machine Release weakness
+    (Analysis Phase Section 3.5), AND the fix for the Heavy Wash
+    timing gap flagged in 4.2/4.6 - a Heavy Wash occupies two
+    consecutive slots as two separate booking rows, and the earlier
+    version of this method released a machine the moment the FIRST
+    row's slot ended, even while the second row (and the actual
+    wash) was still genuinely running.
+    
+    Both rows of one Heavy Wash booking share the same customer_id,
+    machine_id, booking_date, and service_id - there's no separate
+    grouping column, since each row gets its own independent
+    booking_reference (see insert() above). That shared combination
+    is used here as the "time block" key: a row is only considered
+    released if NO sibling row sharing that same key is still
+    Pending with a slot that hasn't ended yet. For a standard
+    (single-slot) booking, a row has no siblings, so this behaves
+    exactly as before.
+    */
+
     // The date reconstruction matters: slot.end_time only stores a
     // time-of-day, not which date it applies to - a slot labelled
     // "09:30 - 10:15" is reused every day. Comparing it against NOW()
@@ -136,7 +149,18 @@ class BookingRepo implements BookingRepoInterface{
                 FROM booking b
                 JOIN slot s ON b.slot_id = s.slot_id
                 WHERE b.status = 'Pending'
-                  AND CONCAT(b.booking_date, ' ', TIME(s.end_time)) <= NOW()";
+                  AND CONCAT(b.booking_date, ' ', TIME(s.end_time)) <= NOW()
+                  AND NOT EXISTS (
+                      SELECT 1
+                      FROM booking b2
+                      JOIN slot s2 ON b2.slot_id = s2.slot_id
+                      WHERE b2.customer_id = b.customer_id
+                        AND b2.machine_id = b.machine_id
+                        AND b2.booking_date = b.booking_date
+                        AND b2.service_id = b.service_id
+                        AND b2.status = 'Pending'
+                        AND CONCAT(b2.booking_date, ' ', TIME(s2.end_time)) > NOW()
+                  )";
 
         $result = $this->db->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
