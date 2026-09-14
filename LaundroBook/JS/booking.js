@@ -95,6 +95,21 @@ document.addEventListener("DOMContentLoaded", function () {
     function populateAvailability(combos) {
         availableCombos = combos;
 
+        if (combos.length === 0) {
+            //Select tags get disabled when there are no active combos
+            machineSelect.innerHTML = '<option value="">No machines available for this date</option>';
+            slotSelect.innerHTML = '<option value="">No time slots available for this date</option>';
+            machineSelect.disabled = true;
+            slotSelect.disabled = true;
+            return;
+        }
+
+        // Re-enable in case a previous search (different date/service)
+        // came back empty and disabled these, this search has real
+        // results, so the selects need to be usable again.
+        machineSelect.disabled = false;
+        slotSelect.disabled = false;
+
         machineSelect.innerHTML = '<option value="">Select an available machine</option>';
         slotSelect.innerHTML = '<option value="">Select an available time slot</option>';
 
