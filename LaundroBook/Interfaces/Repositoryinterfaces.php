@@ -36,3 +36,7 @@ interface ServiceRepoInterface{
     public function findByType(string $washType, string $loadType): ?array;
     public function getServiceById(int $serviceId): ?array;
 }
+
+interface SystemManagerRepoInterface{
+    public function findManager(int $managerId): ?SystemManager; 
+}
