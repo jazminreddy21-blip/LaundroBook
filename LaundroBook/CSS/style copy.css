@@ -1,0 +1,1504 @@
+:root{
+
+
+    /* Colours */
+    --primary-color: #00BCD4;
+    --secondary-color: #0097A7;
+    --background-color: #F8F9FA;
+    --card-color: #FFFFFF;
+    --text-color: #333333;
+    --white-color: #FFFFFF;
+
+    /* Effects */
+    --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    --transition: 0.3s ease;
+
+}
+*{
+	margin:0;
+	padding:0;
+	box-sizing:border-box;
+}
+
+body{
+	font-family:Verdana, sans-serif;
+	background: var(--background-color);
+	color:var(--text-color);
+	overflow-x:hidden;
+}
+
+.container{
+	width:90%;
+	max-width:1200px;
+	margin: 0 auto;
+}
+
+/*Header and Nav*/
+header{
+    background:#64748B;
+  
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.header-container{
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+}
+	
+	.logo{
+    display:flex;     /* Puts text below the icon */
+    align-items:center;
+	gap:12px;
+    text-decoration:none;
+}
+
+.logo i{
+    font-size:30px;
+  color: #2C3E50;
+}
+
+.logo-text{
+    font-family: 'Poppins', sans-serif;
+    font-size:28px;
+  color: #0F172A;
+    margin-top:5px;
+	
+}
+
+.logo-text span{
+      color: #4B5563;
+}
+
+nav{
+    display:flex;
+    align-items:center;
+    gap:30px;
+}
+
+nav ul{
+	display:flex;
+	list-style:none;
+	gap:28px;
+}
+
+nav a{
+	text-decoration:none;
+	color:#0F172A;
+	font-weight:600;
+	font-size:16px;
+	position:relative;
+	padding: 5px 0;
+	transition:all 0.4s ease;
+}
+
+nav a::after{
+	content:'';
+	position:absolute;
+	bottom:0;
+	left:0;
+	width:0;
+	height:2px;
+	background:#4B5563;
+	transition:width 0.3s ease;
+}
+
+nav a:hover::after{
+	width:100%;
+}
+
+
+
+.nav-buttons{
+	display:flex;
+	gap:12px;
+	margin-left:20px;
+}
+
+.btn{
+	display:inline-block;
+	padding:4px 15px;
+	border-radius:14px;
+	text-decoration:none;
+	font-weight:600;
+	cursor:pointer;
+	border:none;
+	font-size:16px;
+}
+
+.btn-primary{
+	background: #4B5563;
+	color:white;
+}
+
+.btn-primary:hover{
+	background:#0F172A;
+	transform:translateY(-3px);
+}
+
+.btn-secondary{
+	background:transparent;
+	color:#0F172A;
+	border:2px solid #4B5563;
+}
+
+.btn-secondary:hover{
+	background:rgba(111, 78, 55, 0.05);
+	transform:translateY(-3px);
+}
+
+
+/*Hero section*/
+.hero{
+    min-height:650px;
+    position:relative;
+    overflow:hidden;
+    padding-top:40px;
+	margin-bottom:0;
+}
+
+.hero::before{
+	content:'';
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	background:linear-gradient(135deg, #F5F7FA 0%, ##EDF2F7 50%);
+	z-index: -1;
+}
+
+.hero-content{
+	width:750px;
+	color:var(--text-light);
+	animation:fadInUp 1s ease-out;
+}
+
+.hero .container{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.hero-subtitle{
+	font-size:20px;
+	color:var(--text-color);
+	margin-top:0.1px;
+	margin-bottom:60px;
+	display:flex;
+	align-items:center;
+	gap:10px;
+}
+
+.hero-subtitle::before{
+	content:'';
+	width:50px;
+	height:2px;
+	background:var(--text-color);
+}
+
+.hero-title{
+	font-size:58px;
+	line-height:1.1;
+	margin-bottom:25px;
+	letter-spacing:0.5px;
+	color:#1F2937;
+}
+
+.hero-title span{
+	color:var(--text-color);
+	position:relative;
+}
+.hero-text{
+	font-size:16px;
+	margin-bottom:120px;
+	max-width:700px;
+
+}
+
+
+.hero-buttons{
+	display:flex;
+	gap:20px;
+    margin-top: 10px;
+}
+
+/*Services*/
+.services{
+    padding:0px 0;
+    background:#F5F7FA;
+}
+
+.section-header{
+    text-align:center;
+    margin-bottom:50px;
+}
+
+.section-subtitle{
+    font-size:20px;
+    color:#64748B;
+    margin-bottom:10px;
+}
+
+.section-title{
+    font-size:42px;
+    color:#1F2937;
+    margin-bottom:15px;
+    font-weight:700;
+}
+
+.section-desc{
+    font-size:18px;
+    color:#4B5563;
+}
+.service-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:30px;
+}
+.service-img{
+    width:100%;
+    height:220px;
+    overflow:hidden;
+	border-radius:20px;
+}
+.service-img img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:0.4s ease;
+}
+.service-card:hover .service-img img{
+    transform:scale(1.08);
+}
+
+.service-card{
+    background:#FFFFFF;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+    transition:0.3s ease;
+}
+
+.service-card:hover{
+
+    transform:translateY(-10px);
+    box-shadow:0 20px 40px rgba(0,0,0,0.15);
+
+}
+/*======================================
+        About Page
+======================================*/
+.service-info{
+
+    padding:25px;
+
+}
+
+.service-title{
+
+    font-size:26px;
+    color:#1F2937;
+    margin-bottom:15px;
+    font-weight:700;
+
+}
+
+.service-desc{
+
+    font-size:16px;
+    line-height:1.7;
+    color:#4B5563;
+
+}
+.about-text{
+    font-size:18px;
+    line-height:1.8;
+    color:#334155;
+    max-width:650px;
+    margin-bottom:50px;
+}
+
+.contact{
+
+    padding:80px 0;
+    background:#F5F7FA;
+
+}
+
+.contact-container{
+
+    display:flex;
+    justify-content:space-between;
+    gap:50px;
+    margin-top:50px;
+
+}
+
+
+.contact-info{
+
+    flex:1;
+    background:white;
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+
+}
+
+
+.contact-info h3{
+
+    font-size:28px;
+    margin-bottom:30px;
+    color:#1F2937;
+
+}
+
+
+.contact-info p{
+
+    margin-bottom:25px;
+    font-size:17px;
+    color:#4B5563;
+
+}
+
+
+.contact-info i{
+
+    color:#64748B;
+    margin-right:10px;
+
+}
+
+
+.contact-form{
+
+    flex:1;
+    background:white;
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+
+}
+
+
+.contact-form form{
+
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+
+}
+
+
+.contact-form input,
+.contact-form textarea{
+
+    padding:15px;
+    border:1px solid #D1D5DB;
+    border-radius:12px;
+    font-size:16px;
+    outline:none;
+
+}
+
+
+.contact-form input:focus,
+.contact-form textarea:focus{
+
+    border-color:#64748B;
+
+}
+
+
+.contact-form button{
+
+    width:180px;
+
+}
+
+/*Booking Page*/
+
+.booking-page{
+    padding:80px 0;
+    background:#F8F9FA;
+}
+
+
+/* Main booking card */
+
+.booking-card{
+    width:85%;
+    max-width:900px;
+    margin:0 auto;
+    padding:50px;
+    background:#FFFFFF;
+    border-radius:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+
+/* Page title */
+
+.booking-card h2{
+    text-align:center;
+    font-size:42px;
+    color:#1F2937;
+    margin-bottom:15px;
+}
+
+
+/* Small description */
+
+.booking-card p{
+    text-align:center;
+    color:#64748B;
+    font-size:17px;
+    margin-bottom:40px;
+}
+
+
+/* Sections inside the booking form */
+/* =========================================================
+                BOOKING INFORMATION
+========================================================= */
+
+.booking-details {
+
+    background: #FFFFFF;
+
+    border: 1px solid #E5E7EB;
+
+    border-radius: 12px;
+
+    padding: 25px;
+
+    margin-bottom: 35px;
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+
+}
+
+
+/* =========================================================
+                    SECTION HEADING
+========================================================= */
+
+.booking-details h3 {
+
+    font-size: 24px;
+
+    color: #374151;
+
+    margin-bottom: 10px;
+
+}
+
+
+.booking-details p {
+
+    color: #6B7280;
+
+    font-size: 15px;
+
+    line-height: 1.5;
+
+    margin-bottom: 25px;
+
+}
+
+
+/* =========================================================
+                        LABELS
+========================================================= */
+
+.booking-details label {
+
+    display: block;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    color: #334155;
+
+    margin-bottom: 8px;
+
+}
+
+
+/* =========================================================
+                    INPUTS AND SELECTS
+========================================================= */
+
+.booking-details input,
+.booking-details select,
+.booking-details textarea {
+
+    width: 100%;
+
+    padding: 14px;
+
+    margin-bottom: 22px;
+
+    border: 1px solid #D1D5DB;
+
+    border-radius: 8px;
+
+    font-size: 15px;
+
+    background: #FFFFFF;
+
+    color: #374151;
+
+    box-sizing: border-box;
+
+    transition: all 0.3s ease;
+
+}
+
+
+/* =========================================================
+                        FOCUS
+========================================================= */
+
+.booking-details input:focus,
+.booking-details select:focus,
+.booking-details textarea:focus {
+
+    outline: none;
+
+    border-color: #64748B;
+
+    box-shadow: 0 0 0 3px rgba(100,116,139,0.15);
+
+}
+
+
+/* =========================================================
+                    DATE INPUT
+========================================================= */
+
+.booking-details input[type="date"] {
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================================
+                    AVAILABILITY FIELDS
+========================================================= */
+
+.booking-details .availability-field {
+
+    margin-bottom: 5px;
+
+}
+
+
+/* =========================================================
+                    BOOKING ACTIONS
+========================================================= */
+
+.booking-actions {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    margin-top: 10px;
+
+    margin-bottom: 20px;
+
+}
+
+
+/* =========================================================
+                    BOOK NOW BUTTON
+========================================================= */
+
+.booking-actions .btn-primary {
+
+    padding: 14px 32px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #4B5563;
+
+    color: #FFFFFF;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+
+}
+
+
+.booking-actions .btn-primary:hover {
+
+    background: #374151;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+
+}
+
+
+.booking-actions .btn-primary:active {
+
+    transform: translateY(0);
+
+    box-shadow: none;
+
+}
+
+
+/* =========================================================
+                    HIDDEN ELEMENT
+========================================================= */
+
+.hidden {
+
+    display: none !important;
+
+}
+
+
+/* =========================================================
+                    RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .booking-details {
+
+        padding: 20px;
+
+    }
+
+    .booking-actions {
+
+        justify-content: stretch;
+
+    }
+
+    .booking-actions .btn-primary {
+
+        width: 100%;
+
+    }
+
+}
+/* Tracking Delivery Page*/
+
+
+.tracking-section{
+    padding: 140px 0 80px;
+    background-color: var(--background-color);
+}
+
+
+/**********************************/
+/* TRACKING FORM */
+/**********************************/
+
+.tracking-form{
+    background-color: var(--card-color);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    margin-bottom: 40px;
+}
+
+.tracking-form label{
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.tracking-form input{
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #D1D5DB;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+.tracking-form input:focus{
+    border-color: var(--primary-color);
+}
+
+
+/**********************************/
+/* TRACKING RESULTS */
+/**********************************/
+
+.tracking-results{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+
+/**********************************/
+/* TRACKING CARDS */
+/**********************************/
+
+.tracking-card{
+    background-color: var(--card-color);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+
+.tracking-card h3{
+    font-size: 24px;
+    color: var(--text-color);
+    margin-bottom: 25px;
+}
+
+
+.tracking-card p{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 15px 0;
+
+    border-bottom: 1px solid #E5E7EB;
+
+    color: var(--text-color);
+}
+
+
+.tracking-card p:last-child{
+    border-bottom: none;
+}
+
+
+.tracking-card strong{
+    font-weight: 600;
+}
+
+
+.tracking-card span{
+    font-weight: 500;
+    color: var(--secondary-color);
+}
+
+
+/**********************************/
+/* DELIVERY PROGRESS */
+/**********************************/
+
+.delivery-progress{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+.delivery-progress li{
+    padding: 18px;
+    margin-bottom: 15px;
+
+    background-color: #F8F9FA;
+    border-radius: 12px;
+
+    font-weight: 500;
+    color: var(--text-color);
+
+    transition: 0.3s ease;
+}
+
+
+.delivery-progress li:last-child{
+    margin-bottom: 0;
+}
+
+
+.delivery-progress li:hover{
+    transform: translateX(5px);
+}
+
+
+/**********************************/
+/* STATUS COLOURS (OPTIONAL) */
+/**********************************/
+
+.completed{
+    border-left: 6px solid #22C55E;
+}
+
+
+.current{
+    border-left: 6px solid #3B82F6;
+}
+
+
+.pending{
+    border-left: 6px solid #D1D5DB;
+}
+
+
+/**********************************/
+/* ADDITIONAL NOTES */
+/**********************************/
+
+#tracking-notes{
+    display: block;
+    width: 100%;
+    color: var(--text-color);
+    line-height: 1.7;
+}
+
+
+/**********************************/
+/* RESPONSIVE DESIGN */
+/**********************************/
+
+@media(max-width:768px){
+
+    .tracking-section{
+        padding: 120px 20px 60px;
+    }
+
+    .tracking-card{
+        padding: 25px;
+    }
+
+    .tracking-card p{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .tracking-card h3{
+        font-size: 22px;
+    }
+
+}
+/**********************************/
+/* BOOKING CONFIRMATION PAGE */
+/**********************************/
+
+.confirmation-section{
+    padding: 140px 0 80px;
+    background-color: var(--background-color);
+}
+
+
+/**********************************/
+/* CONFIRMATION CARD STYLING */
+/**********************************/
+
+.confirmation-card{
+    background-color: var(--card-color);
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+
+.confirmation-card h3{
+    font-size: 24px;
+    color: var(--text-color);
+    margin-bottom: 25px;
+}
+
+
+.confirmation-card p{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 15px 0;
+
+    border-bottom: 1px solid #E5E7EB;
+
+    color: var(--text-color);
+}
+
+
+.confirmation-card p:last-child{
+    border-bottom: none;
+}
+
+
+.confirmation-card strong{
+    font-weight: 600;
+}
+
+
+.confirmation-card span{
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+
+
+/**********************************/
+/* SUCCESS MESSAGE */
+/**********************************/
+
+.success-message{
+    text-align: center;
+    background-color: var(--card-color);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+
+.success-message i{
+    font-size: 70px;
+    color: #22C55E;
+    margin-bottom: 20px;
+}
+
+
+.success-message h2{
+    margin-bottom: 15px;
+    color: var(--text-color);
+}
+
+
+.success-message p{
+    line-height: 1.8;
+    color: var(--text-color);
+}
+
+
+/**********************************/
+/* TRACKING OPTIONS */
+/**********************************/
+
+.confirmation-buttons{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 25px;
+}
+
+
+/**********************************/
+/* BOOKING REFERENCE NUMBER */
+/**********************************/
+
+#booking-reference{
+    font-weight: 700;
+    color: var(--primary-color);
+    letter-spacing: 1px;
+}
+
+
+/**********************************/
+/* RESPONSIVE DESIGN */
+/**********************************/
+
+@media(max-width:768px){
+
+    .confirmation-section{
+        padding: 120px 20px 60px;
+    }
+
+
+    .confirmation-card{
+        padding: 25px;
+    }
+
+
+    .confirmation-card p{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+
+    .confirmation-buttons{
+        flex-direction: column;
+        align-items: center;
+    }
+
+
+    .success-message i{
+        font-size: 55px;
+    }
+
+}.hidden{
+    display:none;
+}
+
+#addressSection{
+    margin-top:20px;
+}
+
+#address{
+    width:100%;
+    min-height:120px;
+    padding:15px;
+    border:1px solid #ccc;
+    border-radius:12px;
+    resize:vertical;
+}/* ==========================
+   Driver Information Card
+   ========================== */
+
+.driver-info-card{
+
+    background:#FFFFFF;
+    padding:30px;
+    margin-top:30px;
+    border-radius:15px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+
+}
+
+.driver-info-card h2{
+
+    color:#1F2937;
+    margin-bottom:20px;
+    font-size:24px;
+
+}
+
+.driver-photo-placeholder{
+
+    width:120px;
+    height:120px;
+    border:2px dashed #CBD5E1;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 25px auto;
+    color:#64748B;
+    font-size:14px;
+    text-align:center;
+
+}
+
+.driver-details{
+
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+
+}
+
+.driver-details p{
+
+    margin:0;
+    padding:12px;
+    background:#F8FAFC;
+    border-radius:10px;
+    color:#334155;
+
+}
+
+.driver-details strong{
+
+    color:#1E293B;
+
+}.driver-photo{
+
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    display:block;
+    margin:0 auto 25px auto;
+
+}
+/* ========================================= */
+/* CUSTOMER INFORMATION */
+/* ========================================= */
+
+.customer-details{
+
+    background:#FFFFFF;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:12px;
+
+    padding:25px;
+
+    margin-bottom:35px;
+
+    box-shadow:0 4px 12px rgba(0,0,0,0.05);
+
+}
+
+.customer-details h3{
+
+    font-size:24px;
+
+    color:#374151;
+
+    margin-bottom:10px;
+
+}
+
+.customer-details p{
+
+    color:#6B7280;
+
+    margin-bottom:25px;
+
+    font-size:15px;
+
+    line-height:1.5;
+
+}
+
+.customer-details label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    margin-top:18px;
+
+    font-weight:600;
+
+    color:#374151;
+
+}
+
+.customer-details input {
+
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #D1D5DB;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+    box-sizing:border-box;
+
+    transition:0.3s ease;
+
+}
+
+.customer-details input:focus{
+
+    outline:none;
+
+    border-color:#64748B;
+
+    box-shadow:0 0 0 3px rgba(100,116,139,0.15);
+
+}
+/* ========================================= */
+/* CUSTOMER ADDRESS */
+/* ========================================= */
+
+.customer-details textarea {
+
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #D1D5DB;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+    font-family:inherit;
+
+    resize:vertical;
+
+    box-sizing:border-box;
+
+    transition:0.3s ease;
+
+}
+
+
+/* Customer Address Focus */
+
+.customer-details textarea:focus {
+
+    outline:none;
+
+    border-color:#64748B;
+
+    box-shadow:0 0 0 3px rgba(100,116,139,0.15);
+
+}
+/* =========================================================
+   VALIDATION ERROR MESSAGES
+========================================================= */
+
+.validation-message {
+    display: none;
+}
+
+.validation-message.error {
+    display: block;
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    border-left: 4px solid #DC2626;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 25px;
+}
+
+.validation-message.error ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.validation-message.error ul li {
+    color: #DC2626;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+}
+
+.validation-message.error ul li::before {
+    content: "\f06a";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    top: 6px;
+    font-size: 13px;
+}
+
+/* =========================================================
+   AVAILABILITY / SUMMARY SECTION
+========================================================= */
+
+.availability-section {
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 30px;
+    margin-top: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.availability-header h3 {
+    font-size: 22px;
+    color: #1F2937;
+    margin-bottom: 8px;
+}
+
+.availability-header p {
+    color: #6B7280;
+    font-size: 15px;
+    margin-bottom: 25px;
+}
+
+/* Service Result Card */
+
+.service-result {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.service-result h4 {
+    font-size: 16px;
+    color: #374151;
+    margin-bottom: 15px;
+}
+
+.service-result-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+}
+
+.service-result-item {
+    background: #F3F4F6;
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+}
+
+.service-result-item span {
+    display: block;
+    font-size: 12px;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.service-result-item strong {
+    display: block;
+    font-size: 18px;
+    color: #1F2937;
+}
+
+/* Booking Date & Collection Method Display */
+
+.booking-date-result {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+}
+
+.booking-date-result span {
+    font-size: 14px;
+    color: #6B7280;
+}
+
+.booking-date-result strong {
+    font-size: 16px;
+    color: #1F2937;
+}
+
+/* Machine & Slot Grid */
+
+.availability-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.availability-grid .form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+.availability-grid .form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #D1D5DB;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #FFFFFF;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.availability-grid .form-group select:focus {
+    outline: none;
+    border-color: #64748B;
+    box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.15);
+}
+
+/* Confirm Booking Button */
+
+.availability-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.availability-actions .btn-primary {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 10px;
+    background: #16A34A;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.availability-actions .btn-primary:hover {
+    background: #15803D;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(22, 163, 74, 0.25);
+}
+
+.availability-actions .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Booking Success */
+
+.booking-success {
+    background: #F0FDF4;
+    border: 1px solid #86EFAC;
+    border-left: 4px solid #16A34A;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 25px;
+    text-align: center;
+}
+
+.booking-success h3 {
+    color: #16A34A;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.booking-success p {
+    color: #374151;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .availability-section {
+        padding: 20px;
+    }
+
+    .service-result-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .availability-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .availability-actions {
+        justify-content: stretch;
+    }
+
+    .availability-actions .btn-primary {
+        width: 100%;
+    }
+}
