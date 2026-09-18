@@ -38,5 +38,5 @@ interface ServiceRepoInterface{
 }
 
 interface SystemManagerRepoInterface{
-    public function findManager(int $managerId): ?SystemManager; 
+    public function findManager(string $username): ?SystemManager; 
 }
