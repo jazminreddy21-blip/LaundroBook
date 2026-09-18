@@ -71,7 +71,7 @@
     <ul>
 
         <li>
-            <a href="adminDash.html" class="active">
+            <a href="adminDash.php" class="active">
                 Dashboard
             </a>
         </li>
@@ -113,7 +113,7 @@
         </li>
 
         <li>
-            <a href="/LaundroBook/Public/adminLogout.php">
+            <a href="../Public/adminLogout.php">
                 Logout
             </a>
         </li>

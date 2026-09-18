@@ -76,7 +76,7 @@
 
             session_destroy();
 
-            header('Location: Views/login.html');
+            header('Location: ../Views/login.php');
             exit;
         }
         public function requireAuthentication(){
