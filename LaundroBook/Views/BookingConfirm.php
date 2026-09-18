@@ -103,8 +103,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <div class="container header-container">
 
-<a href="index.html" class="logo"> <i class="fa-solid fa-shirt"></i>
-
+<a href="index.html" class="logo"><img src="../Images/logo.png" alt="LaundroBook Logo" class="logo-image">
 <div class="logo-text">
     Laundro<span>Book</span>
 </div>
