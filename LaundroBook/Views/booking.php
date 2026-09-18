@@ -61,7 +61,7 @@ if ($hasErrors) {
     <header>
         <div class="container header-container">
             <a href="index.html" class="logo">
-                <i class="fa-solid fa-shirt"></i>
+                <img src="../Images/logo.png" alt="LaundroBook Logo" class="logo-image">
                 <div class="logo-text">
                     Laundro<span>Book</span>
                 </div>

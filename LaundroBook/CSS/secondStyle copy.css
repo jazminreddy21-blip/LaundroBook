@@ -1,0 +1,594 @@
+/* ========================================= */
+/* RESET */
+/* ========================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    background:#F5F6F8;
+    min-height:100vh;
+	
+	color:#374151;
+}
+
+/* ========================================= */
+/* LOGIN PAGE */
+/* ========================================= */
+
+.login-container{
+    width:100%;
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:20px;
+}
+
+.login-card{
+    background:#FFFFFF;
+
+    width:100%;
+    max-width:450px;
+
+    padding:40px;
+
+    border-radius:18px;
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.08);
+
+    transition:0.3s ease;
+}
+
+.login-card:hover{
+    transform:translateY(-3px);
+}
+
+.login-header{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.login-header i{
+    font-size:55px;
+    color:#4B5563;
+    margin-bottom:15px;
+}
+
+.login-header h1{
+    color:#1F2937;
+    font-size:32px;
+    margin-bottom:8px;
+}
+
+.login-header p{
+    color:#6B7280;
+    font-size:15px;
+}
+
+/* ========================================= */
+/* FORM */
+/* ========================================= */
+
+.input-group{
+    margin-bottom:20px;
+}
+
+.input-group label{
+    display:block;
+    margin-bottom:8px;
+
+    color:#374151;
+    font-weight:600;
+    font-size:14px;
+}
+
+.input-group input{
+    width:100%;
+
+    padding:14px;
+
+    border:1px solid #D1D5DB;
+
+    border-radius:10px;
+
+    font-size:15px;
+
+    outline:none;
+
+    transition:0.3s;
+}
+
+.input-group input:focus{
+    border-color:#4B5563;
+
+    box-shadow:
+    0 0 0 3px rgba(75,85,99,0.15);
+}
+
+/* ========================================= */
+/* ERROR MESSAGE */
+/* ========================================= */
+
+.error-message{
+    min-height:20px;
+
+    color:#DC2626;
+
+    font-size:14px;
+
+    margin-bottom:15px;
+}
+
+/* ========================================= */
+/* LOGIN BUTTON */
+/* ========================================= */
+
+.login-btn{
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#4B5563;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:0.3s ease;
+}
+
+
+.login-btn:hover{
+    background:#374151;
+}
+
+/* ========================================= */
+/* RESPONSIVE */
+/* ========================================= */
+
+@media(max-width:500px){
+
+    .login-card{
+
+        padding:30px 25px;
+
+    }
+
+    .login-header h1{
+
+        font-size:28px;
+
+    }
+
+}
+/*Admin Dashboard*/
+/* ========================================= */
+/* HEADER */
+/* ========================================= */
+
+.admin-header{
+
+    background:#4B5563;
+    color:#FFFFFF;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:20px 40px;
+
+}
+
+.logo h1{
+
+    font-size:30px;
+    font-weight:700;
+
+}
+
+.admin-user p{
+
+    font-size:16px;
+    font-weight:500;
+
+}
+
+/* ========================================= */
+/* NAVIGATION */
+/* ========================================= */
+
+.admin-navbar{
+
+    background:#6B7280;
+
+}
+
+.admin-navbar ul{
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:35px;
+
+    list-style:none;
+
+    padding:15px;
+
+}
+
+.admin-navbar ul li a{
+
+    color:#FFFFFF;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    transition:0.3s;
+
+}
+
+.admin-navbar ul li a:hover{
+
+    color:#E5E7EB;
+
+}
+
+.admin-navbar ul li a.active{
+
+    border-bottom:3px solid #FFFFFF;
+
+    padding-bottom:5px;
+
+}
+
+/* ========================================= */
+/* MAIN CONTAINER */
+/* ========================================= */
+
+.dashboard-container{
+
+    width:90%;
+    max-width:1200px;
+
+    margin:40px auto;
+
+}
+
+/* ========================================= */
+/* WELCOME SECTION */
+/* ========================================= */
+
+.welcome-section{
+
+    background:#FFFFFF;
+
+    border-radius:12px;
+
+    padding:30px;
+
+    margin-bottom:35px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    box-shadow:0 4px 10px rgba(0,0,0,0.08);
+
+}
+
+.welcome-text h2{
+
+    font-size:30px;
+
+    color:#374151;
+
+    margin-bottom:10px;
+
+}
+
+.welcome-text p{
+
+    color:#6B7280;
+
+    line-height:1.6;
+
+    max-width:650px;
+
+}
+
+.welcome-date{
+
+    background:#F9FAFB;
+
+    border:1px solid #D1D5DB;
+
+    border-radius:10px;
+
+    padding:18px 25px;
+
+    text-align:center;
+
+    min-width:220px;
+
+}
+
+.welcome-date strong{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#374151;
+
+}
+
+#currentDate{
+
+    font-weight:600;
+
+    color:#6B7280;
+
+}/* ========================================= */
+/* DASHBOARD STATISTICS */
+/* ========================================= */
+
+.dashboard-stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(3, 1fr);
+
+    gap:25px;
+
+    margin-bottom:40px;
+
+}
+
+.stat-card{
+
+    background:#FFFFFF;
+
+    border:1px solid #D1D5DB;
+
+    border-radius:12px;
+
+    padding:30px 20px;
+
+    text-align:center;
+
+    transition:0.3s ease;
+
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+
+}
+
+.stat-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 6px 16px rgba(0,0,0,0.12);
+
+}
+
+.stat-card h3{
+
+    font-size:18px;
+
+    color:#4B5563;
+
+    margin-bottom:20px;
+
+}
+
+.stat-card h2{
+
+    font-size:40px;
+
+    color:#1F2937;
+
+    min-height:48px;
+
+    font-weight:700;
+
+}.stat-card h2:empty::after{
+
+    content:"--";
+
+    color:#9CA3AF;
+
+}/* ========================================= */
+/* TASKS REQUIRING ATTENTION */
+/* ========================================= */
+
+.notifications-section{
+
+    background:#FFFFFF;
+
+    border:1px solid #D1D5DB;
+
+    border-radius:12px;
+
+    padding:30px;
+
+    margin-bottom:40px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+
+}
+
+.section-heading{
+
+    margin-bottom:25px;
+
+}
+
+.section-heading h2{
+
+    color:#374151;
+
+    font-size:26px;
+
+    margin-bottom:8px;
+
+}
+
+.section-heading p{
+
+    color:#6B7280;
+
+    font-size:15px;
+
+}
+
+/* Backend will generate notification cards */
+
+#notificationContainer{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+/* Message shown when there are no notifications */
+
+#noNotificationsMessage{
+
+    color:#6B7280;
+
+    text-align:center;
+
+    padding:20px 0;
+
+    font-style:italic;
+
+}
+
+/* ========================================= */
+/* FOOTER */
+/* ========================================= */
+
+.admin-footer{
+
+    background:#4B5563;
+
+    color:#FFFFFF;
+
+    text-align:center;
+
+    padding:20px;
+
+    margin-top:40px;
+
+}
+
+.admin-footer p{
+
+    font-size:15px;
+
+}
+
+/* ========================================= */
+/* RESPONSIVE DESIGN */
+/* ========================================= */
+
+@media(max-width:992px){
+
+    .dashboard-stats{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .admin-header{
+
+        flex-direction:column;
+
+        gap:15px;
+
+        text-align:center;
+
+    }
+
+    .admin-navbar ul{
+
+        flex-wrap:wrap;
+
+        gap:15px;
+
+    }
+
+    .welcome-section{
+
+        flex-direction:column;
+
+        text-align:center;
+
+        gap:25px;
+
+    }
+
+    .welcome-date{
+
+        width:100%;
+
+    }
+
+    .dashboard-stats{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
+
+@media(max-width:480px){
+
+    .dashboard-container{
+
+        width:95%;
+
+    }
+
+    .logo h1{
+
+        font-size:24px;
+
+    }
+
+    .welcome-text h2{
+
+        font-size:24px;
+
+    }
+
+    .stat-card h2{
+
+        font-size:32px;
+
+    }
+
+}
