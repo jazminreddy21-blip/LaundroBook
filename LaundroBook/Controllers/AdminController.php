@@ -13,7 +13,7 @@
         }
 
         public function showLogin(){
-            require_once __DIR__ . '/../Views/login.html'; 
+            require_once __DIR__ . '/../Views/login.php'; 
         }
 
 
@@ -30,7 +30,7 @@
             if(empty($username) || empty($password)){
                 //technically, this should be 
                 $error = 'Username and password are required'; 
-                require_once __DIR__ . '/../Views/login.html'; 
+                require_once __DIR__ . '/../Views/login.php'; 
                 return;  
             }
             $manager = $this->systemManagerRepository->findManager($username);
@@ -40,7 +40,7 @@
             if($manager == null || !password_verify($password, $manager->getPasswordHash())){
                 $error = "Invalid email or password inserted"; 
                 //need to display errors to show that credentials were wrong
-                require_once __DIR__ . '/../Views/login.html'; 
+                require_once __DIR__ . '/../Views/login.php'; 
                 
                 return; 
             }
@@ -80,7 +80,7 @@
             exit;
         }
         public function requireAuthentication(){
-            if(isset($_SESSION['manager_id'])){
+            if(!isset($_SESSION['manager_id'])){
                 header('Location: /login.html'); 
                 exit; 
             }

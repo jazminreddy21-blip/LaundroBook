@@ -11,7 +11,8 @@ $repository = new SystemManagerRepo();
 
 $controller = new AdminController($repository);
 
-$controller->login();
+$admin = $controller->login();
+
 
 
 

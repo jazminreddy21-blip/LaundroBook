@@ -56,10 +56,11 @@
 
                 </div>
 
-                <div class="login-error">
-
+                <?php if(!empty($error)) : ?>
+                <div class="login-error visible">
+                    <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8')?>
                 </div>
-
+                <?php endif;?>
                 <button type="submit" class="login-btn">
 
                     <i class="fa-solid fa-right-to-bracket"></i>
