@@ -54,8 +54,8 @@ class AvailabilityController
         return $d && $d->format($format) === $date;
     }
 }
-
-if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['action']) && $_POST['action'] === 'check_availability') {
+ 
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && basename($_SERVER['SCRIPT_NAME']) === 'availabilityController.php') {
     $controller = new AvailabilityController();
     $controller->checkAvailability();
 }

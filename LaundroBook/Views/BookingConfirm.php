@@ -115,7 +115,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <ul>
 
-<li><a href="index.html">Home</a></li> <li><a href="about.html">About</a></li> <li><a href="contact.html">Contact</a></li>
+<li><a href="index.html">Home</a></li> <li><a href="about.html">About</a></li> <li><a href="contact.php">Contact</a></li>
 
 </ul>
 

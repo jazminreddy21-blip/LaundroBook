@@ -71,7 +71,7 @@ if ($hasErrors) {
                 <ul>
                     <li><a href="index.html">Home</a></li>
                     <li><a href="about.html">About</a></li>
-                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="contact.php">Contact</a></li>
                 </ul>
             </nav>
 
@@ -95,7 +95,7 @@ if ($hasErrors) {
             </div>
 
             <!-- CHANGED: was action="#", now posts to the real controller/testing controller -->
-            <form action="../tests/Mock confirm booking.php" method="POST" class="booking-form" id="bookingForm" novalidate>
+            <form action="../Controllers/bookingController.php" method="POST" class="booking-form" id="bookingForm" novalidate>
 
                 <!-- CHANGED: class/contents now set from $_SESSION['booking_errors']
                      on page load, in addition to being set by booking.js on the
@@ -172,8 +172,8 @@ if ($hasErrors) {
                     <label for="collection_method">Collection Method</label>
                     <select name="collection_method" id="collection_method" required>
                         <option value="">Select Collection Method</option>
-                        <option value="pickup">Self Pickup</option>
-                        <option value="delivery">Home Delivery</option>
+                        <option value="pickup">Self Drop off and Pickup</option>
+                        <option value="delivery">Home Pickup and Delivery</option>
                     </select>
 
                     <div id="addressSection" class="hidden">

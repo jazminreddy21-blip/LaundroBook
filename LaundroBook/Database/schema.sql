@@ -36,7 +36,8 @@ CREATE TABLE `booking` (
   `booking_reference` varchar(50) NOT NULL,
   `booking_date` date NOT NULL,
   `total_price` decimal(10,2) NOT NULL,
-  `status` varchar(50) NOT NULL
+  `status` varchar(50) NOT NULL,
+  `active_combo_key` varchar(100) GENERATED ALWAYS AS (CASE WHEN `status` != 'cancelled' THEN CONCAT(`machine_id`, '-', `slot_id`, '-', `booking_date`) ELSE NULL END) STORED
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -163,6 +164,7 @@ CREATE TABLE `system_manager` (
 ALTER TABLE `booking`
   ADD PRIMARY KEY (`booking_id`),
   ADD UNIQUE KEY `booking_reference` (`booking_reference`),
+  ADD UNIQUE KEY `unq_active_combo` (`active_combo_key`),
   ADD KEY `customer_id` (`customer_id`),
   ADD KEY `machine_id` (`machine_id`),
   ADD KEY `manager_id` (`manager_id`),

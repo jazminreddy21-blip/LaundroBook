@@ -1,0 +1,7 @@
+# Real SMTP credentials - never commit this. Copy Config/EmailConfig.example.php
+# to Config/EmailConfig.php and fill in real values locally instead.
+Config/EmailConfig.php
+
+# Temporary diagnostic script used only for testing email in isolation -
+# not part of the real project, safe to ignore if it still exists locally.
+tests/test-email.php

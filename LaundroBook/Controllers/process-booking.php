@@ -1,14 +1,15 @@
 <?php
- 
+
 // This code is used to call the booking controller and display
 // the errors found within the errors array in the booking controller.
 
 
 require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
+require_once __DIR__ . '/../Interfaces/EmailServiceInterface.php';
 require_once __DIR__ . '/../Services/AvailabilityService.php';
 require_once __DIR__ . '/../Controllers/bookingController.php';
 require_once __DIR__ . '/../Services/BookingService.php';
- 
+
 class StubMachineRepo implements MachineRepoInterface
 {
     public function getAvailableMachines(): array { return []; }
@@ -16,17 +17,17 @@ class StubMachineRepo implements MachineRepoInterface
     public function updateStatus(int $machineId, string $status): bool { return true; }
     public function machineExists(int $machineId): bool { return true; }
 }
- 
+
 class StubSlotRepo implements SlotRepoInterface
 {
     public function getActiveSlots(): array { return []; }
     public function getSlotById(int $slotId): ?array { return null; }
 }
- 
+
 class StubCustomerRepo implements CustomerRepoInterface
 {
     public function findByEmail(string $email): ?Customer { return null; }
-    public function createCustomer(string $name, string $email, string $phone, string $address): Customer
+    public function createCustomer(string $name, string $email, string $phone, ?string $address): Customer
     {
         return new Customer(1, $name, $email, $phone, $address);
     }
@@ -35,31 +36,54 @@ class StubCustomerRepo implements CustomerRepoInterface
         return new Customer(1, $data['customer_name'], $data['customer_email'], $data['customer_phone'], $data['delivery_address'] ?? '');
     }
 }
- 
+
 class StubBookingRepo implements BookingRepoInterface
 {
     public function insert(int $customerId, int $managerId, array $service, array $data): int { return 1; }
     public function getBookedCombosForDate(string $bookingDate): array { return []; }
     public function getPrimaryManager(): array { return ['manager_id' => 1]; }
     public function findBooking(int $bookingId): ?array { return null; }
+
+    // ADDED: BookingRepoInterface now requires these two methods, used
+    // by AvailabilityService::releaseExpiredMachines() for the
+    // Polling-Based Machine Release fix. Nothing "past end time" in
+    // this stub, so both are effectively no-ops here.
+    public function getBookingsPastEndTime(): array { return []; }
+    public function markCompleted(int $bookingId): bool { return true; }
 }
- 
+
 class StubServiceRepo implements ServiceRepoInterface
 {
     public function findByType(string $washType, string $loadType): ?array { return null; }
     public function getServiceById(int $serviceId): ?array { return null; }
 }
- 
+
+// ADDED: BookingService now requires an EmailServiceInterface as its
+// 7th constructor argument, used to send the confirmation email after
+// a successful booking. This stub never touches real SMTP, matching
+// the same pattern as tests/Mock confirm booking.php.
+class StubEmailService implements EmailServiceInterface
+{
+    public function sendBookingConfirmation(
+        string $customerEmail, string $bookingReference, array $service,
+        string $bookingDate, string $machineName, string $slotLabel,
+        ?string $secondSlotLabel
+    ): bool {
+        return true;
+    }
+}
+
 $machineRepo = new StubMachineRepo();
 $slotRepo = new StubSlotRepo();
 $customerRepo = new StubCustomerRepo();
 $bookingRepo = new StubBookingRepo();
 $serviceRepo = new StubServiceRepo();
- 
+$emailService = new StubEmailService();
+
 $availability = new AvailabilityService($machineRepo, $slotRepo, $bookingRepo);
-$bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability);
+$bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability, $emailService);
 $controller = new bookingController($bookingService);
- 
+
 if ($controller->validate_input()) {
     echo "<h2>Validation passed!</h2>";
     echo "<pre>";

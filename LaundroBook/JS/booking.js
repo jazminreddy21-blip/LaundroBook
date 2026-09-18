@@ -36,9 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // filtering (further down) has something to filter against.
     let availableCombos = [];
 
-    // ADDED: TEST MODE SWITCH, point this at the real AvailabilityController.php
-    // once the backend is connected. Swap this one line only.
-    const AVAILABILITY_ENDPOINT = "../tests/test.php";
+    const AVAILABILITY_ENDPOINT = "../Controllers/availabilityController.php";
 
     async function loadPricingData(){
         if(pricingData) return pricingData;
@@ -96,6 +94,21 @@ document.addEventListener("DOMContentLoaded", function () {
     // loadAvailability() returned.
     function populateAvailability(combos) {
         availableCombos = combos;
+
+        if (combos.length === 0) {
+            //Select tags get disabled when there are no active combos
+            machineSelect.innerHTML = '<option value="">No machines available for this date</option>';
+            slotSelect.innerHTML = '<option value="">No time slots available for this date</option>';
+            machineSelect.disabled = true;
+            slotSelect.disabled = true;
+            return;
+        }
+
+        // Re-enable in case a previous search (different date/service)
+        // came back empty and disabled these, this search has real
+        // results, so the selects need to be usable again.
+        machineSelect.disabled = false;
+        slotSelect.disabled = false;
 
         machineSelect.innerHTML = '<option value="">Select an available machine</option>';
         slotSelect.innerHTML = '<option value="">Select an available time slot</option>';
@@ -258,7 +271,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 loadType.charAt(0).toUpperCase() + loadType.slice(1);
             document.getElementById("selectedBookingDate").textContent = bookingDate;
             document.getElementById("selectedCollectionMethod").textContent =
-                collection === "pickup" ? "Self Pickup" : "Home Delivery";
+                collectionMethod.options[collectionMethod.selectedIndex].text;
 
             // contrary to the comment that was here, we're using JS 
             // to populate the booking summary, instead of using the db

@@ -96,7 +96,7 @@ class BookingRepo implements BookingRepoInterface{
  
     // Every booking needs a manager_id, assuming that there is one
     // manager in the system right now, so this just grabs whichever
-    // row happens to exist, function is not yet used.
+    // row happens to exist.
     public function getPrimaryManager(): array
     {
         $result = $this->db->query("SELECT manager_id FROM system_manager LIMIT 1");
@@ -115,6 +115,67 @@ class BookingRepo implements BookingRepoInterface{
         $stmt->close();
  
         return $result ?: null;
+    }
+
+    /*This is the fix for the Polling-Based Machine Release weakness
+    (Analysis Phase Section 3.5), AND the fix for the Heavy Wash
+    timing gap flagged in 4.2/4.6 - a Heavy Wash occupies two
+    consecutive slots as two separate booking rows, and the earlier
+    version of this method released a machine the moment the FIRST
+    row's slot ended, even while the second row (and the actual
+    wash) was still genuinely running.
+    
+    Both rows of one Heavy Wash booking share the same customer_id,
+    machine_id, booking_date, and service_id - there's no separate
+    grouping column, since each row gets its own independent
+    booking_reference (see insert() above). That shared combination
+    is used here as the "time block" key: a row is only considered
+    released if NO sibling row sharing that same key is still
+    Pending with a slot that hasn't ended yet. For a standard
+    (single-slot) booking, a row has no siblings, so this behaves
+    exactly as before.
+    */
+
+    // The date reconstruction matters: slot.end_time only stores a
+    // time-of-day, not which date it applies to - a slot labelled
+    // "09:30 - 10:15" is reused every day. Comparing it against NOW()
+    // directly would be meaningless for a booking on a different date
+    // than today. CONCAT(b.booking_date, ' ', TIME(s.end_time)) builds
+    // the real moment this specific booking actually ends, then
+    // compares THAT against NOW() - not the bare slot time on its own.
+    public function getBookingsPastEndTime(): array
+    {
+        $sql = "SELECT b.booking_id, b.machine_id
+                FROM booking b
+                JOIN slot s ON b.slot_id = s.slot_id
+                WHERE b.status = 'Pending'
+                  AND CONCAT(b.booking_date, ' ', TIME(s.end_time)) <= NOW()
+                  AND NOT EXISTS (
+                      SELECT 1
+                      FROM booking b2
+                      JOIN slot s2 ON b2.slot_id = s2.slot_id
+                      WHERE b2.customer_id = b.customer_id
+                        AND b2.machine_id = b.machine_id
+                        AND b2.booking_date = b.booking_date
+                        AND b2.service_id = b.service_id
+                        AND b2.status = 'Pending'
+                        AND CONCAT(b2.booking_date, ' ', TIME(s2.end_time)) > NOW()
+                  )";
+
+        $result = $this->db->query($sql);
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    // Marks a booking completed once its slot has ended - called
+    // alongside flipping the machine back to available, so the two
+    // stay in sync with each other.
+    public function markCompleted(int $bookingId): bool
+    {
+        $sql = "UPDATE booking SET status = 'completed' WHERE booking_id = ?";
+        $stmt = $this->run($sql, 'i', [$bookingId]);
+        $success = $stmt->affected_rows >= 0;
+        $stmt->close();
+        return $success;
     }
 
 }
