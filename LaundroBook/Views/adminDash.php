@@ -1,6 +1,13 @@
 <?php
     if(session_status() == PHP_SESSION_NONE) {
         session_start();
+
+        //block access if it's directly from url without logging in
+        if(!isset($_SESSION['manager_id'])){
+            header('Location: login.php'); 
+            exit; 
+        }
+
     }
 ?>
 <!DOCTYPE html>

@@ -19,7 +19,7 @@
 
         public function login() {
 
-            if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+            if($_SERVER['REQUEST_METHOD'] !== 'POST' ){
                 $this->showLogin(); 
                 return; 
             }
@@ -49,12 +49,16 @@
             
             //starting a session based on the manager id
             $_SESSION['manager_id'] = $manager->getId();
+
+            echo $manager->getId(); 
+
             
             
             //preventing resubmission when dashboard is refreshed
             header('Location: ../Views/adminDash.php'); 
             exit; 
         }
+        
 
 
         public function logout(){
