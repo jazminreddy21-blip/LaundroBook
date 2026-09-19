@@ -42,36 +42,12 @@
 
     </div>
 
-    <!-- =======================================================
-         BACKEND INTEGRATION
-
-         Data Source:
-         Admin Table
-
-         Purpose:
-         Display the name of the currently logged-in administrator.
-
-         Expected Output:
-         Administrator Name
-
-         Example:
-         Welcome, Jazmin
-
-         Insert the value inside the element below.
-
-    ======================================================== -->
-
     <div class="admin-user">
 
-        <p id="adminName" name="adminName"></p>
-
+        <p id="adminName" name="adminName"><?= htmlspecialchars($_SESSION['username']?? 'Admin');?></p>
     </div>
 
 </header>
-
-<!------------------------------------------------------------
-                    NAVIGATION BAR
-------------------------------------------------------------->
 
 <nav class="admin-navbar">
 
@@ -158,28 +134,11 @@
 
     </div>
 
-    <!-- =======================================================
-         BACKEND INTEGRATION
-
-         Data Source:
-         System Date
-
-         Purpose:
-         Display today's date.
-
-         Expected Output:
-         Saturday, 1 August 2026
-
-         Display the value inside the element below.
-
-    ======================================================== -->
-
     <div class="welcome-date">
 
         <p>
 
-            <strong>Today's Date:</strong>
-
+            <strong>Today's Date: <?=htmlspecialchars(date("F j, Y"));?></strong>
             <span id="currentDate"
                   name="currentDate">
 

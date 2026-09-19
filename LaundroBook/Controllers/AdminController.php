@@ -49,8 +49,8 @@
             
             //starting a session based on the manager id
             $_SESSION['manager_id'] = $manager->getId();
+            $_SESSION['username'] = $manager->getUsername(); 
 
-            echo $manager->getId(); 
 
             
             
