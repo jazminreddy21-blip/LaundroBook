@@ -14,7 +14,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
     <!-- Admin CSS -->
-    <link rel="stylesheet" href="../CSS/secondStyle.css">
+    <link rel="stylesheet" href="../../CSS/secondStyle.css">
 
 </head>
 
