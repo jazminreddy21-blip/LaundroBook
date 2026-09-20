@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LaundroBook Admin Login</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="../CSS/secondStyle.css">
+
+</head>
+
+<body class="login-page">
+
+    <!-- ========================================= -->
+    <!-- LOGIN CONTAINER -->
+    <!-- ========================================= -->
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <div class="login-header">
+
+                <i class="fa-solid fa-soap"></i>
+
+                <h1>LaundroBook</h1>
+
+                <p>Administrator Portal</p>
+
+            </div>
+
+            <!-- ========================================= -->
+            <!-- LOGIN FORM -->
+            <!-- ========================================= -->
+
+            <!-- Backend Developer:
+                 Form should validate admin credentials
+                 against the Admin table in the database.
+
+                 If successful:
+                 Redirect to dashboard.html
+
+                 If unsuccessful:
+                 Display login error message.
+            -->
+
+            <form action="#" method="POST">
+
+                <div class="form-group">
+
+                    <label>Email Address</label>
+
+                    <!-- Backend Developer:
+                         Compare against admin email -->
+
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="Enter admin email"
+                        required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Password</label>
+
+                    <!-- Backend Developer:
+                         Verify password hash -->
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Enter password"
+                        required>
+
+                </div>
+
+                <!-- Backend Developer:
+                     Display authentication errors here -->
+
+                <div class="login-error">
+
+                    <!-- Example:
+                    Invalid email or password.
+                    -->
+
+                </div>
+
+                <button type="submit" class="login-btn">
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+
+                    Login
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
+<!--
+Backend Developer Notes:
+
+1. Use password hashing.
+2. Do NOT store plain text passwords.
+3. Create admin session after successful login.
+4. Prevent access to dashboard pages without session.
+5. Redirect unauthenticated users to login page.
+-->
