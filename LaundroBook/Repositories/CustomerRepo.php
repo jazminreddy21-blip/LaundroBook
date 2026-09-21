@@ -50,7 +50,7 @@ class CustomerRepo implements CustomerRepoInterface
 
     // Inserts a brand new customer row and hands back a Customer object
     // built with the ID MySQL generated for it.
-    public function createCustomer(string $name, string $email, string $phone, string $address): Customer
+    public function createCustomer(string $name, string $email, string $phone, ?string $address): Customer
     {
         $sql = "INSERT INTO customer (customer_name, customer_email, customer_phone, address)
                 VALUES (?, ?, ?, ?)";

@@ -30,6 +30,7 @@ interface BookingRepoInterface{
     public function getBookedCombosForDate(string $bookingDate): array;
     public function getPrimaryManager(): array;
     public function findBooking(int $bookingId): ?array;
+    public function todaysBookings(): ?array; 
 }
 
 interface ServiceRepoInterface{

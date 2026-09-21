@@ -38,6 +38,7 @@ if ($hasErrors) {
     }
     $errorsHtml .= '</ul>';
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -95,7 +96,7 @@ if ($hasErrors) {
             </div>
 
             <!-- CHANGED: was action="#", now posts to the real controller/testing controller -->
-            <form action="../tests/Mock confirm booking.php" method="POST" class="booking-form" id="bookingForm" novalidate>
+            <form action="../Controllers/bookingController.php" method="POST" class="booking-form" id="bookingForm" novalidate>
 
                 <!-- CHANGED: class/contents now set from $_SESSION['booking_errors']
                      on page load, in addition to being set by booking.js on the

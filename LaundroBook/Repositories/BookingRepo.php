@@ -117,4 +117,21 @@ class BookingRepo implements BookingRepoInterface{
         return $result ?: null;
     }
 
+
+    //I assume that a function such as getToday's booking will be
+    //in this repo and that includes pending bookings
+    public function todaysBookings(): ?array
+    {
+        $sql = "SELECT * FROM booking WHERE booking_date = ?";
+
+        $stmt = $this->run($sql, 's', [date('Y-m-d')]);
+        $result = $stmt->getresult()->fetch_assoc(); 
+        $stmt->close(); 
+
+        if($result){
+            return null; 
+        }
+
+        return $result ?: null; 
+    } 
 }
