@@ -508,12 +508,246 @@ body{
 }
 
 /* ========================================= */
+/* MANAGEMENT PAGES (Bookings, Pickups,      */
+/* Deliveries, Machines, Customers, Reports) */
+/* ========================================= */
+
+.page-heading{
+    background:#FFFFFF;
+    border:1px solid #D1D5DB;
+    border-radius:12px;
+    padding:25px 30px;
+    margin-bottom:30px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+
+.page-heading h2{
+    color:#374151;
+    font-size:26px;
+    margin-bottom:6px;
+}
+
+.page-heading p{
+    color:#6B7280;
+    font-size:15px;
+}
+
+.filter-section{
+    background:#FFFFFF;
+    border:1px solid #D1D5DB;
+    border-radius:12px;
+    padding:20px 25px;
+    margin-bottom:25px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+
+.filter-section form{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    gap:18px;
+}
+
+.filter-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.filter-group label{
+    font-size:13px;
+    color:#4B5563;
+    font-weight:600;
+}
+
+.filter-group input,
+.filter-group select{
+    padding:9px 12px;
+    border:1px solid #D1D5DB;
+    border-radius:8px;
+    font-size:14px;
+    min-width:180px;
+}
+
+.filter-section button{
+    padding:10px 22px;
+    background:#374151;
+    color:#FFFFFF;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+    transition:0.2s ease;
+}
+
+.filter-section button:hover{
+    background:#1F2937;
+}
+
+.table-section{
+    background:#FFFFFF;
+    border:1px solid #D1D5DB;
+    border-radius:12px;
+    padding:10px 15px;
+    margin-bottom:30px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    overflow-x:auto;
+}
+
+.admin-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+}
+
+.admin-table th{
+    text-align:left;
+    padding:14px 12px;
+    color:#4B5563;
+    border-bottom:2px solid #E5E7EB;
+    white-space:nowrap;
+}
+
+.admin-table td{
+    padding:14px 12px;
+    border-bottom:1px solid #E5E7EB;
+    color:#374151;
+    vertical-align:middle;
+}
+
+.admin-table tbody tr:hover{
+    background:#F9FAFB;
+}
+
+.empty-row td{
+    text-align:center;
+    color:#9CA3AF;
+    padding:30px 0;
+    font-style:italic;
+}
+
+/* Status / result banners for redirects like ?updated=1 or ?error=... */
+.page-banner{
+    padding:14px 20px;
+    border-radius:8px;
+    margin-bottom:20px;
+    font-size:14px;
+    font-weight:600;
+}
+
+.page-banner.success{
+    background:#DCFCE7;
+    color:#166534;
+    border:1px solid #86EFAC;
+}
+
+.page-banner.error{
+    background:#FEE2E2;
+    color:#991B1B;
+    border:1px solid #FCA5A5;
+}
+
+/* Status pills used across bookings/pickups/deliveries/machines */
+.status-pill{
+    display:inline-block;
+    padding:5px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+    text-transform:capitalize;
+    white-space:nowrap;
+}
+
+.status-pending{ background:#FEF3C7; color:#92400E; }
+.status-in_progress{ background:#DBEAFE; color:#1E40AF; }
+.status-completed{ background:#DCFCE7; color:#166534; }
+.status-cancelled{ background:#FEE2E2; color:#991B1B; }
+.status-available{ background:#DCFCE7; color:#166534; }
+.status-in_use{ background:#DBEAFE; color:#1E40AF; }
+.status-under_maintenance{ background:#FEE2E2; color:#991B1B; }
+
+.action-form{
+    display:inline-flex;
+    gap:6px;
+    align-items:center;
+}
+
+.action-form select{
+    padding:6px 8px;
+    border:1px solid #D1D5DB;
+    border-radius:6px;
+    font-size:13px;
+}
+
+.action-btn{
+    padding:6px 14px;
+    border:none;
+    border-radius:6px;
+    background:#374151;
+    color:#FFFFFF;
+    font-size:13px;
+    cursor:pointer;
+    font-weight:600;
+    transition:0.2s ease;
+}
+
+.action-btn:hover{
+    background:#1F2937;
+}
+
+.action-btn.danger{
+    background:#DC2626;
+}
+
+.action-btn.danger:hover{
+    background:#B91C1C;
+}
+
+/* Notification cards on the dashboard */
+.notification-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:16px 20px;
+    border-radius:10px;
+    text-decoration:none;
+    background:#FEF3C7;
+    color:#92400E;
+    font-size:14px;
+    font-weight:600;
+    transition:0.2s ease;
+}
+
+.notification-card:hover{
+    filter:brightness(0.97);
+}
+
+.notification-card i{
+    font-size:18px;
+}
+
+/* Simple summary cards used on the Reports page */
+.report-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:25px;
+    margin-bottom:30px;
+}
+
+/* ========================================= */
 /* RESPONSIVE DESIGN */
 /* ========================================= */
 
 @media(max-width:992px){
 
     .dashboard-stats{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+    .report-grid{
 
         grid-template-columns:repeat(2,1fr);
 
@@ -560,6 +794,27 @@ body{
     .dashboard-stats{
 
         grid-template-columns:1fr;
+
+    }
+
+    .report-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .filter-section form{
+
+        flex-direction:column;
+        align-items:stretch;
+
+    }
+
+    .filter-group input,
+    .filter-group select{
+
+        min-width:0;
+        width:100%;
 
     }
 
