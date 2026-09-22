@@ -128,4 +128,10 @@ class BookingService
             'second_slot_label' => $secondSlot['slot_label'] ?? null,
         ];
     }
+
+    public function getTodaysBookings(): int{
+
+        return $this->bookingRepo->todaysBookings();
+    }
+
 }

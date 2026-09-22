@@ -7,10 +7,13 @@
         //once validated successfully, then we can route the request to the system manager repo
         //which will then fetch the admin from the database and return a result if it fails
         private SystemManagerRepoInterface $systemManagerRepository; 
-
-        public function __construct(SystemManagerRepoInterface $systemManagerRepository){
+        //private BookingService $bookingService;
+        public function __construct(SystemManagerRepoInterface $systemManagerRepository, 
+        //BookingService $bookingService
+        ){
             $this->systemManagerRepository = $systemManagerRepository;  
-        }
+            //$this->bookingService = $bookingService;
+            }
 
         public function showLogin(){
             require_once __DIR__ . '/../Views/login.php'; 
@@ -89,6 +92,14 @@
                 exit; 
             }
         }
+/*
+        public function dashboard(): void
+        {
+            $todaysBookings = $this->bookingService->getTodaysBookings(); 
+
+            require_once __DIR__ . '../Views/adminDash.php'; 
+        }
+            */
     }
 
 

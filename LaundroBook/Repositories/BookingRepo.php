@@ -120,18 +120,16 @@ class BookingRepo implements BookingRepoInterface{
 
     //I assume that a function such as getToday's booking will be
     //in this repo and that includes pending bookings
-    public function todaysBookings(): ?array
+    public function todaysBookings(): int
     {
-        $sql = "SELECT * FROM booking WHERE booking_date = ?";
+        //this query is minimal so it simply returns the number, not
+        //the actual bookings
+        $sql = "SELECT COUNT(*) as total FROM booking WHERE booking_date = ?";
 
         $stmt = $this->run($sql, 's', [date('Y-m-d')]);
         $result = $stmt->getresult()->fetch_assoc(); 
         $stmt->close(); 
 
-        if($result){
-            return null; 
-        }
-
-        return $result ?: null; 
+        return (int)($result['total'] ?? 0); 
     } 
 }

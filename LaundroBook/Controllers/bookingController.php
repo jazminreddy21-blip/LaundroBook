@@ -223,6 +223,7 @@ class bookingController{
     public function getData(){
         return $this->data;
     }
+    
 
     /*
         The actual write endpoint, what "Confirm Booking" calls.
