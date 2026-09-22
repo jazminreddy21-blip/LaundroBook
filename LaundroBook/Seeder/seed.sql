@@ -1,8 +1,10 @@
 -- laundrobook_seed_data.sql
 
--- One manager
+-- Login credentials:
+--   Username: admin
+--   Password: Test@123
 INSERT INTO system_manager (manager_username, password_hash) VALUES
-('admin', '$2y$10$placeholderhashfortestingonly');
+('admin', '$2y$10$qmpdS.q9RvrDds9CQ/PjwO6N0JB7jnd0P9B2qGAUTRGIL5TpL21ie');
 
 -- Machines
 INSERT INTO machine (manager_id, machine_name, machine_status) VALUES
