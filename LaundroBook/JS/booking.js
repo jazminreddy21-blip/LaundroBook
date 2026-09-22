@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ADDED: TEST MODE SWITCH, point this at the real AvailabilityController.php
     // once the backend is connected. Swap this one line only.
-    const AVAILABILITY_ENDPOINT = "../tests/test.php";
+    const AVAILABILITY_ENDPOINT = "../Controllers/availabilityController.php";
 
     async function loadPricingData(){
         if(pricingData) return pricingData;
@@ -73,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: new URLSearchParams({
+                    action: "check_availability", 
                     booking_date: bookingDate,
                     duration_slots: durationSlots
                 })
