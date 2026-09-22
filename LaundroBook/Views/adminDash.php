@@ -1,14 +1,20 @@
 <?php
     if(session_status() == PHP_SESSION_NONE) {
         session_start();
-
-        //block access if it's directly from url without logging in
-        if(!isset($_SESSION['manager_id'])){
-            header('Location: login.php'); 
-            exit; 
-        }
-
     }
+
+    require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
+    require_once __DIR__ . '/../Repositories/SystemManagerRepo.php';
+    require_once __DIR__ . '/../Controllers/AdminController.php';
+
+    $controller = new AdminController(new SystemManagerRepo());
+
+    //block access if it's directly from url without logging in
+    $controller->requireAuthentication();
+
+    $dashboard = $controller->getDashboardData();
+    $stats = $dashboard['stats'];
+    $notifications = $dashboard['notifications'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,37 +66,37 @@
         </li>
 
         <li>
-            <a href="bookingManagement.html">
+            <a href="bookingManagement.php">
                 Bookings
             </a>
         </li>
 
         <li>
-            <a href="pickupManagement.html">
+            <a href="pickupManagement.php">
                 Pickups
             </a>
         </li>
 
         <li>
-            <a href="deliveryManagement.html">
+            <a href="deliveryManagement.php">
                 Deliveries
             </a>
         </li>
 
         <li>
-            <a href="machineManagement.html">
+            <a href="machineManagement.php">
                 Machines
             </a>
         </li>
 
         <li>
-            <a href="customerManagement.html">
+            <a href="customerManagement.php">
                 Customers
             </a>
         </li>
 
         <li>
-            <a href="reports.html">
+            <a href="reports.php">
                 Reports
             </a>
         </li>
@@ -176,7 +182,7 @@
         <h3>Today's Bookings</h3>
 
         <h2 id="todayBookings"
-            name="todayBookings"></h2>
+            name="todayBookings"><?= (int)$stats['today_bookings']; ?></h2>
 
     </div>
 
@@ -201,7 +207,7 @@
         <h3>Pending Bookings</h3>
 
         <h2 id="pendingBookings"
-            name="pendingBookings"></h2>
+            name="pendingBookings"><?= (int)$stats['pending_bookings']; ?></h2>
 
     </div>
 
@@ -226,7 +232,7 @@
         <h3>Today's Pickups</h3>
 
         <h2 id="todayPickups"
-            name="todayPickups"></h2>
+            name="todayPickups"><?= (int)$stats['today_pickups']; ?></h2>
 
     </div>
 
@@ -251,7 +257,7 @@
         <h3>Today's Deliveries</h3>
 
         <h2 id="todayDeliveries"
-            name="todayDeliveries"></h2>
+            name="todayDeliveries"><?= (int)$stats['today_deliveries']; ?></h2>
 
     </div>
 
@@ -276,7 +282,7 @@
         <h3>Available Machines</h3>
 
         <h2 id="availableMachines"
-            name="availableMachines"></h2>
+            name="availableMachines"><?= (int)$stats['available_machines']; ?></h2>
 
     </div>
 
@@ -304,7 +310,7 @@
         <h3>Today's Revenue</h3>
 
         <h2 id="todayRevenue"
-            name="todayRevenue"></h2>
+            name="todayRevenue">R<?= number_format((float)$stats['today_revenue'], 2); ?></h2>
 
     </div>
 
@@ -356,6 +362,14 @@
     <div id="notificationContainer"
          name="notificationContainer">
 
+        <?php foreach ($notifications as $notification): ?>
+            <a class="notification-card notification-<?= htmlspecialchars($notification['type']); ?>"
+               href="<?= htmlspecialchars($notification['link']); ?>">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span><?= htmlspecialchars($notification['message']); ?></span>
+            </a>
+        <?php endforeach; ?>
+
     </div>
 
     <!-- ======================================================
@@ -377,7 +391,10 @@
     ======================================================= -->
 
     <p id="noNotificationsMessage"
-       name="noNotificationsMessage">
+       name="noNotificationsMessage"
+       <?= !empty($notifications) ? 'style="display:none;"' : ''; ?>>
+
+        <?= empty($notifications) ? 'There are currently no notifications.' : ''; ?>
 
     </p>
 
