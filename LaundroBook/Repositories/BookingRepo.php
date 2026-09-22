@@ -8,8 +8,6 @@ class BookingRepo implements BookingRepoInterface{
 
     public function __construct()
     {
-        // Grabs the one shared database connection instead of opening a
-        // new one every time a BookingRepo gets created.
         $this->db = Connection::getConnection();
     }
 
@@ -67,9 +65,6 @@ class BookingRepo implements BookingRepoInterface{
         return $bookingId;
     }
 
-    // Fills in the real booking_reference after insert(). Kept private
-    // since nothing outside this class should ever need to update a
-    // reference on its own, it's only ever a follow-up step to insert().
     private function updateReference(int $bookingId, string $reference): void
     {
         $sql = "UPDATE booking SET booking_reference = ? WHERE booking_id = ?";
@@ -127,9 +122,161 @@ class BookingRepo implements BookingRepoInterface{
         $sql = "SELECT COUNT(*) as total FROM booking WHERE booking_date = ?";
 
         $stmt = $this->run($sql, 's', [date('Y-m-d')]);
-        $result = $stmt->getresult()->fetch_assoc(); 
+        $result = $stmt->get_result()->fetch_assoc();
         $stmt->close(); 
 
         return (int)($result['total'] ?? 0); 
     } 
+
+    // ------------------------------------------------------------
+    // Everything below this line was added to support the admin
+    // dashboard stats, notifications and the Booking Management page.
+
+    // Count of bookings still awaiting admin approval, shown on the
+    // "Pending Bookings" stat card.
+    public function pendingBookingsCount(): int
+    {
+        $sql = "SELECT COUNT(*) as total FROM booking WHERE LOWER(status) = 'pending'";
+        $result = $this->db->query($sql)->fetch_assoc();
+        return (int)($result['total'] ?? 0);
+    }
+
+    // Sum of total_price for bookings made today. There is no
+    // payments table in the schema yet, so "today's revenue" is
+    // derived from today's bookings instead. Cancelled bookings are
+    // excluded since no money is actually collected for those.
+    public function todaysRevenue(): float
+    {
+        $sql = "SELECT COALESCE(SUM(total_price), 0) as total
+                FROM booking
+                WHERE booking_date = ? AND LOWER(status) != 'cancelled'";
+
+        $stmt = $this->run($sql, 's', [date('Y-m-d')]);
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return (float)($result['total'] ?? 0);
+    }
+
+    // Same idea as todaysRevenue()/countByStatusBetween(), but for an
+    // arbitrary date range. Used by the Reports page.
+    public function revenueBetween(string $startDate, string $endDate): float
+    {
+        $sql = "SELECT COALESCE(SUM(total_price), 0) as total
+                FROM booking
+                WHERE booking_date BETWEEN ? AND ? AND LOWER(status) != 'cancelled'";
+
+        $stmt = $this->run($sql, 'ss', [$startDate, $endDate]);
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return (float)($result['total'] ?? 0);
+    }
+
+    public function countByStatusBetween(string $status, string $startDate, string $endDate): int
+    {
+        $sql = "SELECT COUNT(*) as total
+                FROM booking
+                WHERE LOWER(status) = LOWER(?) AND booking_date BETWEEN ? AND ?";
+
+        $stmt = $this->run($sql, 'sss', [$status, $startDate, $endDate]);
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return (int)($result['total'] ?? 0);
+    }
+
+    // Full booking list for the Booking Management page, joined with
+    // customer/machine/service/slot so the admin table can show names
+    // instead of raw IDs. Supports the same three filters the page's
+    // search form offers: free-text (reference or customer name),
+    // status, and an exact booking date.
+    public function getAllBookings(array $filters = []): array
+    {
+        $sql = "SELECT b.booking_id, b.booking_reference, b.booking_date, b.total_price, b.status,
+                       c.customer_name, c.customer_email, c.customer_phone,
+                       m.machine_name,
+                       sv.wash_type, sv.load_type,
+                       sl.slot_label
+                FROM booking b
+                JOIN customer c ON c.customer_id = b.customer_id
+                JOIN machine m ON m.machine_id = b.machine_id
+                JOIN service sv ON sv.service_id = b.service_id
+                JOIN slot sl ON sl.slot_id = b.slot_id
+                WHERE 1=1";
+
+        $types = '';
+        $params = [];
+
+        if (!empty($filters['search'])) {
+            $sql .= " AND (b.booking_reference LIKE ? OR c.customer_name LIKE ?)";
+            $like = '%' . $filters['search'] . '%';
+            $types .= 'ss';
+            $params[] = $like;
+            $params[] = $like;
+        }
+
+        if (!empty($filters['status'])) {
+            $sql .= " AND LOWER(b.status) = LOWER(?)";
+            $types .= 's';
+            $params[] = $filters['status'];
+        }
+
+        if (!empty($filters['date'])) {
+            $sql .= " AND b.booking_date = ?";
+            $types .= 's';
+            $params[] = $filters['date'];
+        }
+
+        $sql .= " ORDER BY b.booking_date DESC, b.booking_id DESC";
+
+        $stmt = $this->run($sql, $types, $params);
+        $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return $result;
+    }
+
+    // Looks up one booking (with the same joined display data as
+    // getAllBookings()) by its human-facing reference, e.g. LB-00001.
+    // Used by the "Manage" action on the Booking Management page.
+    public function findBookingByReference(string $reference): ?array
+    {
+        $sql = "SELECT b.booking_id, b.booking_reference, b.booking_date, b.total_price, b.status,
+                       b.machine_id,
+                       c.customer_name, c.customer_email, c.customer_phone,
+                       m.machine_name,
+                       sv.wash_type, sv.load_type,
+                       sl.slot_label
+                FROM booking b
+                JOIN customer c ON c.customer_id = b.customer_id
+                JOIN machine m ON m.machine_id = b.machine_id
+                JOIN service sv ON sv.service_id = b.service_id
+                JOIN slot sl ON sl.slot_id = b.slot_id
+                WHERE b.booking_reference = ?";
+
+        $stmt = $this->run($sql, 's', [$reference]);
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return $result ?: null;
+    }
+
+    // Updates a booking's status. Only the four values the CHECK
+    // constraint allows are accepted; anything else throws instead of
+    // silently failing the UPDATE.
+    public function updateStatus(int $bookingId, string $status): bool
+    {
+        $valid = ['pending', 'in_progress', 'completed', 'cancelled'];
+        if (!in_array(strtolower($status), $valid, true)) {
+            throw new InvalidArgumentException("Invalid booking status {$status}");
+        }
+
+        $sql = "UPDATE booking SET status = ? WHERE booking_id = ?";
+        $stmt = $this->run($sql, 'si', [strtolower($status), $bookingId]);
+        $success = $stmt->affected_rows >= 0;
+        $stmt->close();
+
+        return $success;
+    }
 }
