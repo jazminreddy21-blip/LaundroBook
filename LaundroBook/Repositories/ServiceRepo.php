@@ -59,4 +59,16 @@ class ServiceRepo implements ServiceRepoInterface
 
         return $result ?: null;
     }
+
+    // Added for the admin Reports page, e.g. listing every service so
+    // bookings can be broken down/priced per wash+load combination.
+    public function getAllServices(): array
+    {
+        $sql = "SELECT service_id, wash_type, load_type, price, duration_minutes, duration_slots
+                FROM service
+                ORDER BY wash_type, load_type";
+
+        $result = $this->db->query($sql);
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
 }
