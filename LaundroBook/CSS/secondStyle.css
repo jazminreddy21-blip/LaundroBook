@@ -2,20 +2,42 @@
 /* RESET */
 /* ========================================= */
 
+:root{
+
+    /* Colours */
+    --primary-color: #00BCD4;
+    --secondary-color: #0097A7;
+    --background-color: #F8F9FA;
+    --card-color: #FFFFFF;
+    --text-color: #333333;
+    --white-color: #FFFFFF;
+
+    /* LaundroBook Blue Colours */
+    --deep-blue: #075985;
+    --blue: #0284C7;
+    --bright-blue: #0EA5E9;
+    --aqua: #22D3EE;
+    --light-blue: #E0F2FE;
+
+    /* Effects */
+    --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    --transition: 0.3s ease;
+
+}
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body{
-    background:#F5F6F8;
+    font-family:Verdana, sans-serif;
+    background:var(--background-color);
+    color:var(--text-color);
+    overflow-x:hidden;
     min-height:100vh;
-	
-	color:#374151;
 }
-
 /* ========================================= */
 /* LOGIN PAGE */
 /* ========================================= */
@@ -29,6 +51,13 @@ body{
     align-items:center;
 
     padding:20px;
+
+    background:linear-gradient(
+        135deg,
+        #F0F9FF 0%,
+        #E0F2FE 55%,
+        #FFFFFF 100%
+    );
 }
 
 .login-card{
@@ -39,16 +68,19 @@ body{
 
     padding:40px;
 
-    border-radius:18px;
+    border-radius:20px;
 
-    box-shadow:
-    0 10px 25px rgba(0,0,0,0.08);
+    box-shadow:0 10px 30px rgba(7, 89, 133, 0.08);
 
-    transition:0.3s ease;
+    transition:all 0.3s ease;
+
+    border:1px solid #E0F2FE;
 }
 
 .login-card:hover{
     transform:translateY(-3px);
+
+    box-shadow:0 15px 35px rgba(7, 89, 133, 0.12);
 }
 
 .login-header{
@@ -58,21 +90,44 @@ body{
 
 .login-header i{
     font-size:55px;
-    color:#4B5563;
+    color:#0284C7;
     margin-bottom:15px;
 }
 
 .login-header h1{
-    color:#1F2937;
+    color:#075985;
     font-size:32px;
     margin-bottom:8px;
+    font-weight:700;
 }
 
 .login-header p{
-    color:#6B7280;
+    color:#475569;
     font-size:15px;
 }
+.login-logo{
+    width:190px;
+    height:190px;
+    object-fit:contain;
+    display:block;
+    margin:0 auto 15px auto;
+}
+.login-btn{
+    width:100%;
+    padding:14px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s ease;
+}
 
+.login-btn:hover{
+    background:#075985;
+}
 /* ========================================= */
 /* FORM */
 /* ========================================= */
@@ -85,7 +140,7 @@ body{
     display:block;
     margin-bottom:8px;
 
-    color:#374151;
+    color:#075985;
     font-weight:600;
     font-size:14px;
 }
@@ -95,7 +150,7 @@ body{
 
     padding:14px;
 
-    border:1px solid #D1D5DB;
+    border:1px solid #BAE6FD;
 
     border-radius:10px;
 
@@ -103,14 +158,17 @@ body{
 
     outline:none;
 
-    transition:0.3s;
+    transition:0.3s ease;
+
+    background:#FFFFFF;
+    color:#334155;
 }
 
 .input-group input:focus{
-    border-color:#4B5563;
+    border-color:#0284C7;
 
     box-shadow:
-    0 0 0 3px rgba(75,85,99,0.15);
+    0 0 0 3px rgba(14,165,233,0.15);
 }
 
 /* ========================================= */
@@ -127,36 +185,6 @@ body{
     margin-bottom:15px;
 }
 
-/* ========================================= */
-/* LOGIN BUTTON */
-/* ========================================= */
-
-.login-btn{
-    width:100%;
-
-    padding:14px;
-
-    border:none;
-
-    border-radius:10px;
-
-    background:#4B5563;
-
-    color:white;
-
-    font-size:16px;
-
-    font-weight:600;
-
-    cursor:pointer;
-
-    transition:0.3s ease;
-}
-
-
-.login-btn:hover{
-    background:#374151;
-}
 
 /* ========================================= */
 /* RESPONSIVE */
@@ -183,103 +211,131 @@ body{
 /* ========================================= */
 
 .admin-header{
-
-    background:#4B5563;
-    color:#FFFFFF;
+    background:#FFFFFF;
+    color:#075985;
 
     display:flex;
     justify-content:space-between;
     align-items:center;
 
-    padding:20px 40px;
+    padding:18px 40px;
 
+    box-shadow:0 2px 10px rgba(15,23,42,0.08);
+}
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
+.admin-logo{
+    width:95px;
+    height:95px;
+    object-fit:contain;
+    display:block;
+}
 .logo h1{
-
     font-size:30px;
     font-weight:700;
-
+    color:#075985;
 }
 
 .admin-user p{
-
     font-size:16px;
     font-weight:500;
-
+    color:#334155;
 }
-
 /* ========================================= */
 /* NAVIGATION */
 /* ========================================= */
 
+/* ==============================
+   ADMIN NAVIGATION
+============================== */
+
 .admin-navbar{
-
-    background:#6B7280;
-
+    background:#FFFFFF;
+    border-top:1px solid #E0F2FE;
+    border-bottom:1px solid #E0F2FE;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 40px;
 }
 
-.admin-navbar ul{
 
+/* Logo and LaundroBook name */
+
+.navbar-brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-shrink:0;
+}
+
+.navbar-logo{
+    width:45px;
+    height:45px;
+    object-fit:contain;
+    display:block;
+}
+
+.navbar-brand span{
+    color:#075985;
+    font-size:20px;
+    font-weight:700;
+}
+
+
+/* Navigation links */
+
+.admin-navbar ul{
     display:flex;
     justify-content:center;
     align-items:center;
-    gap:35px;
-
+    gap:30px;
     list-style:none;
-
-    padding:15px;
-
+    padding:10px 0;
+    margin:0;
 }
 
 .admin-navbar ul li a{
-
-    color:#FFFFFF;
-
+    color:#075985;
     text-decoration:none;
-
     font-weight:600;
-
-    transition:0.3s;
-
+    font-size:15px;
+    transition:0.3s ease;
+    position:relative;
 }
 
 .admin-navbar ul li a:hover{
-
-    color:#E5E7EB;
-
+    color:#0284C7;
 }
 
 .admin-navbar ul li a.active{
-
-    border-bottom:3px solid #FFFFFF;
-
+    color:#0284C7;
+    border-bottom:3px solid #22D3EE;
     padding-bottom:5px;
-
 }
-
 /* ========================================= */
 /* MAIN CONTAINER */
 /* ========================================= */
 
 .dashboard-container{
-
     width:90%;
     max-width:1200px;
 
     margin:40px auto;
-
 }
-
 /* ========================================= */
 /* WELCOME SECTION */
 /* ========================================= */
 
 .welcome-section{
-
     background:#FFFFFF;
 
-    border-radius:12px;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
 
     padding:30px;
 
@@ -289,85 +345,72 @@ body{
     justify-content:space-between;
     align-items:center;
 
-    box-shadow:0 4px 10px rgba(0,0,0,0.08);
-
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
 }
 
 .welcome-text h2{
-
     font-size:30px;
 
-    color:#374151;
+    color:#075985;
 
     margin-bottom:10px;
-
 }
 
 .welcome-text p{
-
-    color:#6B7280;
+    color:#334155;
 
     line-height:1.6;
 
     max-width:650px;
-
 }
 
 .welcome-date{
+    background:#F0F9FF;
 
-    background:#F9FAFB;
+    border:1px solid #BAE6FD;
 
-    border:1px solid #D1D5DB;
-
-    border-radius:10px;
+    border-radius:15px;
 
     padding:18px 25px;
 
     text-align:center;
 
     min-width:220px;
-
 }
 
 .welcome-date strong{
-
     display:block;
 
     margin-bottom:8px;
 
-    color:#374151;
-
+    color:#075985;
 }
 
 #currentDate{
-
     font-weight:600;
 
-    color:#6B7280;
-
-}/* ========================================= */
+    color:#0284C7;
+}
+/* ========================================= */
 /* DASHBOARD STATISTICS */
 /* ========================================= */
 
 .dashboard-stats{
-
     display:grid;
 
-    grid-template-columns:repeat(3, 1fr);
+    grid-template-columns:repeat(3,1fr);
 
     gap:25px;
 
     margin-bottom:40px;
-
 }
 
 .stat-card{
+    background:#F0F9FF;
 
-    background:#FFFFFF;
+    border:1px solid #BAE6FD;
 
-    border:1px solid #D1D5DB;
-
-    border-radius:12px;
+    border-radius:20px;
 
     padding:30px 20px;
 
@@ -375,121 +418,100 @@ body{
 
     transition:0.3s ease;
 
-    box-shadow:0 2px 8px rgba(0,0,0,0.08);
-
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
 }
 
 .stat-card:hover{
-
     transform:translateY(-4px);
 
-    box-shadow:0 6px 16px rgba(0,0,0,0.12);
-
+    box-shadow:0 8px 18px rgba(7,89,133,0.12);
 }
 
 .stat-card h3{
-
     font-size:18px;
 
-    color:#4B5563;
+    color:#075985;
 
     margin-bottom:20px;
-
 }
 
 .stat-card h2{
-
     font-size:40px;
 
-    color:#1F2937;
+    color:#0284C7;
 
     min-height:48px;
 
     font-weight:700;
+}
 
-}.stat-card h2:empty::after{
-
+.stat-card h2:empty::after{
     content:"--";
 
-    color:#9CA3AF;
-
+    color:#94A3B8;
 }/* ========================================= */
 /* TASKS REQUIRING ATTENTION */
 /* ========================================= */
 
 .notifications-section{
-
     background:#FFFFFF;
 
-    border:1px solid #D1D5DB;
+    border:1px solid #BAE6FD;
 
-    border-radius:12px;
+    border-radius:20px;
 
     padding:30px;
 
     margin-bottom:40px;
 
-    box-shadow:0 2px 8px rgba(0,0,0,0.08);
-
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
 }
 
 .section-heading{
-
     margin-bottom:25px;
-
 }
 
 .section-heading h2{
-
-    color:#374151;
+    color:#075985;
 
     font-size:26px;
 
     margin-bottom:8px;
-
 }
 
 .section-heading p{
-
-    color:#6B7280;
+    color:#334155;
 
     font-size:15px;
-
 }
 
 /* Backend will generate notification cards */
 
 #notificationContainer{
-
     display:flex;
 
     flex-direction:column;
 
     gap:15px;
-
 }
 
 /* Message shown when there are no notifications */
 
 #noNotificationsMessage{
-
-    color:#6B7280;
+    color:#64748B;
 
     text-align:center;
 
     padding:20px 0;
 
     font-style:italic;
-
 }
-
 /* ========================================= */
 /* FOOTER */
 /* ========================================= */
 
 .admin-footer{
-
-    background:#4B5563;
+    background:#075985;
 
     color:#FFFFFF;
 
@@ -498,15 +520,11 @@ body{
     padding:20px;
 
     margin-top:40px;
-
 }
 
 .admin-footer p{
-
     font-size:15px;
-
 }
-
 /* ========================================= */
 /* RESPONSIVE DESIGN */
 /* ========================================= */
@@ -514,9 +532,7 @@ body{
 @media(max-width:992px){
 
     .dashboard-stats{
-
         grid-template-columns:repeat(2,1fr);
-
     }
 
 }
@@ -524,43 +540,35 @@ body{
 @media(max-width:768px){
 
     .admin-header{
-
         flex-direction:column;
 
         gap:15px;
 
         text-align:center;
-
     }
 
     .admin-navbar ul{
-
         flex-wrap:wrap;
 
         gap:15px;
 
+        padding:15px 10px;
     }
 
     .welcome-section{
-
         flex-direction:column;
 
         text-align:center;
 
         gap:25px;
-
     }
 
     .welcome-date{
-
         width:100%;
-
     }
 
     .dashboard-stats{
-
         grid-template-columns:1fr;
-
     }
 
 }
@@ -568,27 +576,3633 @@ body{
 @media(max-width:480px){
 
     .dashboard-container{
-
         width:95%;
+    }
 
+    .admin-header{
+        padding:18px 20px;
     }
 
     .logo h1{
-
         font-size:24px;
+    }
 
+    .welcome-section{
+        padding:25px 20px;
     }
 
     .welcome-text h2{
-
         font-size:24px;
+    }
 
+    .stat-card{
+        padding:25px 15px;
     }
 
     .stat-card h2{
-
         font-size:32px;
-
     }
 
+
+    
+}
+/* =========================================================
+   BOOKING MANAGEMENT PAGE
+========================================================= */
+
+.booking-management-container{
+    width:90%;
+    max-width:1250px;
+    margin:40px auto;
+}
+
+
+/* =========================================================
+   PAGE HEADING
+========================================================= */
+
+.booking-page-heading{
+    margin-bottom:30px;
+}
+
+.booking-page-heading h2{
+    color:#075985;
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+.booking-page-heading p{
+    color:#334155;
+    font-size:15px;
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+========================================================= */
+
+.booking-section-heading{
+    margin-bottom:22px;
+}
+
+.booking-section-heading h2{
+    color:#075985;
+    font-size:24px;
+    margin-bottom:8px;
+}
+
+.booking-section-heading h2 i{
+    color:#0284C7;
+    margin-right:8px;
+}
+
+.booking-section-heading p{
+    color:#334155;
+    font-size:14px;
+}
+
+
+/* =========================================================
+   RECENT BOOKING UPDATES
+========================================================= */
+
+.booking-updates-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+#bookingUpdatesContainer{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.booking-update{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    background:#F0F9FF;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    padding:16px 18px;
+}
+
+.update-icon{
+    width:42px;
+    height:42px;
+    background:#E0F2FE;
+    color:#0284C7;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.update-icon i{
+    font-size:17px;
+}
+
+.update-content{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.update-content p{
+    color:#334155;
+    font-size:14px;
+}
+
+.update-booking-reference{
+    color:#075985;
+}
+
+.update-booking-status{
+    color:#0284C7;
+}
+
+.update-time{
+    color:#64748B;
+    font-size:12px;
+}
+
+
+/* =========================================================
+   BOOKING SUMMARY CARDS
+========================================================= */
+
+.booking-summary{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.booking-stat-card{
+    background:#F0F9FF;
+    border:1px solid #BAE6FD;
+    border-radius:18px;
+    padding:25px 18px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+    transition:0.3s ease;
+}
+
+.booking-stat-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 8px 18px rgba(7,89,133,0.12);
+}
+
+.booking-stat-icon{
+    width:48px;
+    height:48px;
+    background:#E0F2FE;
+    color:#0284C7;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.booking-stat-icon i{
+    font-size:20px;
+}
+
+.booking-stat-info h3{
+    color:#075985;
+    font-size:14px;
+    margin-bottom:7px;
+}
+
+.booking-stat-info h2{
+    color:#0284C7;
+    font-size:25px;
+    font-weight:700;
+}
+
+
+/* =========================================================
+   SEARCH SECTION
+========================================================= */
+
+.booking-search-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.booking-search-form{
+    display:flex;
+    align-items:flex-end;
+    gap:15px;
+}
+
+.booking-search-input{
+    flex:1;
+}
+
+.booking-search-input label{
+    display:block;
+    color:#075985;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:8px;
+}
+
+.booking-search-input input{
+    width:100%;
+    padding:13px 15px;
+    border:1px solid #BAE6FD;
+    border-radius:10px;
+    background:#FFFFFF;
+    color:#334155;
+    font-size:14px;
+    outline:none;
+    transition:0.3s ease;
+}
+
+.booking-search-input input:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.15);
+}
+
+.booking-search-input input::placeholder{
+    color:#94A3B8;
+}
+
+#searchBookingBtn{
+    padding:13px 22px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+#searchBookingBtn:hover{
+    background:#075985;
+}
+
+#searchBookingBtn i{
+    margin-right:6px;
+}
+
+
+/* =========================================================
+   BOOKINGS TABLE SECTION
+========================================================= */
+
+.booking-table-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:40px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.booking-table-container{
+    width:100%;
+    overflow-x:auto;
+}
+
+
+/* =========================================================
+   BOOKINGS TABLE
+========================================================= */
+
+.booking-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:950px;
+}
+
+.booking-table thead{
+    background:#F0F9FF;
+}
+
+.booking-table th{
+    color:#075985;
+    font-size:13px;
+    font-weight:700;
+    text-align:left;
+    padding:15px;
+    border-bottom:2px solid #BAE6FD;
+    white-space:nowrap;
+}
+
+.booking-table td{
+    padding:16px 15px;
+    border-bottom:1px solid #E0F2FE;
+    color:#334155;
+    font-size:13px;
+    vertical-align:middle;
+}
+
+.booking-table tbody tr{
+    transition:0.2s ease;
+}
+
+.booking-table tbody tr:hover{
+    background:#F0F9FF;
+}
+
+.booking-table tbody tr:last-child td{
+    border-bottom:none;
+}
+
+
+/* =========================================================
+   BOOKING REFERENCE
+========================================================= */
+
+.booking-reference{
+    color:#075985;
+    font-size:14px;
+}
+
+
+/* =========================================================
+   CUSTOMER DETAILS
+========================================================= */
+
+.customer-details{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    min-width:180px;
+}
+
+.customer-name{
+    color:#075985;
+    font-size:14px;
+}
+
+.customer-email,
+.customer-phone{
+    color:#64748B;
+    font-size:12px;
+}
+
+
+/* =========================================================
+   SERVICE
+========================================================= */
+
+.booking-service{
+    color:#334155;
+    font-weight:600;
+}
+
+
+/* =========================================================
+   METHOD BADGES
+========================================================= */
+
+.method-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:7px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.method-badge i{
+    font-size:12px;
+}
+
+.method-badge.delivery{
+    background:#E0F2FE;
+    color:#0284C7;
+}
+
+.method-badge.collection{
+    background:#ECFEFF;
+    color:#075985;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.status-badge{
+    display:inline-flex;
+    align-items:center;
+    padding:7px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+
+/* Pending */
+
+.status-badge.pending{
+    background:#F1F5F9;
+    color:#475569;
+}
+
+
+/* Accepted */
+
+.status-badge.accepted{
+    background:#E0F2FE;
+    color:#0284C7;
+}
+
+
+/* In Washing */
+
+.status-badge.washing{
+    background:#ECFEFF;
+    color:#075985;
+}
+
+
+/* Ready for Collection */
+
+.status-badge.ready-collection{
+    background:#DCFCE7;
+    color:#166534;
+}
+
+
+/* Ready for Delivery */
+
+.status-badge.ready-delivery{
+    background:#DBEAFE;
+    color:#1D4ED8;
+}
+
+
+/* Out for Delivery */
+
+.status-badge.out-for-delivery{
+    background:#E0F2FE;
+    color:#0284C7;
+}
+
+
+/* Completed */
+
+.status-badge.completed{
+    background:#DCFCE7;
+    color:#166534;
+}
+
+
+/* Cancelled */
+
+.status-badge.cancelled{
+    background:#FEE2E2;
+    color:#B91C1C;
+}
+
+
+/* =========================================================
+   STATUS UPDATE
+========================================================= */
+
+.status-update{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    min-width:220px;
+}
+
+.booking-status-select{
+    padding:9px 10px;
+    border:1px solid #BAE6FD;
+    border-radius:8px;
+    background:#FFFFFF;
+    color:#334155;
+    font-size:12px;
+    outline:none;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.booking-status-select:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.12);
+}
+
+.save-status-btn{
+    padding:9px 12px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:0.3s ease;
+}
+
+.save-status-btn:hover{
+    background:#075985;
+}
+
+.save-status-btn i{
+    margin-right:4px;
+}
+
+
+/* =========================================================
+   BOOKING MANAGEMENT RESPONSIVE DESIGN
+========================================================= */
+
+@media(max-width:1100px){
+
+    .booking-summary{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+}
+
+
+@media(max-width:768px){
+
+    .booking-management-container{
+        width:95%;
+        margin:30px auto;
+    }
+
+
+    .booking-page-heading h2{
+        font-size:26px;
+    }
+
+
+    .booking-updates-section,
+    .booking-search-section,
+    .booking-table-section{
+        padding:22px;
+    }
+
+
+    .booking-summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+
+    .booking-search-form{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+
+    #searchBookingBtn{
+        width:100%;
+    }
+
+
+    .booking-update{
+        align-items:flex-start;
+    }
+
+}
+
+
+@media(max-width:480px){
+
+    .booking-summary{
+        grid-template-columns:1fr;
+    }
+
+
+    .booking-page-heading h2{
+        font-size:23px;
+    }
+
+
+    .booking-section-heading h2{
+        font-size:20px;
+    }
+
+
+    .booking-stat-card{
+        padding:20px;
+    }
+
+
+    .booking-updates-section,
+    .booking-search-section,
+    .booking-table-section{
+        padding:18px;
+    }
+
+}
+
+/* =========================================================
+   LAUNDROBOOK - PICKUP MANAGEMENT STYLES
+========================================================= */
+
+
+/* =========================================================
+   PICKUP MANAGEMENT CONTAINER
+========================================================= */
+
+.pickup-management-container{
+    width:90%;
+    max-width:1250px;
+    margin:40px auto;
+}
+
+
+/* =========================================================
+   PAGE HEADING
+========================================================= */
+
+.pickup-page-heading{
+    margin-bottom:30px;
+}
+
+.pickup-page-heading h2{
+    color:#075985;
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+.pickup-page-heading p{
+    color:#334155;
+    font-size:15px;
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+========================================================= */
+
+.pickup-section-heading{
+    margin-bottom:22px;
+}
+
+.pickup-section-heading h2{
+    color:#075985;
+    font-size:24px;
+    margin-bottom:8px;
+}
+
+.pickup-section-heading h2 i{
+    color:#0284C7;
+    margin-right:8px;
+}
+
+.pickup-section-heading p{
+    color:#334155;
+    font-size:14px;
+}
+
+
+/* =========================================================
+   RECENT PICKUP UPDATES
+========================================================= */
+
+.pickup-updates-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+#pickupUpdatesContainer{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.pickup-update{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    background:#F0F9FF;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    padding:16px 18px;
+}
+
+.update-icon{
+    width:42px;
+    height:42px;
+    background:#E0F2FE;
+    color:#0284C7;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.update-icon i{
+    font-size:17px;
+}
+
+.update-content{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.update-content p{
+    color:#334155;
+    font-size:14px;
+}
+
+.update-booking-reference{
+    color:#075985;
+}
+
+.update-pickup-status{
+    color:#0284C7;
+}
+
+.update-time{
+    color:#64748B;
+    font-size:12px;
+}
+
+
+/* =========================================================
+   PICKUP SUMMARY CARDS
+========================================================= */
+
+.pickup-summary{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.pickup-stat-card{
+    background:#F0F9FF;
+    border:1px solid #BAE6FD;
+    border-radius:18px;
+    padding:25px 18px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+    transition:0.3s ease;
+}
+
+.pickup-stat-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 8px 18px rgba(7,89,133,0.12);
+}
+
+.pickup-stat-icon{
+    width:48px;
+    height:48px;
+    background:#E0F2FE;
+    color:#0284C7;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.pickup-stat-icon i{
+    font-size:20px;
+}
+
+.pickup-stat-info h3{
+    color:#075985;
+    font-size:14px;
+    margin-bottom:7px;
+}
+
+.pickup-stat-info h2{
+    color:#0284C7;
+    font-size:25px;
+    font-weight:700;
+}
+
+
+/* =========================================================
+   SEARCH PICKUPS
+========================================================= */
+
+.pickup-search-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.pickup-search-form{
+    display:flex;
+    align-items:flex-end;
+    gap:15px;
+}
+
+.pickup-search-input{
+    flex:1;
+}
+
+.pickup-search-input label{
+    display:block;
+    color:#075985;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:8px;
+}
+
+.pickup-search-input input{
+    width:100%;
+    padding:13px 15px;
+    border:1px solid #BAE6FD;
+    border-radius:10px;
+    background:#FFFFFF;
+    color:#334155;
+    font-size:14px;
+    outline:none;
+    transition:0.3s ease;
+}
+
+.pickup-search-input input:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.15);
+}
+
+.pickup-search-input input::placeholder{
+    color:#94A3B8;
+}
+
+#searchPickupBtn{
+    padding:13px 22px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+#searchPickupBtn:hover{
+    background:#075985;
+}
+
+#searchPickupBtn i{
+    margin-right:6px;
+}
+
+
+/* =========================================================
+   LAUNDRY STATUS
+========================================================= */
+
+.laundry-status-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.laundry-status-form{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr auto;
+    gap:20px;
+    align-items:end;
+}
+
+.laundry-status-item{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.laundry-status-item label{
+    color:#075985;
+    font-size:14px;
+    font-weight:600;
+}
+
+.laundry-status-item strong{
+    display:flex;
+    align-items:center;
+    min-height:46px;
+    padding:12px 15px;
+    background:#F0F9FF;
+    border:1px solid #BAE6FD;
+    border-radius:10px;
+    color:#0284C7;
+    font-size:14px;
+}
+
+.laundry-status-item select,
+.laundry-status-item input{
+    width:100%;
+    min-height:46px;
+    padding:12px 15px;
+    border:1px solid #BAE6FD;
+    border-radius:10px;
+    background:#FFFFFF;
+    color:#334155;
+    font-size:14px;
+    outline:none;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.laundry-status-item select:focus,
+.laundry-status-item input:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.15);
+}
+
+.laundry-status-action{
+    display:flex;
+    align-items:flex-end;
+}
+
+#saveLaundryStatus{
+    min-height:46px;
+    padding:12px 20px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:0.3s ease;
+}
+
+#saveLaundryStatus:hover{
+    background:#075985;
+}
+
+#saveLaundryStatus i{
+    margin-right:6px;
+}
+
+
+/* =========================================================
+   LAUNDRY PROGRESS
+========================================================= */
+
+.pickup-progress-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.pickup-progress{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.pickup-progress-step{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:16px 18px;
+    background:#F8FAFC;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    transition:0.3s ease;
+}
+
+.pickup-progress-step.active{
+    background:#E0F2FE;
+    border-color:#7DD3FC;
+}
+
+.pickup-progress-step.completed{
+    background:#F0F9FF;
+    border-color:#BAE6FD;
+}
+
+.progress-icon{
+    width:45px;
+    height:45px;
+    background:#E0F2FE;
+    color:#94A3B8;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.pickup-progress-step.active .progress-icon{
+    background:#0284C7;
+    color:#FFFFFF;
+}
+
+.pickup-progress-step.completed .progress-icon{
+    background:#075985;
+    color:#FFFFFF;
+}
+
+.progress-icon i{
+    font-size:18px;
+}
+
+.progress-content{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.progress-content strong{
+    color:#075985;
+    font-size:15px;
+}
+
+.progress-content span{
+    color:#334155;
+    font-size:13px;
+}
+
+
+/* =========================================================
+   PICKUP TABLE
+========================================================= */
+
+.pickup-table-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:40px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.pickup-table-container{
+    width:100%;
+    overflow-x:auto;
+}
+
+.pickup-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1050px;
+}
+
+.pickup-table thead{
+    background:#F0F9FF;
+}
+
+.pickup-table th{
+    color:#075985;
+    font-size:13px;
+    font-weight:700;
+    text-align:left;
+    padding:15px;
+    border-bottom:2px solid #BAE6FD;
+    white-space:nowrap;
+}
+
+.pickup-table td{
+    padding:16px 15px;
+    border-bottom:1px solid #E0F2FE;
+    color:#334155;
+    font-size:13px;
+    vertical-align:middle;
+}
+
+.pickup-table tbody tr{
+    transition:0.2s ease;
+}
+
+.pickup-table tbody tr:hover{
+    background:#F0F9FF;
+}
+
+.pickup-table tbody tr:last-child td{
+    border-bottom:none;
+}
+
+.pickup-booking-reference{
+    color:#075985;
+    font-size:14px;
+}
+
+.pickup-customer-details{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    min-width:180px;
+}
+
+.pickup-customer-name{
+    color:#075985;
+    font-size:14px;
+}
+
+.pickup-customer-email,
+.pickup-customer-phone{
+    color:#64748B;
+    font-size:12px;
+}
+
+.pickup-service{
+    color:#334155;
+    font-weight:600;
+}
+
+.pickup-completion-time{
+    color:#334155;
+    font-size:13px;
+    white-space:nowrap;
+}
+
+
+/* =========================================================
+   PICKUP STATUS BADGES
+========================================================= */
+
+.pickup-status-badge{
+    display:inline-flex;
+    align-items:center;
+    padding:7px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.pickup-status-badge.order-confirmed{
+    background:#F1F5F9;
+    color:#475569;
+}
+
+.pickup-status-badge.laundry-received{
+    background:#E0F2FE;
+    color:#0284C7;
+}
+
+.pickup-status-badge.washing{
+    background:#ECFEFF;
+    color:#075985;
+}
+
+.pickup-status-badge.drying{
+    background:#DBEAFE;
+    color:#1D4ED8;
+}
+
+.pickup-status-badge.folding{
+    background:#E0F2FE;
+    color:#0284C7;
+}
+
+.pickup-status-badge.ready-collection{
+    background:#DCFCE7;
+    color:#166534;
+}
+
+
+/* =========================================================
+   PICKUP STATUS UPDATE
+========================================================= */
+
+.pickup-status-update{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    min-width:230px;
+}
+
+.pickup-status-select{
+    padding:9px 10px;
+    border:1px solid #BAE6FD;
+    border-radius:8px;
+    background:#FFFFFF;
+    color:#334155;
+    font-size:12px;
+    outline:none;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.pickup-status-select:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.12);
+}
+
+.save-pickup-status-btn{
+    padding:9px 12px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:0.3s ease;
+}
+
+.save-pickup-status-btn:hover{
+    background:#075985;
+}
+
+.save-pickup-status-btn i{
+    margin-right:4px;
+}
+
+
+/* =========================================================
+   RESPONSIVE DESIGN
+========================================================= */
+
+@media(max-width:1100px){
+
+    .pickup-summary{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .laundry-status-form{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .laundry-status-action{
+        grid-column:span 2;
+    }
+
+}
+
+
+@media(max-width:768px){
+
+    .pickup-management-container{
+        width:95%;
+        margin:30px auto;
+    }
+
+    .pickup-page-heading h2{
+        font-size:26px;
+    }
+
+    .pickup-updates-section,
+    .pickup-search-section,
+    .laundry-status-section,
+    .pickup-progress-section,
+    .pickup-table-section{
+        padding:22px;
+    }
+
+    .pickup-summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .pickup-search-form{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    #searchPickupBtn{
+        width:100%;
+    }
+
+    .laundry-status-form{
+        grid-template-columns:1fr;
+    }
+
+    .laundry-status-action{
+        grid-column:auto;
+    }
+
+    #saveLaundryStatus{
+        width:100%;
+    }
+
+    .pickup-update{
+        align-items:flex-start;
+    }
+
+}
+
+
+@media(max-width:480px){
+
+    .pickup-summary{
+        grid-template-columns:1fr;
+    }
+
+    .pickup-page-heading h2{
+        font-size:23px;
+    }
+
+    .pickup-section-heading h2{
+        font-size:20px;
+    }
+
+    .pickup-stat-card{
+        padding:20px;
+    }
+
+    .pickup-updates-section,
+    .pickup-search-section,
+    .laundry-status-section,
+    .pickup-progress-section,
+    .pickup-table-section{
+        padding:18px;
+    }
+
+    .pickup-progress-step{
+        align-items:flex-start;
+    }
+
+}
+/* =========================================================
+   LAUNDROBOOK - DELIVERY MANAGEMENT STYLES
+========================================================= */
+
+
+/* =========================================================
+   PAGE CONTAINER
+========================================================= */
+
+.delivery-management-container{
+    width:90%;
+    max-width:1250px;
+    margin:40px auto;
+}
+
+.delivery-page-heading{
+    margin-bottom:30px;
+}
+
+.delivery-page-heading h2{
+    color:#075985;
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+.delivery-page-heading p{
+    color:#334155;
+    font-size:15px;
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+========================================================= */
+
+.delivery-section-heading{
+    margin-bottom:22px;
+}
+
+.delivery-section-heading h2{
+    color:#075985;
+    font-size:24px;
+    margin-bottom:8px;
+}
+
+.delivery-section-heading h2 i{
+    color:#0284C7;
+    margin-right:8px;
+}
+
+.delivery-section-heading p{
+    color:#334155;
+    font-size:14px;
+}
+
+
+/* =========================================================
+   RECENT DELIVERY UPDATES
+========================================================= */
+
+.delivery-updates-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+#deliveryUpdatesContainer{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.delivery-update{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    background:#F0F9FF;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    padding:16px 18px;
+}
+
+.update-icon{
+    width:42px;
+    height:42px;
+    background:#E0F2FE;
+    color:#0284C7;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.update-icon i{
+    font-size:17px;
+}
+
+.update-content{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.update-content p{
+    color:#334155;
+    font-size:14px;
+}
+
+.update-delivery-reference{
+    color:#075985;
+}
+
+.update-delivery-status{
+    color:#0284C7;
+}
+
+.update-time{
+    color:#64748B;
+    font-size:12px;
+}
+
+
+/* =========================================================
+   DELIVERY SUMMARY
+========================================================= */
+
+.delivery-summary{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.delivery-stat-card{
+    background:#F0F9FF;
+    border:1px solid #BAE6FD;
+    border-radius:18px;
+    padding:25px 18px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+    transition:0.3s ease;
+}
+
+.delivery-stat-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 8px 18px rgba(7,89,133,0.12);
+}
+
+.delivery-stat-icon{
+    width:48px;
+    height:48px;
+    background:#E0F2FE;
+    color:#0284C7;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.delivery-stat-icon i{
+    font-size:20px;
+}
+
+.delivery-stat-info h3{
+    color:#075985;
+    font-size:14px;
+    margin-bottom:7px;
+}
+
+.delivery-stat-info h2{
+    color:#0284C7;
+    font-size:25px;
+    font-weight:700;
+}
+
+
+/* =========================================================
+   SEARCH DELIVERIES
+========================================================= */
+
+.delivery-search-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.delivery-search-form{
+    display:flex;
+    align-items:flex-end;
+    gap:15px;
+}
+
+.delivery-search-input{
+    flex:1;
+}
+
+.delivery-search-input label{
+    display:block;
+    color:#075985;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:8px;
+}
+
+.delivery-search-input input{
+    width:100%;
+    padding:13px 15px;
+    border:1px solid #BAE6FD;
+    border-radius:10px;
+    background:#FFFFFF;
+    color:#334155;
+    font-size:14px;
+    outline:none;
+    transition:0.3s ease;
+}
+
+.delivery-search-input input:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.15);
+}
+
+.delivery-search-input input::placeholder{
+    color:#94A3B8;
+}
+
+#searchDeliveryBtn{
+    padding:13px 22px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+#searchDeliveryBtn:hover{
+    background:#075985;
+}
+
+#searchDeliveryBtn i{
+    margin-right:6px;
+}
+
+
+/* =========================================================
+   DELIVERY STATUS
+========================================================= */
+
+.delivery-status-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.delivery-status-form{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr 1fr auto;
+    gap:20px;
+    align-items:end;
+}
+
+.delivery-status-item{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.delivery-status-item label{
+    color:#075985;
+    font-size:14px;
+    font-weight:600;
+}
+
+.delivery-status-item strong{
+    display:flex;
+    align-items:center;
+    min-height:46px;
+    padding:12px 15px;
+    background:#F0F9FF;
+    border:1px solid #BAE6FD;
+    border-radius:10px;
+    color:#0284C7;
+    font-size:14px;
+}
+
+.delivery-status-item select,
+.delivery-status-item input{
+    width:100%;
+    min-height:46px;
+    padding:12px 15px;
+    border:1px solid #BAE6FD;
+    border-radius:10px;
+    background:#FFFFFF;
+    color:#334155;
+    font-size:14px;
+    outline:none;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.delivery-status-item select:focus,
+.delivery-status-item input:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.15);
+}
+
+.delivery-status-action{
+    display:flex;
+    align-items:flex-end;
+}
+
+#saveDeliveryStatus{
+    min-height:46px;
+    padding:12px 20px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:0.3s ease;
+}
+
+#saveDeliveryStatus:hover{
+    background:#075985;
+}
+
+#saveDeliveryStatus i{
+    margin-right:6px;
+}
+
+
+/* =========================================================
+   DELIVERY PROGRESS
+========================================================= */
+
+.delivery-progress-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.delivery-progress-form{
+    display:grid;
+    grid-template-columns:1fr 2fr auto;
+    gap:20px;
+    align-items:end;
+}
+
+.delivery-progress-item{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.delivery-progress-item label{
+    color:#075985;
+    font-size:14px;
+    font-weight:600;
+}
+
+.delivery-progress-item strong{
+    display:flex;
+    align-items:center;
+    min-height:46px;
+    padding:12px 15px;
+    background:#F0F9FF;
+    border:1px solid #BAE6FD;
+    border-radius:10px;
+    color:#0284C7;
+    font-size:14px;
+}
+
+.delivery-progress-item select{
+    width:100%;
+    min-height:46px;
+    padding:12px 15px;
+    border:1px solid #BAE6FD;
+    border-radius:10px;
+    background:#FFFFFF;
+    color:#334155;
+    font-size:14px;
+    outline:none;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.delivery-progress-item select:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.15);
+}
+
+.delivery-progress-action{
+    display:flex;
+    align-items:flex-end;
+}
+
+#saveDeliveryProgress{
+    min-height:46px;
+    padding:12px 20px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:0.3s ease;
+}
+
+#saveDeliveryProgress:hover{
+    background:#075985;
+}
+
+#saveDeliveryProgress i{
+    margin-right:6px;
+}
+
+
+/* =========================================================
+   DRIVER INFORMATION
+========================================================= */
+
+.driver-info-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.driver-info-card{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.driver-info-item{
+    background:#F0F9FF;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.driver-info-label{
+    color:#075985;
+    font-size:13px;
+    font-weight:600;
+}
+
+.driver-info-item strong{
+    color:#334155;
+    font-size:14px;
+}
+
+
+/* =========================================================
+   DELIVERY TABLE
+========================================================= */
+
+.delivery-table-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:40px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.delivery-table-container{
+    width:100%;
+    overflow-x:auto;
+}
+
+.delivery-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1200px;
+}
+
+.delivery-table thead{
+    background:#F0F9FF;
+}
+
+.delivery-table th{
+    color:#075985;
+    font-size:13px;
+    font-weight:700;
+    text-align:left;
+    padding:15px;
+    border-bottom:2px solid #BAE6FD;
+    white-space:nowrap;
+}
+
+.delivery-table td{
+    padding:16px 15px;
+    border-bottom:1px solid #E0F2FE;
+    color:#334155;
+    font-size:13px;
+    vertical-align:middle;
+}
+
+.delivery-table tbody tr{
+    transition:0.2s ease;
+}
+
+.delivery-table tbody tr:hover{
+    background:#F0F9FF;
+}
+
+.delivery-table tbody tr:last-child td{
+    border-bottom:none;
+}
+
+
+/* =========================================================
+   DELIVERY DETAILS
+========================================================= */
+
+.delivery-booking-reference{
+    color:#075985;
+    font-size:14px;
+}
+
+.delivery-customer-details{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    min-width:180px;
+}
+
+.delivery-customer-name{
+    color:#075985;
+    font-size:14px;
+}
+
+.delivery-customer-email,
+.delivery-customer-phone{
+    color:#64748B;
+    font-size:12px;
+}
+
+.delivery-service{
+    color:#334155;
+    font-weight:600;
+}
+
+.delivery-estimated-time{
+    color:#334155;
+    font-size:13px;
+    white-space:nowrap;
+}
+
+.delivery-driver{
+    color:#075985;
+    font-size:13px;
+    font-weight:600;
+}
+
+
+/* =========================================================
+   DELIVERY STATUS BADGES
+========================================================= */
+
+.delivery-status-badge{
+    display:inline-flex;
+    align-items:center;
+    padding:7px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.delivery-status-badge.pickup-of-order{
+    background:#F1F5F9;
+    color:#475569;
+}
+
+.delivery-status-badge.order-confirmed{
+    background:#E0F2FE;
+    color:#0284C7;
+}
+
+.delivery-status-badge.laundry-completed{
+    background:#ECFEFF;
+    color:#075985;
+}
+
+.delivery-status-badge.ready-for-delivery{
+    background:#DBEAFE;
+    color:#1D4ED8;
+}
+
+.delivery-status-badge.driver-assigned{
+    background:#E0F2FE;
+    color:#0284C7;
+}
+
+.delivery-status-badge.out-for-delivery{
+    background:#DCFCE7;
+    color:#166534;
+}
+
+.delivery-status-badge.driver-close-by{
+    background:#FEF3C7;
+    color:#92400E;
+}
+
+.delivery-status-badge.delivery-complete{
+    background:#DCFCE7;
+    color:#166534;
+}
+
+
+/* =========================================================
+   DELIVERY STATUS UPDATE
+========================================================= */
+
+.delivery-status-update{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    min-width:230px;
+}
+
+.delivery-status-select{
+    padding:9px 10px;
+    border:1px solid #BAE6FD;
+    border-radius:8px;
+    background:#FFFFFF;
+    color:#334155;
+    font-size:12px;
+    outline:none;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+.delivery-status-select:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.12);
+}
+
+.save-delivery-status-btn{
+    padding:9px 12px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:0.3s ease;
+}
+
+.save-delivery-status-btn:hover{
+    background:#075985;
+}
+
+.save-delivery-status-btn i{
+    margin-right:4px;
+}
+
+
+/* =========================================================
+   RESPONSIVE DESIGN
+========================================================= */
+
+@media(max-width:1200px){
+
+    .delivery-summary{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .delivery-status-form{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .delivery-status-action{
+        grid-column:span 2;
+    }
+
+    #saveDeliveryStatus{
+        width:100%;
+    }
+
+    .driver-info-card{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+
+@media(max-width:768px){
+
+    .delivery-management-container{
+        width:95%;
+        margin:30px auto;
+    }
+
+    .delivery-page-heading h2{
+        font-size:26px;
+    }
+
+    .delivery-updates-section,
+    .delivery-search-section,
+    .delivery-status-section,
+    .delivery-progress-section,
+    .driver-info-section,
+    .delivery-table-section{
+        padding:22px;
+    }
+
+    .delivery-summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .delivery-search-form{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    #searchDeliveryBtn{
+        width:100%;
+    }
+
+    .delivery-status-form{
+        grid-template-columns:1fr;
+    }
+
+    .delivery-status-action{
+        grid-column:auto;
+    }
+
+    #saveDeliveryStatus{
+        width:100%;
+    }
+
+    .delivery-progress-form{
+        grid-template-columns:1fr;
+    }
+
+    #saveDeliveryProgress{
+        width:100%;
+    }
+
+    .driver-info-card{
+        grid-template-columns:1fr;
+    }
+
+    .delivery-update{
+        align-items:flex-start;
+    }
+
+}
+
+
+@media(max-width:480px){
+
+    .delivery-summary{
+        grid-template-columns:1fr;
+    }
+
+    .delivery-page-heading h2{
+        font-size:23px;
+    }
+
+    .delivery-section-heading h2{
+        font-size:20px;
+    }
+
+    .delivery-stat-card{
+        padding:20px;
+    }
+
+    .delivery-updates-section,
+    .delivery-search-section,
+    .delivery-status-section,
+    .delivery-progress-section,
+    .driver-info-section,
+    .delivery-table-section{
+        padding:18px;
+    }
+
+}
+/* =========================================================
+   MACHINE MANAGEMENT PAGE
+   ========================================================= */
+
+.machine-management-container{
+    width:90%;
+    max-width:1250px;
+    margin:40px auto;
+}
+
+
+/* =========================================================
+   PAGE HEADING
+   ========================================================= */
+
+.machine-page-heading{
+    margin-bottom:30px;
+}
+
+.machine-page-heading h2{
+    color:#075985;
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+.machine-page-heading p{
+    color:#334155;
+    font-size:15px;
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+   ========================================================= */
+
+.machine-section-heading{
+    margin-bottom:22px;
+}
+
+.machine-section-heading h2{
+    color:#075985;
+    font-size:24px;
+    margin-bottom:8px;
+}
+
+.machine-section-heading h2 i{
+    color:#0284C7;
+    margin-right:8px;
+}
+
+.machine-section-heading p{
+    color:#334155;
+    font-size:14px;
+}
+
+
+/* =========================================================
+   RECENT UPDATES
+   ========================================================= */
+
+.machine-updates-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+#machineUpdatesContainer{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.machine-update{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    background:#F0F9FF;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    padding:16px 18px;
+}
+
+.machine-update .update-icon{
+    width:42px;
+    height:42px;
+    background:#E0F2FE;
+    color:#0284C7;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.machine-update .update-icon i{
+    font-size:17px;
+}
+
+.machine-update .update-content{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.machine-update .update-content p{
+    color:#334155;
+    font-size:14px;
+}
+
+.update-machine-reference{
+    color:#075985;
+}
+
+.update-machine-status{
+    color:#0284C7;
+}
+
+.machine-update .update-time{
+    color:#64748B;
+    font-size:12px;
+}
+
+
+/* =========================================================
+   MACHINE SUMMARY CARDS
+   ========================================================= */
+
+.machine-summary{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.machine-stat-card{
+    background:#F0F9FF;
+    border:1px solid #BAE6FD;
+    border-radius:18px;
+    padding:25px 18px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+    transition:0.3s ease;
+}
+
+.machine-stat-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 8px 18px rgba(7,89,133,0.12);
+}
+
+.machine-stat-icon{
+    width:48px;
+    height:48px;
+    background:#E0F2FE;
+    color:#0284C7;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.machine-stat-icon i{
+    font-size:20px;
+}
+
+.machine-stat-info h3{
+    color:#075985;
+    font-size:14px;
+    margin-bottom:7px;
+}
+
+.machine-stat-info h2{
+    color:#0284C7;
+    font-size:25px;
+    font-weight:700;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.machine-search-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.machine-search-form{
+    display:flex;
+    align-items:flex-end;
+    gap:15px;
+}
+
+.machine-search-input{
+    flex:1;
+}
+
+.machine-search-input label{
+    display:block;
+    color:#075985;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:8px;
+}
+
+.machine-search-input input{
+    width:100%;
+    padding:13px 15px;
+    border:1px solid #BAE6FD;
+    border-radius:10px;
+    background:#FFFFFF;
+    color:#334155;
+    font-size:14px;
+    outline:none;
+    transition:0.3s ease;
+}
+
+.machine-search-input input:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.15);
+}
+
+.machine-search-input input::placeholder{
+    color:#94A3B8;
+}
+
+#searchMachineBtn{
+    padding:13px 22px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+#searchMachineBtn:hover{
+    background:#075985;
+}
+
+#searchMachineBtn i{
+    margin-right:6px;
+}
+
+
+/* =========================================================
+   MACHINE AVAILABILITY
+   ========================================================= */
+
+.machine-availability-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.machine-availability-container{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.availability-info-card{
+    background:#F0F9FF;
+    border:1px solid #E0F2FE;
+    border-radius:15px;
+    padding:20px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.availability-info-icon{
+    width:48px;
+    height:48px;
+    background:#E0F2FE;
+    color:#0284C7;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.availability-info-icon i{
+    font-size:20px;
+}
+
+.availability-info-card h3{
+    color:#075985;
+    font-size:15px;
+    margin-bottom:6px;
+}
+
+.availability-info-card p{
+    color:#334155;
+    font-size:13px;
+    line-height:1.5;
+}
+
+
+/* =========================================================
+   MACHINE TABLE
+   ========================================================= */
+
+.machine-table-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:40px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.machine-table-container{
+    width:100%;
+    overflow-x:auto;
+}
+
+.machine-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1000px;
+}
+
+.machine-table thead{
+    background:#F0F9FF;
+}
+
+.machine-table th{
+    color:#075985;
+    font-size:13px;
+    font-weight:700;
+    text-align:left;
+    padding:15px;
+    border-bottom:2px solid #BAE6FD;
+    white-space:nowrap;
+}
+
+.machine-table td{
+    padding:16px 15px;
+    border-bottom:1px solid #E0F2FE;
+    color:#334155;
+    font-size:13px;
+    vertical-align:middle;
+}
+
+.machine-table tbody tr{
+    transition:0.2s ease;
+}
+
+.machine-table tbody tr:hover{
+    background:#F0F9FF;
+}
+
+.machine-table tbody tr:last-child td{
+    border-bottom:none;
+}
+
+
+/* =========================================================
+   MACHINE TABLE CONTENT
+   ========================================================= */
+
+.machine-number{
+    color:#075985;
+    font-size:14px;
+}
+
+.machine-type{
+    color:#334155;
+    font-weight:600;
+}
+
+.machine-booking{
+    color:#334155;
+    font-size:13px;
+}
+
+.machine-available-time{
+    color:#334155;
+    font-size:13px;
+    white-space:nowrap;
+}
+
+.machine-maintenance-status{
+    color:#334155;
+    font-size:13px;
+}
+
+
+/* =========================================================
+   MACHINE STATUS BADGES
+   ========================================================= */
+
+.machine-status-badge{
+    display:inline-flex;
+    align-items:center;
+    padding:7px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.machine-status-badge.available{
+    background:#DCFCE7;
+    color:#166534;
+}
+
+.machine-status-badge.in-use{
+    background:#E0F2FE;
+    color:#0284C7;
+}
+
+.machine-status-badge.maintenance{
+    background:#FEF3C7;
+    color:#92400E;
+}
+
+.machine-status-badge.repair{
+    background:#FEE2E2;
+    color:#B91C1C;
+}
+
+
+/* =========================================================
+   VIEW BUTTON
+   ========================================================= */
+
+.view-machine-btn{
+    padding:9px 13px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:0.3s ease;
+}
+
+.view-machine-btn:hover{
+    background:#075985;
+}
+
+.view-machine-btn i{
+    margin-right:4px;
+}
+
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+@media(max-width:1200px){
+
+    .machine-summary{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+}
+
+
+@media(max-width:768px){
+
+    .machine-management-container{
+        width:95%;
+        margin:30px auto;
+    }
+
+    .machine-page-heading h2{
+        font-size:26px;
+    }
+
+    .machine-updates-section,
+    .machine-search-section,
+    .machine-availability-section,
+    .machine-table-section{
+        padding:22px;
+    }
+
+    .machine-summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .machine-search-form{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    #searchMachineBtn{
+        width:100%;
+    }
+
+    .machine-availability-container{
+        grid-template-columns:1fr;
+    }
+
+    .machine-update{
+        align-items:flex-start;
+    }
+
+}
+
+
+@media(max-width:480px){
+
+    .machine-summary{
+        grid-template-columns:1fr;
+    }
+
+    .machine-page-heading h2{
+        font-size:23px;
+    }
+
+    .machine-section-heading h2{
+        font-size:20px;
+    }
+
+    .machine-stat-card{
+        padding:20px;
+    }
+
+    .machine-updates-section,
+    .machine-search-section,
+    .machine-availability-section,
+    .machine-table-section{
+        padding:18px;
+    }
+
+}
+/* =========================================================
+   CUSTOMER MANAGEMENT
+   ========================================================= */
+
+.customer-management-container{
+    width:90%;
+    max-width:1250px;
+    margin:40px auto;
+}
+
+
+/* =========================================================
+   PAGE HEADING
+   ========================================================= */
+
+.customer-page-heading{
+    margin-bottom:30px;
+}
+
+.customer-page-heading h2{
+    color:#075985;
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+.customer-page-heading p{
+    color:#334155;
+    font-size:15px;
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+   ========================================================= */
+
+.customer-section-heading{
+    margin-bottom:22px;
+}
+
+.customer-section-heading h2{
+    color:#075985;
+    font-size:24px;
+    margin-bottom:8px;
+}
+
+.customer-section-heading h2 i{
+    color:#0284C7;
+    margin-right:8px;
+}
+
+.customer-section-heading p{
+    color:#334155;
+    font-size:14px;
+}
+
+
+/* =========================================================
+   RECENT UPDATES
+   ========================================================= */
+
+.customer-updates-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+#customerUpdatesContainer{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.customer-update{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    background:#F0F9FF;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    padding:16px 18px;
+}
+
+.update-icon{
+    width:42px;
+    height:42px;
+    background:#E0F2FE;
+    color:#0284C7;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.update-icon i{
+    font-size:17px;
+}
+
+.update-content{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.update-content p{
+    color:#334155;
+    font-size:14px;
+}
+
+.update-customer-name{
+    color:#075985;
+}
+
+.update-time{
+    color:#64748B;
+    font-size:12px;
+}
+
+
+/* =========================================================
+   CUSTOMER SUMMARY
+   ========================================================= */
+
+.customer-summary{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.customer-stat-card{
+    background:#F0F9FF;
+    border:1px solid #BAE6FD;
+    border-radius:18px;
+    padding:25px 18px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+    transition:0.3s ease;
+}
+
+.customer-stat-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 8px 18px rgba(7,89,133,0.12);
+}
+
+.customer-stat-icon{
+    width:48px;
+    height:48px;
+    background:#E0F2FE;
+    color:#0284C7;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.customer-stat-icon i{
+    font-size:20px;
+}
+
+.customer-stat-info h3{
+    color:#075985;
+    font-size:14px;
+    margin-bottom:7px;
+}
+
+.customer-stat-info h2{
+    color:#0284C7;
+    font-size:25px;
+    font-weight:700;
+}
+
+
+/* =========================================================
+   CUSTOMER SEARCH
+   ========================================================= */
+
+.customer-search-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.customer-search-form{
+    display:flex;
+    align-items:flex-end;
+    gap:15px;
+}
+
+.customer-search-input{
+    flex:1;
+}
+
+.customer-search-input label{
+    display:block;
+    color:#075985;
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:8px;
+}
+
+.customer-search-input input{
+    width:100%;
+    padding:13px 15px;
+    border:1px solid #BAE6FD;
+    border-radius:10px;
+    background:#FFFFFF;
+    color:#334155;
+    font-size:14px;
+    outline:none;
+    transition:0.3s ease;
+}
+
+.customer-search-input input:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.15);
+}
+
+.customer-search-input input::placeholder{
+    color:#94A3B8;
+}
+
+#searchCustomerBtn{
+    padding:13px 22px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s ease;
+}
+
+#searchCustomerBtn:hover{
+    background:#075985;
+}
+
+#searchCustomerBtn i{
+    margin-right:6px;
+}
+
+
+/* =========================================================
+   CUSTOMER TABLE
+   ========================================================= */
+
+.customer-table-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:40px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.customer-table-container{
+    width:100%;
+    overflow-x:auto;
+}
+
+.customer-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:900px;
+}
+
+.customer-table thead{
+    background:#F0F9FF;
+}
+
+.customer-table th{
+    color:#075985;
+    font-size:13px;
+    font-weight:700;
+    text-align:left;
+    padding:15px;
+    border-bottom:2px solid #BAE6FD;
+    white-space:nowrap;
+}
+
+.customer-table td{
+    padding:16px 15px;
+    border-bottom:1px solid #E0F2FE;
+    color:#334155;
+    font-size:13px;
+    vertical-align:middle;
+}
+
+.customer-table tbody tr{
+    transition:0.2s ease;
+}
+
+.customer-table tbody tr:hover{
+    background:#F0F9FF;
+}
+
+.customer-table tbody tr:last-child td{
+    border-bottom:none;
+}
+
+
+/* =========================================================
+   CUSTOMER INFORMATION
+   ========================================================= */
+
+.customer-name{
+    color:#075985;
+    font-size:14px;
+}
+
+.customer-email{
+    color:#334155;
+    font-size:13px;
+}
+
+.customer-phone{
+    color:#334155;
+    font-size:13px;
+}
+
+.customer-booking-count{
+    color:#0284C7;
+    font-weight:700;
+    font-size:14px;
+}
+
+.customer-latest-booking{
+    color:#075985;
+    font-size:14px;
+}
+
+
+/* =========================================================
+   CUSTOMER STATUS
+   ========================================================= */
+
+.customer-status-badge{
+    display:inline-flex;
+    align-items:center;
+    padding:7px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.customer-status-badge.in-progress{
+    background:#E0F2FE;
+    color:#0284C7;
+}
+
+.customer-status-badge.ready{
+    background:#DCFCE7;
+    color:#166534;
+}
+
+.customer-status-badge.completed{
+    background:#DCFCE7;
+    color:#166534;
+}
+
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+@media(max-width:1100px){
+
+    .customer-summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+
+@media(max-width:768px){
+
+    .customer-management-container{
+        width:95%;
+        margin:30px auto;
+    }
+
+    .customer-page-heading h2{
+        font-size:26px;
+    }
+
+    .customer-updates-section,
+    .customer-search-section,
+    .customer-table-section{
+        padding:22px;
+    }
+
+    .customer-summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .customer-search-form{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    #searchCustomerBtn{
+        width:100%;
+    }
+
+    .customer-update{
+        align-items:flex-start;
+    }
+
+}
+
+
+@media(max-width:480px){
+
+    .customer-summary{
+        grid-template-columns:1fr;
+    }
+
+    .customer-page-heading h2{
+        font-size:23px;
+    }
+
+    .customer-section-heading h2{
+        font-size:20px;
+    }
+
+    .customer-stat-card{
+        padding:20px;
+    }
+
+    .customer-updates-section,
+    .customer-search-section,
+    .customer-table-section{
+        padding:18px;
+    }
+
+}
+/* =========================================================
+   REPORTS
+   ========================================================= */
+
+.reports-container{
+    width:90%;
+    max-width:1250px;
+    margin:40px auto;
+}
+
+
+/* =========================================================
+   PAGE HEADING
+   ========================================================= */
+
+.reports-page-heading{
+    margin-bottom:30px;
+}
+
+.reports-page-heading h2{
+    color:#075985;
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+.reports-page-heading p{
+    color:#334155;
+    font-size:15px;
+}
+
+
+/* =========================================================
+   SECTION HEADINGS
+   ========================================================= */
+
+.reports-section-heading{
+    margin-bottom:22px;
+}
+
+.reports-section-heading h2{
+    color:#075985;
+    font-size:24px;
+    margin-bottom:8px;
+}
+
+.reports-section-heading h2 i{
+    color:#0284C7;
+    margin-right:8px;
+}
+
+.reports-section-heading p{
+    color:#334155;
+    font-size:14px;
+}
+
+
+/* =========================================================
+   REPORT FILTER
+   ========================================================= */
+
+.reports-filter-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.reports-filter-form{
+    display:grid;
+    grid-template-columns:1fr 1fr auto;
+    gap:20px;
+    align-items:end;
+}
+
+.reports-filter-item{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.reports-filter-item label{
+    color:#075985;
+    font-size:14px;
+    font-weight:600;
+}
+
+.reports-filter-item input{
+    width:100%;
+    min-height:46px;
+    padding:12px 15px;
+    border:1px solid #BAE6FD;
+    border-radius:10px;
+    background:#FFFFFF;
+    color:#334155;
+    font-size:14px;
+    outline:none;
+    transition:0.3s ease;
+}
+
+.reports-filter-item input:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.15);
+}
+
+.reports-filter-action{
+    display:flex;
+    align-items:flex-end;
+}
+
+#generateReportBtn{
+    min-height:46px;
+    padding:12px 20px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:0.3s ease;
+}
+
+#generateReportBtn:hover{
+    background:#075985;
+}
+
+#generateReportBtn i{
+    margin-right:6px;
+}
+
+
+/* =========================================================
+   REPORT SUMMARY
+   ========================================================= */
+
+.reports-summary{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.report-stat-card{
+    background:#F0F9FF;
+    border:1px solid #BAE6FD;
+    border-radius:18px;
+    padding:25px 18px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+    transition:0.3s ease;
+}
+
+.report-stat-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 8px 18px rgba(7,89,133,0.12);
+}
+
+.report-stat-icon{
+    width:48px;
+    height:48px;
+    background:#E0F2FE;
+    color:#0284C7;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.report-stat-icon i{
+    font-size:20px;
+}
+
+.report-stat-info h3{
+    color:#075985;
+    font-size:14px;
+    margin-bottom:7px;
+}
+
+.report-stat-info h2{
+    color:#0284C7;
+    font-size:25px;
+    font-weight:700;
+}
+
+
+/* =========================================================
+   REPORT TABLES
+   ========================================================= */
+
+.reports-table-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:30px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+.reports-table-container{
+    width:100%;
+    overflow-x:auto;
+}
+
+.reports-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:750px;
+}
+
+.reports-table thead{
+    background:#F0F9FF;
+}
+
+.reports-table th{
+    color:#075985;
+    font-size:13px;
+    font-weight:700;
+    text-align:left;
+    padding:15px;
+    border-bottom:2px solid #BAE6FD;
+    white-space:nowrap;
+}
+
+.reports-table td{
+    padding:16px 15px;
+    border-bottom:1px solid #E0F2FE;
+    color:#334155;
+    font-size:13px;
+    vertical-align:middle;
+}
+
+.reports-table tbody tr{
+    transition:0.2s ease;
+}
+
+.reports-table tbody tr:hover{
+    background:#F0F9FF;
+}
+
+.reports-table tbody tr:last-child td{
+    border-bottom:none;
+}
+
+
+/* =========================================================
+   SERVICE REPORT
+   ========================================================= */
+
+.report-service{
+    color:#075985;
+    font-size:14px;
+}
+
+.service-total{
+    color:#334155;
+    font-weight:600;
+}
+
+.service-completed{
+    color:#166534;
+    font-weight:600;
+}
+
+.service-cancelled{
+    color:#B91C1C;
+    font-weight:600;
+}
+
+.service-revenue{
+    color:#0284C7;
+    font-size:14px;
+}
+
+
+/* =========================================================
+   BOOKING METHOD REPORT
+   ========================================================= */
+
+.report-method{
+    color:#075985;
+    font-size:14px;
+}
+
+.method-total{
+    color:#334155;
+    font-weight:600;
+}
+
+.method-completed{
+    color:#166534;
+    font-weight:600;
+}
+
+.method-cancelled{
+    color:#B91C1C;
+    font-weight:600;
+}
+
+
+/* =========================================================
+   REPORT ACTIVITY
+   ========================================================= */
+
+.reports-activity-section{
+    background:#FFFFFF;
+    border:1px solid #BAE6FD;
+    border-radius:20px;
+    padding:30px;
+    margin-bottom:40px;
+    box-shadow:0 4px 10px rgba(7,89,133,0.08);
+}
+
+#reportActivityContainer{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.report-activity{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    background:#F0F9FF;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    padding:16px 18px;
+}
+
+.report-activity-icon{
+    width:42px;
+    height:42px;
+    background:#E0F2FE;
+    color:#0284C7;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+}
+
+.report-activity-icon i{
+    font-size:17px;
+}
+
+.report-activity-content{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+}
+
+.report-activity-content p{
+    color:#334155;
+    font-size:14px;
+}
+
+.report-activity-content strong{
+    color:#075985;
+}
+
+.report-activity-content span{
+    color:#64748B;
+    font-size:12px;
+}
+
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+@media(max-width:1100px){
+
+    .reports-summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .reports-filter-form{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .reports-filter-action{
+        grid-column:span 2;
+    }
+
+    #generateReportBtn{
+        width:100%;
+    }
+
+}
+
+
+@media(max-width:768px){
+
+    .reports-container{
+        width:95%;
+        margin:30px auto;
+    }
+
+    .reports-page-heading h2{
+        font-size:26px;
+    }
+
+    .reports-filter-section,
+    .reports-table-section,
+    .reports-activity-section{
+        padding:22px;
+    }
+
+    .reports-summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .reports-filter-form{
+        grid-template-columns:1fr;
+    }
+
+    .reports-filter-action{
+        grid-column:auto;
+    }
+
+    #generateReportBtn{
+        width:100%;
+    }
+
+    .report-activity{
+        align-items:flex-start;
+    }
+
+}
+
+
+@media(max-width:480px){
+
+    .reports-summary{
+        grid-template-columns:1fr;
+    }
+
+    .reports-page-heading h2{
+        font-size:23px;
+    }
+
+    .reports-section-heading h2{
+        font-size:20px;
+    }
+
+    .report-stat-card{
+        padding:20px;
+    }
+
+    .reports-filter-section,
+    .reports-table-section,
+    .reports-activity-section{
+        padding:18px;
+    }
 }

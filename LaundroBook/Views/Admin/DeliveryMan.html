@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LaundroBook | Delivery Management</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="../../CSS/secondStyle.css">
+
+</head>
+
+<body>
+
+
+    <!-- ==================================================
+         ADMIN NAVIGATION
+    =================================================== -->
+
+    <nav class="admin-navbar">
+
+        <div class="navbar-brand">
+
+            <img src="../../Images/logo.png"
+                 class="navbar-logo"
+                 alt="LaundroBook Logo">
+
+            <span>
+                LaundroBook
+            </span>
+
+        </div>
+
+
+        <ul>
+
+            <li>
+                <a href="adminDash.html">
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="bookingMan.html">
+                    Bookings
+                </a>
+            </li>
+
+            <li>
+                <a href="pickUpMan.html">
+                    Pickups
+                </a>
+            </li>
+
+            <li>
+                <a href="deliveryMan.html" class="active">
+                    Deliveries
+                </a>
+            </li>
+
+            <li>
+                <a href="MachineMan.html">
+                    Machines
+                </a>
+            </li>
+
+            <li>
+                <a href="CustomerMan.html">
+                    Customers
+                </a>
+            </li>
+
+            <li>
+                <a href="Reports.html">
+                    Reports
+                </a>
+            </li>
+
+            <li>
+                <a href="login.html">
+                    Logout
+                </a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- ==================================================
+         MAIN DELIVERY MANAGEMENT CONTENT
+    =================================================== -->
+
+    <main class="delivery-management-container">
+
+
+        <!-- ==================================================
+             PAGE HEADING
+        =================================================== -->
+
+        <section class="delivery-page-heading">
+
+            <h2>
+                Delivery Management
+            </h2>
+
+            <p>
+                Monitor deliveries, update delivery progress and manage assigned drivers.
+            </p>
+
+        </section>
+
+
+        <!-- ==================================================
+             RECENT DELIVERY UPDATES
+
+             Backend:
+             Populate #deliveryUpdatesContainer with the
+             latest delivery status changes.
+        =================================================== -->
+
+        <section class="delivery-updates-section">
+
+
+            <div class="delivery-section-heading">
+
+                <h2>
+
+                    <i class="fa-solid fa-bell"></i>
+
+                    Recent Updates
+
+                </h2>
+
+                <p>
+                    Latest changes made to deliveries.
+                </p>
+
+            </div>
+
+
+            <!-- Backend: Populate recent delivery updates here -->
+
+            <div id="deliveryUpdatesContainer">
+
+
+                <!-- Example update -->
+
+                <div class="delivery-update">
+
+                    <div class="update-icon">
+
+                        <i class="fa-solid fa-truck"></i>
+
+                    </div>
+
+
+                    <div class="update-content">
+
+                        <p>
+
+                            Delivery
+
+                            <strong class="update-delivery-reference">
+                                #412
+                            </strong>
+
+                            was updated to
+
+                            <strong class="update-delivery-status">
+                                Out for Delivery
+                            </strong>.
+
+                        </p>
+
+
+                        <!-- Backend: Populate date/time -->
+
+                        <span class="update-time">
+                            Recently updated
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             DELIVERY SUMMARY CARDS
+
+             Backend:
+             Populate each value from the database.
+        =================================================== -->
+
+        <section class="delivery-summary">
+
+
+            <!-- PENDING DELIVERIES -->
+
+            <div class="delivery-stat-card">
+
+                <div class="delivery-stat-icon">
+
+                    <i class="fa-solid fa-clock"></i>
+
+                </div>
+
+
+                <div class="delivery-stat-info">
+
+                    <h3>
+                        Pending Deliveries
+                    </h3>
+
+                    <!-- Backend: Count pending deliveries -->
+
+                    <h2 id="pendingDeliveries">
+                        --
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <!-- READY FOR DELIVERY -->
+
+            <div class="delivery-stat-card">
+
+                <div class="delivery-stat-icon">
+
+                    <i class="fa-solid fa-box"></i>
+
+                </div>
+
+
+                <div class="delivery-stat-info">
+
+                    <h3>
+                        Ready for Delivery
+                    </h3>
+
+                    <!-- Backend: Count deliveries ready to leave -->
+
+                    <h2 id="readyForDelivery">
+                        --
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <!-- DRIVER ASSIGNED -->
+
+            <div class="delivery-stat-card">
+
+                <div class="delivery-stat-icon">
+
+                    <i class="fa-solid fa-user-check"></i>
+
+                </div>
+
+
+                <div class="delivery-stat-info">
+
+                    <h3>
+                        Driver Assigned
+                    </h3>
+
+                    <!-- Backend: Count deliveries with assigned drivers -->
+
+                    <h2 id="driverAssigned">
+                        --
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <!-- OUT FOR DELIVERY -->
+
+            <div class="delivery-stat-card">
+
+                <div class="delivery-stat-icon">
+
+                    <i class="fa-solid fa-truck-fast"></i>
+
+                </div>
+
+
+                <div class="delivery-stat-info">
+
+                    <h3>
+                        Out for Delivery
+                    </h3>
+
+                    <!-- Backend: Count active deliveries -->
+
+                    <h2 id="outForDelivery">
+                        --
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <!-- COMPLETED DELIVERIES -->
+
+            <div class="delivery-stat-card">
+
+                <div class="delivery-stat-icon">
+
+                    <i class="fa-solid fa-check"></i>
+
+                </div>
+
+
+                <div class="delivery-stat-info">
+
+                    <h3>
+                        Completed Deliveries
+                    </h3>
+
+                    <!-- Backend: Count completed deliveries -->
+
+                    <h2 id="completedDeliveries">
+                        --
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ==================================================
+             SEARCH DELIVERIES
+
+             Backend:
+             Can later connect this search to the database.
+        =================================================== -->
+
+        <section class="delivery-search-section">
+
+
+            <div class="delivery-section-heading">
+
+                <h2>
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    Search Deliveries
+
+                </h2>
+
+                <p>
+                    Search using the booking reference or customer name.
+                </p>
+
+            </div>
+
+
+            <form
+                id="deliverySearchForm"
+                class="delivery-search-form"
+                action="#"
+                method="GET">
+
+
+                <div class="delivery-search-input">
+
+                    <label for="deliverySearch">
+                        Search Delivery
+                    </label>
+
+
+                    <!-- Backend:
+                         Use this value to search delivery records.
+                    -->
+
+                    <input
+                        type="text"
+                        id="deliverySearch"
+                        name="deliverySearch"
+                        placeholder="Enter booking reference or customer name..."
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    id="searchDeliveryBtn">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    Search
+
+                </button>
+
+
+            </form>
+
+        </section>
+
+
+        <!-- ==================================================
+             DELIVERY STATUS
+
+             Admin:
+             Update current delivery status, estimated
+             delivery time and assigned driver.
+
+             Backend:
+             Save these values against the relevant
+             booking/delivery.
+        =================================================== -->
+
+        <section class="delivery-status-section">
+
+
+            <div class="delivery-section-heading">
+
+                <h2>
+
+                    <i class="fa-solid fa-truck"></i>
+
+                    Delivery Status
+
+                </h2>
+
+                <p>
+                    Update the current delivery status, estimated delivery time and assigned driver.
+                </p>
+
+            </div>
+
+
+            <div class="delivery-status-form">
+
+
+                <!-- BOOKING REFERENCE -->
+
+                <div class="delivery-status-item">
+
+                    <label for="deliveryBookingReference">
+
+                        Booking Reference
+
+                    </label>
+
+
+                    <!-- Backend:
+                         Populate the booking reference.
+                    -->
+
+                    <strong id="deliveryBookingReference">
+
+                        #412
+
+                    </strong>
+
+                </div>
+
+
+                <!-- CURRENT STATUS -->
+
+                <div class="delivery-status-item">
+
+                    <label for="currentDeliveryStatus">
+
+                        Current Status
+
+                    </label>
+
+
+                    <!--
+                        Admin:
+                        Select the current delivery status.
+
+                        Backend:
+                        Save the selected status against
+                        the booking/delivery ID.
+                    -->
+
+                    <select
+                        id="currentDeliveryStatus"
+                        name="currentDeliveryStatus"
+                        data-booking-id="412">
+
+
+                        <option value="pickup_of_order">
+
+                            Pickup of Order
+
+                        </option>
+
+
+                        <option value="order_confirmed">
+
+                            Order Confirmed
+
+                        </option>
+
+
+                        <option value="laundry_completed">
+
+                            Laundry Completed
+
+                        </option>
+
+
+                        <option value="ready_for_delivery">
+
+                            Ready for Delivery
+
+                        </option>
+
+
+                        <option value="driver_assigned">
+
+                            Driver Assigned
+
+                        </option>
+
+
+                        <option value="out_for_delivery" selected>
+
+                            Out for Delivery
+
+                        </option>
+
+
+                        <option value="driver_close_by">
+
+                            Driver Close By
+
+                        </option>
+
+
+                        <option value="delivery_complete">
+
+                            Delivery Complete
+
+                        </option>
+
+
+                    </select>
+
+                </div>
+
+
+                <!-- ESTIMATED DELIVERY TIME -->
+
+                <div class="delivery-status-item">
+
+                    <label for="estimatedDeliveryTime">
+
+                        Estimated Delivery Time
+
+                    </label>
+
+
+                    <!--
+                        Admin:
+                        Enter estimated delivery date/time.
+
+                        Backend:
+                        Save this value with the delivery.
+
+                        Customer side:
+                        Display the saved estimated delivery time.
+                    -->
+
+                    <input
+                        type="datetime-local"
+                        id="estimatedDeliveryTime"
+                        name="estimatedDeliveryTime"
+                        data-booking-id="412">
+
+                </div>
+
+
+                <!-- ASSIGNED DRIVER -->
+
+                <div class="delivery-status-item">
+
+                    <label for="assignedDriver">
+
+                        Assigned Driver
+
+                    </label>
+
+
+                    <!--
+                        Backend:
+                        Populate available drivers.
+
+                        This is currently dummy data.
+                    -->
+
+                    <select
+                        id="assignedDriver"
+                        name="assignedDriver"
+                        data-booking-id="412">
+
+
+                        <option value="">
+
+                            Select Driver
+
+                        </option>
+
+
+                        <option value="driver_001">
+
+                            John Smith
+
+                        </option>
+
+
+                        <option value="driver_002">
+
+                            Sarah Williams
+
+                        </option>
+
+
+                        <option value="driver_003">
+
+                            Michael Brown
+
+                        </option>
+
+
+                    </select>
+
+                </div>
+
+
+                <!-- SAVE STATUS -->
+
+                <div class="delivery-status-action">
+
+
+                    <!--
+                        Backend:
+                        Save the selected delivery status,
+                        estimated delivery time and assigned driver.
+                    -->
+
+                    <button
+                        type="button"
+                        id="saveDeliveryStatus"
+                        data-booking-id="412">
+
+                        <i class="fa-solid fa-check"></i>
+
+                        Save Status
+
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             DELIVERY PROGRESS
+
+             Admin:
+             Update the current delivery stage.
+
+             Backend:
+             Save the current stage against the delivery.
+
+             Customer side:
+             Display the progress automatically based
+             on the saved status.
+        =================================================== -->
+
+        <section class="delivery-progress-section">
+
+
+            <div class="delivery-section-heading">
+
+                <h2>
+
+                    <i class="fa-solid fa-route"></i>
+
+                    Delivery Progress
+
+                </h2>
+
+                <p>
+                    Update the current stage of the customer's delivery.
+                </p>
+
+            </div>
+
+
+            <div class="delivery-progress-form">
+
+
+                <!-- BOOKING REFERENCE -->
+
+                <div class="delivery-progress-item">
+
+                    <label for="progressBookingReference">
+
+                        Booking Reference
+
+                    </label>
+
+
+                    <!-- Backend: Populate booking reference -->
+
+                    <strong id="progressBookingReference">
+
+                        #412
+
+                    </strong>
+
+                </div>
+
+
+                <!-- CURRENT PROGRESS -->
+
+                <div class="delivery-progress-item">
+
+                    <label for="currentDeliveryProgress">
+
+                        Current Progress
+
+                    </label>
+
+
+                    <!--
+                        Backend:
+                        Save selected delivery progress stage.
+                    -->
+
+                    <select
+                        id="currentDeliveryProgress"
+                        name="currentDeliveryProgress"
+                        data-booking-id="412">
+
+
+                        <option value="pickup_of_order">
+
+                            Pickup of Order
+
+                        </option>
+
+
+                        <option value="order_confirmed">
+
+                            Order Confirmed
+
+                        </option>
+
+
+                        <option value="laundry_completed">
+
+                            Laundry Completed
+
+                        </option>
+
+
+                        <option value="ready_for_delivery">
+
+                            Ready for Delivery
+
+                        </option>
+
+
+                        <option value="driver_assigned">
+
+                            Driver Assigned
+
+                        </option>
+
+
+                        <option value="out_for_delivery" selected>
+
+                            Out for Delivery
+
+                        </option>
+
+
+                        <option value="driver_close_by">
+
+                            Driver Close By
+
+                        </option>
+
+
+                        <option value="delivery_complete">
+
+                            Delivery Complete
+
+                        </option>
+
+
+                    </select>
+
+                </div>
+
+
+                <!-- SAVE PROGRESS -->
+
+                <div class="delivery-progress-action">
+
+                    <button
+                        type="button"
+                        id="saveDeliveryProgress"
+                        data-booking-id="412">
+
+                        <i class="fa-solid fa-check"></i>
+
+                        Save Progress
+
+                    </button>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ==================================================
+             DRIVER INFORMATION
+
+             Backend:
+             Populate the assigned driver's information
+             from the database.
+
+             Driver login/database functionality will be
+             handled separately later.
+        =================================================== -->
+
+        <section class="driver-info-section">
+
+
+            <div class="delivery-section-heading">
+
+                <h2>
+
+                    <i class="fa-solid fa-id-card"></i>
+
+                    Driver Information
+
+                </h2>
+
+                <p>
+                    View information about the driver assigned to this delivery.
+                </p>
+
+            </div>
+
+
+            <div class="driver-info-card">
+
+
+                <!-- DRIVER NAME -->
+
+                <div class="driver-info-item">
+
+                    <span class="driver-info-label">
+
+                        Driver Name
+
+                    </span>
+
+
+                    <!-- Backend: Populate assigned driver's name -->
+
+                    <strong id="driverName">
+
+                        John Smith
+
+                    </strong>
+
+                </div>
+
+
+                <!-- DRIVER PHONE -->
+
+                <div class="driver-info-item">
+
+                    <span class="driver-info-label">
+
+                        Phone Number
+
+                    </span>
+
+
+                    <!-- Backend: Populate driver's phone number -->
+
+                    <strong id="driverPhone">
+
+                        071 234 5678
+
+                    </strong>
+
+                </div>
+
+
+                <!-- VEHICLE -->
+
+                <div class="driver-info-item">
+
+                    <span class="driver-info-label">
+
+                        Vehicle
+
+                    </span>
+
+
+                    <!-- Backend: Populate driver's vehicle -->
+
+                    <strong id="driverVehicle">
+
+                        Toyota Corolla
+
+                    </strong>
+
+                </div>
+
+
+                <!-- REGISTRATION -->
+
+                <div class="driver-info-item">
+
+                    <span class="driver-info-label">
+
+                        Vehicle Registration
+
+                    </span>
+
+
+                    <!-- Backend: Populate vehicle registration -->
+
+                    <strong id="driverRegistration">
+
+                        ABC 123 GP
+
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             ALL DELIVERIES
+
+             Backend:
+             Populate #deliveryTableBody with real delivery
+             records from the database.
+        =================================================== -->
+
+        <section class="delivery-table-section">
+
+
+            <div class="delivery-section-heading">
+
+                <h2>
+
+                    <i class="fa-solid fa-list"></i>
+
+                    All Deliveries
+
+                </h2>
+
+                <p>
+                    View delivery information and update delivery status.
+                </p>
+
+            </div>
+
+
+            <div class="delivery-table-container">
+
+
+                <table
+                    class="delivery-table"
+                    id="deliveryTable">
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Booking Ref
+                            </th>
+
+                            <th>
+                                Customer
+                            </th>
+
+                            <th>
+                                Service
+                            </th>
+
+                            <th>
+                                Delivery Status
+                            </th>
+
+                            <th>
+                                Estimated Delivery
+                            </th>
+
+                            <th>
+                                Driver
+                            </th>
+
+                            <th>
+                                Update
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <!-- Backend:
+                         Populate this tbody with real
+                         delivery records.
+                    -->
+
+                    <tbody id="deliveryTableBody">
+
+
+                        <!-- ==================================================
+                             EXAMPLE DELIVERY #412
+                        =================================================== -->
+
+                        <tr
+                            class="delivery-row"
+                            data-delivery-id="412"
+                            data-booking-id="412">
+
+
+                            <!-- BOOKING REFERENCE -->
+
+                            <td>
+
+                                <!-- Backend: Populate booking reference -->
+
+                                <strong class="delivery-booking-reference">
+
+                                    #412
+
+                                </strong>
+
+                            </td>
+
+
+                            <!-- CUSTOMER -->
+
+                            <td>
+
+                                <div class="delivery-customer-details">
+
+
+                                    <!-- Backend: Populate customer name -->
+
+                                    <strong class="delivery-customer-name">
+
+                                        John Smith
+
+                                    </strong>
+
+
+                                    <!-- Backend: Populate customer email -->
+
+                                    <span class="delivery-customer-email">
+
+                                        john@email.com
+
+                                    </span>
+
+
+                                    <!-- Backend: Populate customer phone -->
+
+                                    <span class="delivery-customer-phone">
+
+                                        071 234 5678
+
+                                    </span>
+
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- SERVICE -->
+
+                            <td>
+
+                                <!-- Backend: Populate selected service -->
+
+                                <span class="delivery-service">
+
+                                    Heavy Wash
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- DELIVERY STATUS -->
+
+                            <td>
+
+                                <!-- Backend: Populate current delivery status -->
+
+                                <span
+                                    class="delivery-status-badge out-for-delivery"
+                                    data-status="out_for_delivery">
+
+
+                                    <span class="delivery-current-status">
+
+                                        Out for Delivery
+
+                                    </span>
+
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- ESTIMATED DELIVERY -->
+
+                            <td>
+
+                                <!-- Backend: Populate estimated delivery -->
+
+                                <span class="delivery-estimated-time">
+
+                                    Today at 17:00
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- DRIVER -->
+
+                            <td>
+
+                                <!-- Backend: Populate assigned driver -->
+
+                                <span class="delivery-driver">
+
+                                    John Smith
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- UPDATE -->
+
+                            <td>
+
+                                <div class="delivery-status-update">
+
+
+                                    <select
+                                        class="delivery-status-select"
+                                        id="deliveryStatus412"
+                                        name="deliveryStatus"
+                                        data-delivery-id="412">
+
+
+                                        <option value="">
+
+                                            Select Status
+
+                                        </option>
+
+
+                                        <option value="pickup_of_order">
+
+                                            Pickup of Order
+
+                                        </option>
+
+
+                                        <option value="order_confirmed">
+
+                                            Order Confirmed
+
+                                        </option>
+
+
+                                        <option value="laundry_completed">
+
+                                            Laundry Completed
+
+                                        </option>
+
+
+                                        <option value="ready_for_delivery">
+
+                                            Ready for Delivery
+
+                                        </option>
+
+
+                                        <option value="driver_assigned">
+
+                                            Driver Assigned
+
+                                        </option>
+
+
+                                        <option value="out_for_delivery">
+
+                                            Out for Delivery
+
+                                        </option>
+
+
+                                        <option value="driver_close_by">
+
+                                            Driver Close By
+
+                                        </option>
+
+
+                                        <option value="delivery_complete">
+
+                                            Delivery Complete
+
+                                        </option>
+
+
+                                    </select>
+
+
+                                    <!-- Backend:
+                                         Save selected delivery status.
+                                    -->
+
+                                    <button
+                                        type="button"
+                                        class="save-delivery-status-btn"
+                                        id="saveDeliveryStatus412"
+                                        data-delivery-id="412">
+
+                                        <i class="fa-solid fa-check"></i>
+
+                                        Save
+
+                                    </button>
+
+
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+
+
+                        <!-- ==================================================
+                             EXAMPLE DELIVERY #405
+                        =================================================== -->
+
+                        <tr
+                            class="delivery-row"
+                            data-delivery-id="405"
+                            data-booking-id="405">
+
+
+                            <td>
+
+                                <strong class="delivery-booking-reference">
+
+                                    #405
+
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="delivery-customer-details">
+
+                                    <strong class="delivery-customer-name">
+
+                                        Sarah Jones
+
+                                    </strong>
+
+                                    <span class="delivery-customer-email">
+
+                                        sarah@email.com
+
+                                    </span>
+
+                                    <span class="delivery-customer-phone">
+
+                                        082 555 1234
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="delivery-service">
+
+                                    Normal Wash
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="delivery-status-badge driver-assigned"
+                                    data-status="driver_assigned">
+
+
+                                    <span class="delivery-current-status">
+
+                                        Driver Assigned
+
+                                    </span>
+
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="delivery-estimated-time">
+
+                                    Today at 18:00
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="delivery-driver">
+
+                                    Sarah Williams
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="delivery-status-update">
+
+
+                                    <select
+                                        class="delivery-status-select"
+                                        id="deliveryStatus405"
+                                        name="deliveryStatus"
+                                        data-delivery-id="405">
+
+
+                                        <option value="">
+
+                                            Select Status
+
+                                        </option>
+
+
+                                        <option value="pickup_of_order">
+
+                                            Pickup of Order
+
+                                        </option>
+
+
+                                        <option value="order_confirmed">
+
+                                            Order Confirmed
+
+                                        </option>
+
+
+                                        <option value="laundry_completed">
+
+                                            Laundry Completed
+
+                                        </option>
+
+
+                                        <option value="ready_for_delivery">
+
+                                            Ready for Delivery
+
+                                        </option>
+
+
+                                        <option value="driver_assigned">
+
+                                            Driver Assigned
+
+                                        </option>
+
+
+                                        <option value="out_for_delivery">
+
+                                            Out for Delivery
+
+                                        </option>
+
+
+                                        <option value="driver_close_by">
+
+                                            Driver Close By
+
+                                        </option>
+
+
+                                        <option value="delivery_complete">
+
+                                            Delivery Complete
+
+                                        </option>
+
+
+                                    </select>
+
+
+                                    <button
+                                        type="button"
+                                        class="save-delivery-status-btn"
+                                        id="saveDeliveryStatus405"
+                                        data-delivery-id="405">
+
+                                        <i class="fa-solid fa-check"></i>
+
+                                        Save
+
+                                    </button>
+
+
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+
+
+                        <!-- ==================================================
+                             EXAMPLE DELIVERY #398
+                        =================================================== -->
+
+                        <tr
+                            class="delivery-row"
+                            data-delivery-id="398"
+                            data-booking-id="398">
+
+
+                            <td>
+
+                                <strong class="delivery-booking-reference">
+
+                                    #398
+
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="delivery-customer-details">
+
+                                    <strong class="delivery-customer-name">
+
+                                        Michael Brown
+
+                                    </strong>
+
+                                    <span class="delivery-customer-email">
+
+                                        michael@email.com
+
+                                    </span>
+
+                                    <span class="delivery-customer-phone">
+
+                                        076 444 8899
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="delivery-service">
+
+                                    Quick Wash
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="delivery-status-badge ready-for-delivery"
+                                    data-status="ready_for_delivery">
+
+
+                                    <span class="delivery-current-status">
+
+                                        Ready for Delivery
+
+                                    </span>
+
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="delivery-estimated-time">
+
+                                    Today at 16:30
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="delivery-driver">
+
+                                    Not Assigned
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="delivery-status-update">
+
+
+                                    <select
+                                        class="delivery-status-select"
+                                        id="deliveryStatus398"
+                                        name="deliveryStatus"
+                                        data-delivery-id="398">
+
+
+                                        <option value="">
+
+                                            Select Status
+
+                                        </option>
+
+
+                                        <option value="pickup_of_order">
+
+                                            Pickup of Order
+
+                                        </option>
+
+
+                                        <option value="order_confirmed">
+
+                                            Order Confirmed
+
+                                        </option>
+
+
+                                        <option value="laundry_completed">
+
+                                            Laundry Completed
+
+                                        </option>
+
+
+                                        <option value="ready_for_delivery">
+
+                                            Ready for Delivery
+
+                                        </option>
+
+
+                                        <option value="driver_assigned">
+
+                                            Driver Assigned
+
+                                        </option>
+
+
+                                        <option value="out_for_delivery">
+
+                                            Out for Delivery
+
+                                        </option>
+
+
+                                        <option value="driver_close_by">
+
+                                            Driver Close By
+
+                                        </option>
+
+
+                                        <option value="delivery_complete">
+
+                                            Delivery Complete
+
+                                        </option>
+
+
+                                    </select>
+
+
+                                    <button
+                                        type="button"
+                                        class="save-delivery-status-btn"
+                                        id="saveDeliveryStatus398"
+                                        data-delivery-id="398">
+
+                                        <i class="fa-solid fa-check"></i>
+
+                                        Save
+
+                                    </button>
+
+
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- ==================================================
+         FOOTER
+    =================================================== -->
+
+    <footer class="admin-footer">
+
+        <p>
+            &copy; 2026 LaundroBook. Admin Management System.
+        </p>
+
+    </footer>
+
+
+    <!-- ==================================================
+         DELIVERY MANAGEMENT JAVASCRIPT
+
+         Frontend:
+         Handles search and delivery status interactions.
+
+         Backend:
+         Can later connect these actions to the database.
+    =================================================== -->
+
+    <script src="../../JS/deliveryMan.js"></script>
+
+
+</body>
+
+</html>

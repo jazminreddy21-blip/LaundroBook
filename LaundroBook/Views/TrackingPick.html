@@ -246,49 +246,141 @@ To Be Determined
 
 
 
-
 <!-- Laundry Progress Card -->
 
-<!-- PHP: Update the laundry progress timeline automatically based on the current status selected by the administrator. The administrator should only update the current status. Completed stages should be displayed automatically. -->
+<!--
+    BACKEND PROCESS
+
+    The backend should provide the customer's current
+    laundry status.
+
+    Example:
+    current status = "drying"
+
+    JavaScript will then automatically highlight all
+    completed stages and the current stage.
+
+    The customer cannot edit these stages.
+-->
 
 <div class="tracking-card">
 
-<h3>Laundry Progress</h3>
+    <h3>
+        Laundry Progress
+    </h3>
 
-<ul class="delivery-progress">
 
-    <li id="step-confirmed">
-        Order Confirmed
-    </li>
+    <ul class="delivery-progress" id="laundryProgress">
 
-    <li id="step-received">
-        Laundry Received
-    </li>
 
-    <li id="step-washing">
-        Washing In Progress
-    </li>
+        <!-- ORDER CONFIRMED -->
 
-    <li id="step-drying">
-        Drying In Progress
-    </li>
+        <li
+            id="step-confirmed"
+            data-status="order_confirmed">
 
-    <li id="step-folding">
-        Folding Laundry
-    </li>
+            <i class="fa-solid fa-circle-check"></i>
 
-    <li id="step-ready">
-        Ready For Collection
-    </li>
+            <span>
+                Order Confirmed
+            </span>
 
-    <li id="step-collected">
-        Collected
-    </li>
+        </li>
 
-</ul>
+
+        <!-- LAUNDRY RECEIVED -->
+
+        <li
+            id="step-received"
+            data-status="laundry_received">
+
+            <i class="fa-solid fa-box-open"></i>
+
+            <span>
+                Laundry Received
+            </span>
+
+        </li>
+
+
+        <!-- WASHING -->
+
+        <li
+            id="step-washing"
+            data-status="washing_in_progress">
+
+            <i class="fa-solid fa-soap"></i>
+
+            <span>
+                Washing In Progress
+            </span>
+
+        </li>
+
+
+        <!-- DRYING -->
+
+        <li
+            id="step-drying"
+            data-status="drying">
+
+            <i class="fa-solid fa-wind"></i>
+
+            <span>
+                Drying In Progress
+            </span>
+
+        </li>
+
+
+        <!-- FOLDING -->
+
+        <li
+            id="step-folding"
+            data-status="folding">
+
+            <i class="fa-solid fa-shirt"></i>
+
+            <span>
+                Folding Laundry
+            </span>
+
+        </li>
+
+
+        <!-- READY -->
+
+        <li
+            id="step-ready"
+            data-status="ready_for_collection">
+
+            <i class="fa-solid fa-bag-shopping"></i>
+
+            <span>
+                Ready For Collection
+            </span>
+
+        </li>
+
+
+        <!-- COLLECTED -->
+
+        <li
+            id="step-collected"
+            data-status="collected">
+
+            <i class="fa-solid fa-check-double"></i>
+
+            <span>
+                Collected
+            </span>
+
+        </li>
+
+
+    </ul>
 
 </div>
-
 
 
 
@@ -326,7 +418,7 @@ To Be Determined
 </div>
 
 </section>
-
+<script src="../JS/trackingPickup.js"></script>
 </body>
 
 </html>

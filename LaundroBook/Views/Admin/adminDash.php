@@ -73,43 +73,43 @@
         </li>
 
         <li>
-            <a href="bookingManagement.html">
+            <a href="bookingMan.html">
                 Bookings
             </a>
         </li>
 
         <li>
-            <a href="pickupManagement.html">
+            <a href="pickUpMan.html">
                 Pickups
             </a>
         </li>
 
         <li>
-            <a href="deliveryManagement.html">
+            <a href="deliveryMan.html">
                 Deliveries
             </a>
         </li>
 
         <li>
-            <a href="machineManagement.html">
+            <a href="MachineMan.html">
                 Machines
             </a>
         </li>
 
         <li>
-            <a href="customerManagement.html">
+            <a href="CustomerMan.html">
                 Customers
             </a>
         </li>
 
         <li>
-            <a href="reports.html">
+            <a href="Reports.html">
                 Reports
             </a>
         </li>
 
         <li>
-            <a href="adminLogin.html">
+            <a href="login.html">
                 Logout
             </a>
         </li>

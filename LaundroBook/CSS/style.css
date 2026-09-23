@@ -1861,3 +1861,72 @@ body {
 .service-card h3 { 
     color: #075985 !important; 
 }
+/* =========================================================
+   PICKUP LAUNDRY PROGRESS
+========================================================= */
+
+#laundryProgress{
+    list-style:none;
+    padding:0;
+    margin:0;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+#laundryProgress li{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:15px 18px;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    background:#FFFFFF;
+    color:#94A3B8;
+    transition:0.3s ease;
+}
+
+#laundryProgress li i{
+    width:35px;
+    height:35px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#F1F5F9;
+    color:#94A3B8;
+    flex-shrink:0;
+}
+
+#laundryProgress li span{
+    font-weight:600;
+}
+
+
+/* Completed stages */
+
+#laundryProgress li.completed{
+    background:#F0F9FF;
+    border-color:#BAE6FD;
+    color:#075985;
+}
+
+#laundryProgress li.completed i{
+    background:#0284C7;
+    color:#FFFFFF;
+}
+
+
+/* Current stage */
+
+#laundryProgress li.current{
+    background:#E0F2FE;
+    border-color:#0EA5E9;
+    color:#075985;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.12);
+}
+
+#laundryProgress li.current i{
+    background:#0EA5E9;
+    color:#FFFFFF;
+}

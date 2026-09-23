@@ -10,7 +10,7 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
     <!-- Admin CSS -->
     <link rel="stylesheet" href="../../CSS/secondStyle.css">
@@ -19,368 +19,1038 @@
 
 <body>
 
-<!------------------------------------------------------------
-                        HEADER
-------------------------------------------------------------->
 
-<header class="admin-header">
+    <!-- ==================================================
+         ADMIN HEADER
+         Backend:
+         Display the logged-in admin's name in #adminName.
+         This can be populated from the Admin/User session.
+    =================================================== -->
+    <header class="admin-header">
 
-    <div class="logo">
+        <div class="logo">
 
-        <h1>LaundroBook Admin</h1>
+            <img src="../../Images/logo.png"
+                 class="admin-logo"
+                 alt="LaundroBook Logo">
 
-    </div>
+            <h1>LaundroBook Admin</h1>
 
-    <!-- =======================================================
-         BACKEND INTEGRATION
+        </div>
 
-         Data Source:
-         Admin Table
+        <div class="admin-user">
 
-         Purpose:
-         Display the logged in administrator's name.
+            <!-- Backend: Populate logged-in admin name here -->
+            <p id="adminName" name="adminName"></p>
 
-         Populate:
-         #adminName
+        </div>
 
-    ======================================================== -->
+    </header>
 
-    <div class="admin-user">
-
-        <p id="adminName" name="adminName"></p>
-
-    </div>
-
-</header>
-
-<!------------------------------------------------------------
-                    NAVIGATION
-------------------------------------------------------------->
-
+<!-- ==============================
+     ADMIN NAVIGATION
+=============================== -->
 <nav class="admin-navbar">
 
+    <!-- Logo and company name -->
+    <div class="navbar-brand">
+
+        <img src="../../Images/logo.png"
+             class="navbar-logo"
+             alt="LaundroBook Logo">
+
+        <span>LaundroBook</span>
+
+    </div>
+
+
+    <!-- Navigation links -->
     <ul>
 
-        <li><a href="adminDash.html">Dashboard</a></li>
+        <li>
+            <a href="adminDash.html">
+                Dashboard
+            </a>
+        </li>
 
-        <li><a href="bookingManagement.html" class="active">Bookings</a></li>
+        <li>
+            <a href="bookingMan.html" class="active">
+                Bookings
+            </a>
+        </li>
 
-        <li><a href="pickupManagement.html">Pickups</a></li>
+        <li>
+            <a href="pickUpMan.html">
+                Pickups
+            </a>
+        </li>
 
-        <li><a href="deliveryManagement.html">Deliveries</a></li>
+        <li>
+            <a href="deliveryMan.html">
+                Deliveries
+            </a>
+        </li>
 
-        <li><a href="machineManagement.html">Machines</a></li>
+        <li>
+            <a href="MachineMan.html">
+                Machines
+            </a>
+        </li>
 
-        <li><a href="customerManagement.html">Customers</a></li>
+        <li>
+            <a href="CustomerMan.html">
+                Customers
+            </a>
+        </li>
 
-        <li><a href="reports.html">Reports</a></li>
+        <li>
+            <a href="Reports.html">
+                Reports
+            </a>
+        </li>
 
-        <li><a href="adminLogin.html">Logout</a></li>
+        <li>
+            <a href="login.html">
+                Logout
+            </a>
+        </li>
 
     </ul>
 
 </nav>
 
-<main class="dashboard-container">
+    <!-- ==================================================
+         MAIN BOOKING MANAGEMENT CONTENT
+    =================================================== -->
+    <main class="booking-management-container">
 
-<!------------------------------------------------------------
-                    PAGE HEADING
-------------------------------------------------------------->
 
-<section class="page-heading">
+        <!-- ==================================================
+             PAGE HEADING
+        =================================================== -->
+        <section class="booking-page-heading">
 
-    <h2>Booking Management</h2>
+            <h2>Booking Management</h2>
 
-    <p>
+            <p>
+                View customer bookings and manage booking statuses.
+            </p>
 
-        View, search and manage all customer bookings.
+        </section>
 
-    </p>
 
-</section>
+        <!-- ==================================================
+             RECENT BOOKING UPDATES
+             
+             Backend:
+             Populate #bookingUpdatesContainer with the latest
+             booking status changes from the database.
 
-<!------------------------------------------------------------
-                    SEARCH & FILTERS
-------------------------------------------------------------->
+             Example:
+             "Booking #412 was updated to Out for Delivery."
 
-<section class="filter-section">
+             The newest update should appear first.
+        =================================================== -->
+        <section class="booking-updates-section">
 
-    <form id="bookingSearchForm"
-          name="bookingSearchForm">
+            <div class="booking-section-heading">
 
-        <div class="filter-group">
+                <h2>
+                    <i class="fa-solid fa-bell"></i>
+                    Recent Updates
+                </h2>
 
-            <label for="bookingSearch">
+                <p>
+                    Latest changes made to customer bookings.
+                </p>
 
-                Booking ID / Customer Name
+            </div>
 
-            </label>
 
-            <input
-                type="text"
-                id="bookingSearch"
-                name="bookingSearch">
+            <!-- Backend: Populate this container with recent updates -->
+            <div id="bookingUpdatesContainer">
 
-        </div>
 
-        <div class="filter-group">
+                <!-- Example update -->
 
-            <label for="bookingStatus">
+                <div class="booking-update">
 
-                Booking Status
+                    <div class="update-icon">
 
-            </label>
+                        <i class="fa-solid fa-rotate"></i>
 
-            <select
-                id="bookingStatus"
-                name="bookingStatus">
+                    </div>
 
-                <option value="">All</option>
-                <option value="Pending">Pending</option>
-                <option value="Confirmed">Confirmed</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-                <option value="Cancelled">Cancelled</option>
+                    <div class="update-content">
 
-            </select>
+                        <!-- Backend: Insert booking reference and new status -->
+                        <p>
 
-        </div>
+                            Booking
+                            <strong class="update-booking-reference">
+                                #412
+                            </strong>
 
-        <div class="filter-group">
+                            was updated to
 
-            <label for="bookingDate">
+                            <strong class="update-booking-status">
+                                Out for Delivery
+                            </strong>.
 
-                Booking Date
+                        </p>
 
-            </label>
+                        <!-- Backend: Insert time/date of update -->
+                        <span class="update-time">
+                            Recently updated
+                        </span>
 
-            <input
-                type="date"
-                id="bookingDate"
-                name="bookingDate">
+                    </div>
 
-        </div>
+                </div>
 
-        <button
-            type="submit"
-            id="searchBtn"
-            name="searchBtn">
 
-            Search
+            </div>
 
-        </button>
+        </section>
 
-    </form>
 
-</section>
+        <!-- ==================================================
+             BOOKING SUMMARY CARDS
+             
+             Backend:
+             Populate each value from booking information
+             stored in the database.
+        =================================================== -->
+        <section class="booking-summary">
 
-<!------------------------------------------------------------
-                    BOOKINGS TABLE
-------------------------------------------------------------->
 
-<section class="table-section">
+            <!-- TOTAL BOOKINGS -->
 
-    <table class="admin-table">
+            <div class="booking-stat-card">
 
-        <thead>
+                <div class="booking-stat-icon">
 
-            <tr>
+                    <i class="fa-solid fa-calendar-check"></i>
 
-               <th>Booking Reference</th>
+                </div>
 
-    <th>Customer</th>
+                <div class="booking-stat-info">
 
-    <th>Branch</th>
+                    <h3>Total Bookings</h3>
 
-    <th>Booking Date</th>
+                    <!-- Backend: Total number of bookings -->
+                    <h2 id="totalBookings">--</h2>
 
-    <th>Time Slot</th>
+                </div>
 
-    <th>Machine</th>
+            </div>
 
-    <th>Service</th>
 
-    <th>Collection</th>
+            <!-- READY FOR COLLECTION -->
 
-    <th>Status</th>
+            <div class="booking-stat-card">
 
-    <th>Action</th>
+                <div class="booking-stat-icon">
 
-            </tr>
+                    <i class="fa-solid fa-bag-shopping"></i>
 
-        </thead>
+                </div>
 
-        <!-- =====================================================
-             BACKEND INTEGRATION
+                <div class="booking-stat-info">
 
-             Data Source:
-             Bookings Table
+                    <h3>Ready for Collection</h3>
 
-             Purpose:
-             Retrieve bookings based on
-             search and filter criteria.
+                    <!-- Backend: Count bookings with Ready for Collection status -->
+                    <h2 id="readyForCollection">--</h2>
 
-             Populate:
-             #bookingTableBody
+                </div>
 
-             Generate one table row
-             for every booking returned.
-			 
-			 Branches
----------
-BranchName
+            </div>
 
-Machines
----------
-MachineNumber
 
-Services
----------
-ServiceName
+            <!-- OUT FOR DELIVERY -->
 
-TimeSlots
-----------
-StartTime
-EndTime
+            <div class="booking-stat-card">
 
-Generate one <tr> for every booking.
+                <div class="booking-stat-icon">
 
-========================================================= -->
+                    <i class="fa-solid fa-truck"></i>
 
-        ====================================================== -->
+                </div>
 
-        <tbody id="bookingTableBody"
-               name="bookingTableBody">
-			   
-			   
-<!-- =========================================================
+                <div class="booking-stat-info">
 
-BACKEND INTEGRATION
+                    <h3>Out for Delivery</h3>
 
-Populate this table using data retrieved from
-the following database tables.
+                    <!-- Backend: Count bookings with Out for Delivery status -->
+                    <h2 id="outForDelivery">--</h2>
 
-Bookings
----------
-BookingReference
-BookingDate
-BookingStatus
-CollectionMethod
+                </div>
 
-Customers
----------
-FullName
+            </div>
 
-Branches
---------
-BranchName
 
-Machines
---------
-MachineNumber
+            <!-- IN WASHING -->
 
-Services
---------
-ServiceName
+            <div class="booking-stat-card">
 
-TimeSlots
----------
-StartTime
-EndTime
+                <div class="booking-stat-icon">
 
-=============================================================
+                    <i class="fa-solid fa-soap"></i>
 
-For every booking retrieved from the database,
-generate one table row (<tr>).
+                </div>
 
-Example layout:
+                <div class="booking-stat-info">
 
-<tr>
+                    <h3>In Washing</h3>
 
-<td>Booking Reference</td>
+                    <!-- Backend: Count bookings with In Washing status -->
+                    <h2 id="inWashing">--</h2>
 
-<td>Customer Name</td>
+                </div>
 
-<td>Branch</td>
+            </div>
 
-<td>Booking Date</td>
 
-<td>Time Slot</td>
+            <!-- TOTAL REVENUE -->
 
-<td>Machine Number</td>
+            <div class="booking-stat-card">
 
-<td>Laundry Service</td>
+                <div class="booking-stat-icon">
 
-<td>Collection Method</td>
+                    <i class="fa-solid fa-money-bill-wave"></i>
 
-<td>Booking Status</td>
+                </div>
 
-<td>
+                <div class="booking-stat-info">
 
-<button>Manage</button>
+                    <h3>Total Revenue</h3>
 
-</td>
+                    <!-- Backend: Calculate/display total booking revenue -->
+                    <h2 id="totalRevenue">--</h2>
 
-</tr>
+                </div>
 
-=============================================================
+            </div>
 
-When the Manage button is clicked:
 
-Retrieve the complete booking details using the
-BookingReference.
+        </section>
 
-Display all booking information.
 
-Allow the administrator to:
+        <!-- ==================================================
+             SEARCH BOOKINGS
+             
+             Backend:
+             Search should be able to locate a booking using
+             booking reference and/or customer information.
 
-• Approve Booking
-• Decline Booking
-• Update Booking Status
+             The form currently has no backend action because
+             this is the frontend version.
+        =================================================== -->
+        <section class="booking-search-section">
 
-If Approved
+            <div class="booking-section-heading">
 
-Bookings.BookingStatus = Confirmed
+                <h2>
 
-------------------------------------------------------
+                    <i class="fa-solid fa-magnifying-glass"></i>
 
-If Declined
+                    Search Bookings
 
-Bookings.BookingStatus = Declined
+                </h2>
 
-Machines.MachineStatus = Available
+                <p>
+                    Search using the booking reference or customer name.
+                </p>
 
-TimeSlots.AvailabilityStatus = Available
+            </div>
 
-------------------------------------------------------
 
-Save all changes back to the database.
+            <form id="bookingSearchForm"
+                  class="booking-search-form"
+                  action="#"
+                  method="GET">
 
-========================================================= -->
 
-        </tbody>
+                <div class="booking-search-input">
 
-    </table>
+                    <label for="bookingSearch">
+                        Search Booking
+                    </label>
 
-</section>
+                    <!-- Backend: Use this value to search bookings -->
+                    <input
+                        type="text"
+                        id="bookingSearch"
+                        name="bookingSearch"
+                        placeholder="Enter booking reference or customer name..."
+                    >
 
-</main>
+                </div>
 
-<!------------------------------------------------------------
-                        FOOTER
-------------------------------------------------------------->
 
-<footer class="admin-footer">
+                <button
+                    type="submit"
+                    id="searchBookingBtn">
 
-    <p>
+                    <i class="fa-solid fa-magnifying-glass"></i>
 
-        &copy; 2026 LaundroBook.
-        All Rights Reserved.
+                    Search
 
-    </p>
+                </button>
 
-</footer>
 
+            </form>
+
+        </section>
+
+
+        <!-- ==================================================
+             BOOKINGS TABLE
+             
+             Backend:
+             Populate #bookingTableBody with booking records
+             from the database.
+
+             Information required for each booking:
+             - Booking reference
+             - Customer name
+             - Customer email
+             - Customer phone
+             - Service selected
+             - Collection or Delivery method
+             - Current booking status
+             - Status update option
+        =================================================== -->
+        <section class="booking-table-section">
+
+
+            <div class="booking-section-heading">
+
+                <h2>
+
+                    <i class="fa-solid fa-list"></i>
+
+                    All Bookings
+
+                </h2>
+
+                <p>
+                    View booking information and update booking status.
+                </p>
+
+            </div>
+
+
+            <div class="booking-table-container">
+
+
+                <table
+                    class="booking-table"
+                    id="bookingTable">
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Booking Ref
+                            </th>
+
+                            <th>
+                                Customer
+                            </th>
+
+                            <th>
+                                Service
+                            </th>
+
+                            <th>
+                                Method
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Update
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <!--
+                        Backend:
+                        Populate this tbody with booking records.
+
+                        Each row should represent one booking.
+                    -->
+                    <tbody id="bookingTableBody">
+
+
+                        <!-- ==================================================
+                             EXAMPLE BOOKING ROW
+                             
+                             This is only example frontend data.
+                             Backend developers can replace it with
+                             database-generated rows.
+                        =================================================== -->
+
+                        <tr class="booking-row"
+                            data-booking-id="412">
+
+
+                            <!-- BOOKING REFERENCE -->
+
+                            <td>
+
+                                <!-- Backend: Populate booking reference -->
+                                <strong class="booking-reference">
+                                    #412
+                                </strong>
+
+                            </td>
+
+
+                            <!-- CUSTOMER DETAILS -->
+
+                            <td>
+
+                                <div class="customer-details">
+
+                                    <!-- Backend: Customer name -->
+                                    <strong class="customer-name">
+                                        John Smith
+                                    </strong>
+
+                                    <!-- Backend: Customer email -->
+                                    <span class="customer-email">
+                                        john@email.com
+                                    </span>
+
+                                    <!-- Backend: Customer phone -->
+                                    <span class="customer-phone">
+                                        071 234 5678
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- SERVICE -->
+
+                            <td>
+
+                                <!-- Backend: Populate selected service -->
+                                <span class="booking-service">
+                                    Heavy Wash
+                                </span>
+
+                            </td>
+
+
+                            <!-- COLLECTION / DELIVERY METHOD -->
+
+                            <td>
+
+                                <!--
+                                    Backend:
+                                    Populate according to the customer's
+                                    selected booking method.
+                                -->
+
+                                <span class="method-badge delivery"
+                                      data-method="delivery">
+
+                                    <i class="fa-solid fa-truck"></i>
+
+                                    <span class="booking-method">
+                                        Delivery
+                                    </span>
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- CURRENT STATUS -->
+
+                            <td>
+
+                                <!--
+                                    Backend:
+                                    Populate current booking status.
+                                    This should reflect the database.
+                                -->
+
+                                <span
+                                    class="status-badge out-for-delivery"
+                                    data-status="out_for_delivery">
+
+                                    <span class="booking-current-status">
+                                        Out for Delivery
+                                    </span>
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- STATUS UPDATE -->
+
+                            <td>
+
+                                <div class="status-update">
+
+
+                                    <!--
+                                        Backend:
+                                        The selected value should be sent
+                                        with the booking ID when the admin
+                                        saves a new status.
+                                    -->
+
+                                    <select
+                                        class="booking-status-select"
+                                        id="bookingStatus412"
+                                        name="bookingStatus"
+                                        data-booking-id="412">
+
+
+                                        <option value="">
+                                            Select Status
+                                        </option>
+
+                                        <option value="pending">
+                                            Pending
+                                        </option>
+
+                                        <option value="accepted">
+                                            Accepted
+                                        </option>
+
+                                        <option value="in_washing">
+                                            In Washing
+                                        </option>
+
+                                        <option value="ready_for_collection">
+                                            Ready for Collection
+                                        </option>
+
+                                        <option value="ready_for_delivery">
+                                            Ready for Delivery
+                                        </option>
+
+                                        <option value="out_for_delivery">
+                                            Out for Delivery
+                                        </option>
+
+                                        <option value="completed">
+                                            Completed
+                                        </option>
+
+                                        <option value="cancelled">
+                                            Cancelled
+                                        </option>
+
+
+                                    </select>
+
+
+                                    <!--
+                                        Backend:
+                                        Save the selected status against
+                                        the booking ID.
+
+                                        After the update, the new status
+                                        should also be reflected on the
+                                        customer/user side.
+                                    -->
+
+                                    <button
+                                        type="button"
+                                        class="save-status-btn"
+                                        id="saveStatus412"
+                                        data-booking-id="412">
+
+                                        <i class="fa-solid fa-check"></i>
+
+                                        Save
+
+                                    </button>
+
+
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+
+
+                        <!-- ==================================================
+                             EXAMPLE BOOKING ROW 2
+                        =================================================== -->
+
+                        <tr class="booking-row"
+                            data-booking-id="405">
+
+
+                            <!-- BOOKING REFERENCE -->
+
+                            <td>
+
+                                <strong class="booking-reference">
+                                    #405
+                                </strong>
+
+                            </td>
+
+
+                            <!-- CUSTOMER -->
+
+                            <td>
+
+                                <div class="customer-details">
+
+                                    <strong class="customer-name">
+                                        Sarah Jones
+                                    </strong>
+
+                                    <span class="customer-email">
+                                        sarah@email.com
+                                    </span>
+
+                                    <span class="customer-phone">
+                                        082 555 1234
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- SERVICE -->
+
+                            <td>
+
+                                <span class="booking-service">
+                                    Normal Wash
+                                </span>
+
+                            </td>
+
+
+                            <!-- METHOD -->
+
+                            <td>
+
+                                <span class="method-badge collection"
+                                      data-method="collection">
+
+                                    <i class="fa-solid fa-bag-shopping"></i>
+
+                                    <span class="booking-method">
+                                        Collection
+                                    </span>
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- STATUS -->
+
+                            <td>
+
+                                <span
+                                    class="status-badge ready-collection"
+                                    data-status="ready_for_collection">
+
+                                    <span class="booking-current-status">
+                                        Ready for Collection
+                                    </span>
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- UPDATE -->
+
+                            <td>
+
+                                <div class="status-update">
+
+
+                                    <select
+                                        class="booking-status-select"
+                                        id="bookingStatus405"
+                                        name="bookingStatus"
+                                        data-booking-id="405">
+
+                                        <option value="">
+                                            Select Status
+                                        </option>
+
+                                        <option value="pending">
+                                            Pending
+                                        </option>
+
+                                        <option value="accepted">
+                                            Accepted
+                                        </option>
+
+                                        <option value="in_washing">
+                                            In Washing
+                                        </option>
+
+                                        <option value="ready_for_collection">
+                                            Ready for Collection
+                                        </option>
+
+                                        <option value="ready_for_delivery">
+                                            Ready for Delivery
+                                        </option>
+
+                                        <option value="out_for_delivery">
+                                            Out for Delivery
+                                        </option>
+
+                                        <option value="completed">
+                                            Completed
+                                        </option>
+
+                                        <option value="cancelled">
+                                            Cancelled
+                                        </option>
+
+                                    </select>
+
+
+                                    <button
+                                        type="button"
+                                        class="save-status-btn"
+                                        id="saveStatus405"
+                                        data-booking-id="405">
+
+                                        <i class="fa-solid fa-check"></i>
+
+                                        Save
+
+                                    </button>
+
+
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+
+
+                        <!-- ==================================================
+                             EXAMPLE BOOKING ROW 3
+                        =================================================== -->
+
+                        <tr class="booking-row"
+                            data-booking-id="398">
+
+
+                            <!-- BOOKING REFERENCE -->
+
+                            <td>
+
+                                <strong class="booking-reference">
+                                    #398
+                                </strong>
+
+                            </td>
+
+
+                            <!-- CUSTOMER -->
+
+                            <td>
+
+                                <div class="customer-details">
+
+                                    <strong class="customer-name">
+                                        Michael Brown
+                                    </strong>
+
+                                    <span class="customer-email">
+                                        michael@email.com
+                                    </span>
+
+                                    <span class="customer-phone">
+                                        076 444 8899
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- SERVICE -->
+
+                            <td>
+
+                                <span class="booking-service">
+                                    Quick Wash
+                                </span>
+
+                            </td>
+
+
+                            <!-- METHOD -->
+
+                            <td>
+
+                                <span class="method-badge delivery"
+                                      data-method="delivery">
+
+                                    <i class="fa-solid fa-truck"></i>
+
+                                    <span class="booking-method">
+                                        Delivery
+                                    </span>
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- STATUS -->
+
+                            <td>
+
+                                <span
+                                    class="status-badge washing"
+                                    data-status="in_washing">
+
+                                    <span class="booking-current-status">
+                                        In Washing
+                                    </span>
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- UPDATE -->
+
+                            <td>
+
+                                <div class="status-update">
+
+
+                                    <select
+                                        class="booking-status-select"
+                                        id="bookingStatus398"
+                                        name="bookingStatus"
+                                        data-booking-id="398">
+
+                                        <option value="">
+                                            Select Status
+                                        </option>
+
+                                        <option value="pending">
+                                            Pending
+                                        </option>
+
+                                        <option value="accepted">
+                                            Accepted
+                                        </option>
+
+                                        <option value="in_washing">
+                                            In Washing
+                                        </option>
+
+                                        <option value="ready_for_collection">
+                                            Ready for Collection
+                                        </option>
+
+                                        <option value="ready_for_delivery">
+                                            Ready for Delivery
+                                        </option>
+
+                                        <option value="out_for_delivery">
+                                            Out for Delivery
+                                        </option>
+
+                                        <option value="completed">
+                                            Completed
+                                        </option>
+
+                                        <option value="cancelled">
+                                            Cancelled
+                                        </option>
+
+                                    </select>
+
+
+                                    <button
+                                        type="button"
+                                        class="save-status-btn"
+                                        id="saveStatus398"
+                                        data-booking-id="398">
+
+                                        <i class="fa-solid fa-check"></i>
+
+                                        Save
+
+                                    </button>
+
+
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- ==================================================
+         FOOTER
+    =================================================== -->
+    <footer class="admin-footer">
+
+        <p>
+            &copy; 2026 LaundroBook. Admin Management System.
+        </p>
+
+    </footer>
+
+
+    <!--
+        Backend / JavaScript:
+        Booking management JavaScript can be connected here
+        later if required.
+
+        The backend developers can also replace this with
+        their PHP/backend processing.
+    -->
+
+
+
+    <script src="../../JS/bookingMan.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reports | LaundroBook</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="../../CSS/secondStyle.css">
+
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     ADMIN NAVBAR
+     ========================================================= -->
+
+<nav class="admin-navbar">
+
+    <div class="navbar-brand">
+
+        <img src="../../Images/logo.png"
+             class="navbar-logo"
+             alt="LaundroBook Logo">
+
+        <span>LaundroBook</span>
+
+    </div>
+
+    <ul>
+
+        <li>
+            <a href="adminDash.html">
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="bookingMan.html">
+                Bookings
+            </a>
+        </li>
+
+        <li>
+            <a href="pickUpMan.html">
+                Pickups
+            </a>
+        </li>
+
+        <li>
+            <a href="DeliveryMan.html">
+                Deliveries
+            </a>
+        </li>
+
+        <li>
+            <a href="MachineMan.html">
+                Machines
+            </a>
+        </li>
+
+        <li>
+            <a href="CustomerMan.html">
+                Customers
+            </a>
+        </li>
+
+        <li>
+            <a href="Reports.html"
+               class="active">
+                Reports
+            </a>
+        </li>
+
+        <li>
+            <a href="login.html">
+                Logout
+            </a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- =========================================================
+     REPORTS PAGE
+     ========================================================= -->
+
+<main class="reports-container">
+
+
+    <!-- =====================================================
+         PAGE HEADING
+         ===================================================== -->
+
+    <section class="reports-page-heading">
+
+        <h2>
+            Reports
+        </h2>
+
+        <p>
+            View booking, revenue and service information.
+        </p>
+
+    </section>
+
+
+    <!-- =====================================================
+         REPORT FILTER
+         ===================================================== -->
+
+    <section class="reports-filter-section">
+
+        <div class="reports-section-heading">
+
+            <h2>
+
+                <i class="fa-solid fa-filter"></i>
+
+                Report Period
+
+            </h2>
+
+            <p>
+                Select the period for the report information.
+            </p>
+
+        </div>
+
+
+        <div class="reports-filter-form">
+
+
+            <div class="reports-filter-item">
+
+                <label for="reportStartDate">
+                    Start Date
+                </label>
+
+                <input
+                    type="date"
+                    id="reportStartDate"
+                    name="reportStartDate">
+
+            </div>
+
+
+            <div class="reports-filter-item">
+
+                <label for="reportEndDate">
+                    End Date
+                </label>
+
+                <input
+                    type="date"
+                    id="reportEndDate"
+                    name="reportEndDate">
+
+            </div>
+
+
+            <div class="reports-filter-action">
+
+                <button
+                    type="button"
+                    id="generateReportBtn">
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                    Generate Report
+
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         REPORT SUMMARY
+         ===================================================== -->
+
+    <section class="reports-summary">
+
+
+        <!-- TOTAL BOOKINGS -->
+
+        <div class="report-stat-card">
+
+            <div class="report-stat-icon">
+
+                <i class="fa-solid fa-calendar-check"></i>
+
+            </div>
+
+            <div class="report-stat-info">
+
+                <h3>
+                    Total Bookings
+                </h3>
+
+                <!--
+                    Backend:
+
+                    Populate this value from the database
+                    based on the selected report period.
+                -->
+
+                <h2 id="reportTotalBookings">
+                    --
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- COMPLETED BOOKINGS -->
+
+        <div class="report-stat-card">
+
+            <div class="report-stat-icon">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+            </div>
+
+            <div class="report-stat-info">
+
+                <h3>
+                    Completed
+                </h3>
+
+                <!--
+                    Backend:
+
+                    Count completed bookings from the database.
+                -->
+
+                <h2 id="reportCompletedBookings">
+                    --
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- CANCELLED BOOKINGS -->
+
+        <div class="report-stat-card">
+
+            <div class="report-stat-icon">
+
+                <i class="fa-solid fa-circle-xmark"></i>
+
+            </div>
+
+            <div class="report-stat-info">
+
+                <h3>
+                    Cancelled
+                </h3>
+
+                <!--
+                    Backend:
+
+                    Count cancelled bookings from the database.
+                -->
+
+                <h2 id="reportCancelledBookings">
+                    --
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL REVENUE -->
+
+        <div class="report-stat-card">
+
+            <div class="report-stat-icon">
+
+                <i class="fa-solid fa-money-bill-wave"></i>
+
+            </div>
+
+            <div class="report-stat-info">
+
+                <h3>
+                    Total Revenue
+                </h3>
+
+                <!--
+                    Backend:
+
+                    Calculate total revenue from completed/
+                    applicable bookings in the database.
+                -->
+
+                <h2 id="reportTotalRevenue">
+                    R --
+                </h2>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         SERVICE REPORT
+         ===================================================== -->
+
+    <section class="reports-table-section">
+
+        <div class="reports-section-heading">
+
+            <h2>
+
+                <i class="fa-solid fa-shirt"></i>
+
+                Service Usage
+
+            </h2>
+
+            <p>
+                View the number of bookings made for each service type.
+            </p>
+
+        </div>
+
+
+        <div class="reports-table-container">
+
+            <table class="reports-table"
+                   id="serviceReportTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Service</th>
+
+                        <th>Total Bookings</th>
+
+                        <th>Completed</th>
+
+                        <th>Cancelled</th>
+
+                        <th>Revenue</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <!--
+                    Backend:
+
+                    Populate this table using booking and
+                    service information from the database.
+                -->
+
+                <tbody id="serviceReportTableBody">
+
+
+                    <!-- Temporary dummy data -->
+
+                    <tr>
+
+                        <td>
+                            <strong class="report-service">
+                                Quick Wash
+                            </strong>
+                        </td>
+
+                        <td>
+                            <span class="service-total">
+                                24
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="service-completed">
+                                20
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="service-cancelled">
+                                2
+                            </span>
+                        </td>
+
+                        <td>
+                            <strong class="service-revenue">
+                                R720.00
+                            </strong>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            <strong class="report-service">
+                                Normal Wash
+                            </strong>
+                        </td>
+
+                        <td>
+                            <span class="service-total">
+                                18
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="service-completed">
+                                15
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="service-cancelled">
+                                1
+                            </span>
+                        </td>
+
+                        <td>
+                            <strong class="service-revenue">
+                                R720.00
+                            </strong>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            <strong class="report-service">
+                                Heavy Wash
+                            </strong>
+                        </td>
+
+                        <td>
+                            <span class="service-total">
+                                12
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="service-completed">
+                                10
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="service-cancelled">
+                                1
+                            </span>
+                        </td>
+
+                        <td>
+                            <strong class="service-revenue">
+                                R660.00
+                            </strong>
+                        </td>
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         BOOKING METHOD REPORT
+         ===================================================== -->
+
+    <section class="reports-table-section">
+
+        <div class="reports-section-heading">
+
+            <h2>
+
+                <i class="fa-solid fa-truck"></i>
+
+                Booking Method
+
+            </h2>
+
+            <p>
+                Compare collection and delivery bookings.
+            </p>
+
+        </div>
+
+
+        <div class="reports-table-container">
+
+            <table class="reports-table"
+                   id="methodReportTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Booking Method</th>
+
+                        <th>Total Bookings</th>
+
+                        <th>Completed</th>
+
+                        <th>Cancelled</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <!--
+                    Backend:
+
+                    Populate this information from the
+                    booking records in the database.
+                -->
+
+                <tbody id="methodReportTableBody">
+
+
+                    <!-- Temporary dummy data -->
+
+                    <tr>
+
+                        <td>
+
+                            <strong class="report-method">
+                                Collection
+                            </strong>
+
+                        </td>
+
+                        <td>
+                            <span class="method-total">
+                                30
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="method-completed">
+                                26
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="method-cancelled">
+                                2
+                            </span>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+
+                            <strong class="report-method">
+                                Delivery
+                            </strong>
+
+                        </td>
+
+                        <td>
+                            <span class="method-total">
+                                24
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="method-completed">
+                                19
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="method-cancelled">
+                                2
+                            </span>
+                        </td>
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         RECENT REPORT ACTIVITY
+         ===================================================== -->
+
+    <section class="reports-activity-section">
+
+        <div class="reports-section-heading">
+
+            <h2>
+
+                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                Recent Report Activity
+
+            </h2>
+
+            <p>
+                Recent report generation activity.
+            </p>
+
+        </div>
+
+
+        <!--
+            Backend:
+
+            Populate this container with report activity
+            if report history is stored in the database.
+        -->
+
+        <div id="reportActivityContainer">
+
+
+            <!-- Temporary dummy activity -->
+
+            <div class="report-activity">
+
+                <div class="report-activity-icon">
+
+                    <i class="fa-solid fa-chart-column"></i>
+
+                </div>
+
+                <div class="report-activity-content">
+
+                    <p>
+
+                        Booking report generated for
+
+                        <strong>
+                            September 2026
+                        </strong>.
+
+                    </p>
+
+                    <span>
+                        Today
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
+<footer class="admin-footer">
+
+    <p>
+        &copy; 2026 LaundroBook. All rights reserved.
+    </p>
+
+</footer>
+
+
+<!-- Reports JavaScript -->
+
+<script src="../../JS/reports.js"></script>
+
+
+</body>
+
+</html>

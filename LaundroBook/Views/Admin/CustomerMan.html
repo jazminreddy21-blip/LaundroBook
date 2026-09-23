@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Management | LaundroBook</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="../../CSS/secondStyle.css">
+
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     ADMIN NAVBAR
+     ========================================================= -->
+
+<nav class="admin-navbar">
+
+    <div class="navbar-brand">
+
+        <img src="../../Images/logo.png"
+             class="navbar-logo"
+             alt="LaundroBook Logo">
+
+        <span>LaundroBook</span>
+
+    </div>
+
+    <ul>
+
+        <li>
+            <a href="adminDash.html">
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="bookingMan.html">
+                Bookings
+            </a>
+        </li>
+
+        <li>
+            <a href="pickUpMan.html">
+                Pickups
+            </a>
+        </li>
+
+        <li>
+            <a href="DeliveryMan.html">
+                Deliveries
+            </a>
+        </li>
+
+        <li>
+            <a href="MachineMan.html">
+                Machines
+            </a>
+        </li>
+
+        <li>
+            <a href="CustomerMan.html"
+               class="active">
+                Customers
+            </a>
+        </li>
+
+        <li>
+            <a href="Reports.html">
+                Reports
+            </a>
+        </li>
+
+        <li>
+            <a href="login.html">
+                Logout
+            </a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- =========================================================
+     CUSTOMER MANAGEMENT
+     ========================================================= -->
+
+<main class="customer-management-container">
+
+
+    <!-- =====================================================
+         PAGE HEADING
+         ===================================================== -->
+
+    <section class="customer-page-heading">
+
+        <h2>
+            Customer Management
+        </h2>
+
+        <p>
+            View registered customer information and booking activity.
+        </p>
+
+    </section>
+
+
+    <!-- =====================================================
+         RECENT UPDATES
+         ===================================================== -->
+
+    <section class="customer-updates-section">
+
+        <div class="customer-section-heading">
+
+            <h2>
+
+                <i class="fa-solid fa-bell"></i>
+
+                Recent Updates
+
+            </h2>
+
+            <p>
+                Recent customer activity and account updates.
+            </p>
+
+        </div>
+
+
+        <!--
+            Backend:
+
+            Populate this container with recent customer
+            activity retrieved from the database.
+
+            Examples:
+            - New customer registered
+            - Customer updated their details
+            - Customer made a booking
+        -->
+
+        <div id="customerUpdatesContainer">
+
+
+            <!-- Temporary dummy update -->
+
+            <div class="customer-update">
+
+                <div class="update-icon">
+
+                    <i class="fa-solid fa-user-plus"></i>
+
+                </div>
+
+                <div class="update-content">
+
+                    <p>
+
+                        New customer
+
+                        <strong class="update-customer-name">
+                            Sarah Williams
+                        </strong>
+
+                        registered.
+
+                    </p>
+
+                    <span class="update-time">
+                        15 minutes ago
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CUSTOMER SUMMARY
+         ===================================================== -->
+
+    <section class="customer-summary">
+
+
+        <!-- TOTAL CUSTOMERS -->
+
+        <div class="customer-stat-card">
+
+            <div class="customer-stat-icon">
+
+                <i class="fa-solid fa-users"></i>
+
+            </div>
+
+            <div class="customer-stat-info">
+
+                <h3>
+                    Total Customers
+                </h3>
+
+                <!--
+                    Backend:
+
+                    Populate this value from the database.
+
+                    Count the number of registered customers.
+                -->
+
+                <h2 id="totalCustomers">
+                    --
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL BOOKINGS -->
+
+        <div class="customer-stat-card">
+
+            <div class="customer-stat-icon">
+
+                <i class="fa-solid fa-calendar-check"></i>
+
+            </div>
+
+            <div class="customer-stat-info">
+
+                <h3>
+                    Total Bookings
+                </h3>
+
+                <!--
+                    Backend:
+
+                    Populate this value from the database.
+
+                    Count bookings made by all customers.
+                -->
+
+                <h2 id="customerTotalBookings">
+                    --
+                </h2>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         CUSTOMER SEARCH
+         ===================================================== -->
+
+    <section class="customer-search-section">
+
+        <div class="customer-section-heading">
+
+            <h2>
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                Search Customers
+
+            </h2>
+
+            <p>
+                Search for a customer by name, email or phone number.
+            </p>
+
+        </div>
+
+
+        <form id="customerSearchForm"
+              class="customer-search-form">
+
+
+            <div class="customer-search-input">
+
+                <label for="customerSearch">
+                    Customer
+                </label>
+
+                <input
+                    type="text"
+                    id="customerSearch"
+                    name="customerSearch"
+                    placeholder="Search by name, email or phone number">
+
+            </div>
+
+
+            <button
+                type="submit"
+                id="searchCustomerBtn">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                Search
+
+            </button>
+
+
+        </form>
+
+    </section>
+
+
+    <!-- =====================================================
+         CUSTOMER TABLE
+         ===================================================== -->
+
+    <section class="customer-table-section">
+
+
+        <div class="customer-section-heading">
+
+            <h2>
+
+                <i class="fa-solid fa-users"></i>
+
+                All Customers
+
+            </h2>
+
+            <p>
+                View registered customer information and booking activity.
+            </p>
+
+        </div>
+
+
+        <div class="customer-table-container">
+
+
+            <table
+                class="customer-table"
+                id="customerTable">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>Customer</th>
+
+                        <th>Email</th>
+
+                        <th>Phone</th>
+
+                        <th>Total Bookings</th>
+
+                        <th>Latest Booking</th>
+
+                        <th>Latest Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <!--
+                    Backend:
+
+                    Populate this tbody with customer records
+                    retrieved from the database.
+
+                    The temporary rows below are only example data.
+                -->
+
+                <tbody id="customerTableBody">
+
+
+                    <!-- =================================================
+                         TEMPORARY CUSTOMER 1
+                         ================================================= -->
+
+                    <tr
+                        class="customer-row"
+                        data-customer-id="1">
+
+
+                        <td>
+
+                            <strong class="customer-name">
+                                Sarah Williams
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="customer-email">
+                                sarah.williams@email.com
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="customer-phone">
+                                071 234 5678
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="customer-booking-count">
+                                8
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <strong class="customer-latest-booking">
+                                #412
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="customer-status-badge in-progress"
+                                data-status="in_progress">
+
+                                In Progress
+
+                            </span>
+
+
+                            <!--
+                                Backend:
+
+                                This represents the customer's
+                                latest booking status.
+                            -->
+
+                            <span
+                                class="customer-current-status"
+                                hidden>
+
+                                In Progress
+
+                            </span>
+
+                        </td>
+
+
+                    </tr>
+
+
+                    <!-- =================================================
+                         TEMPORARY CUSTOMER 2
+                         ================================================= -->
+
+                    <tr
+                        class="customer-row"
+                        data-customer-id="2">
+
+
+                        <td>
+
+                            <strong class="customer-name">
+                                Michael Brown
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="customer-email">
+                                michael.brown@email.com
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="customer-phone">
+                                082 345 6789
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="customer-booking-count">
+                                5
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <strong class="customer-latest-booking">
+                                #405
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="customer-status-badge ready"
+                                data-status="ready_for_collection">
+
+                                Ready for Collection
+
+                            </span>
+
+                            <span
+                                class="customer-current-status"
+                                hidden>
+
+                                Ready for Collection
+
+                            </span>
+
+                        </td>
+
+
+                    </tr>
+
+
+                    <!-- =================================================
+                         TEMPORARY CUSTOMER 3
+                         ================================================= -->
+
+                    <tr
+                        class="customer-row"
+                        data-customer-id="3">
+
+
+                        <td>
+
+                            <strong class="customer-name">
+                                John Smith
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="customer-email">
+                                john.smith@email.com
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="customer-phone">
+                                083 456 7890
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="customer-booking-count">
+                                12
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <strong class="customer-latest-booking">
+                                #398
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="customer-status-badge completed"
+                                data-status="completed">
+
+                                Completed
+
+                            </span>
+
+                            <span
+                                class="customer-current-status"
+                                hidden>
+
+                                Completed
+
+                            </span>
+
+                        </td>
+
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
+<footer class="admin-footer">
+
+    <p>
+        &copy; 2026 LaundroBook. All rights reserved.
+    </p>
+
+</footer>
+
+
+<!-- Customer Management JavaScript -->
+
+<script src="../../JS/customerManagement.js"></script>
+
+
+</body>
+
+</html>

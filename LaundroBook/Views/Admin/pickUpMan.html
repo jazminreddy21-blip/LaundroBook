@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LaundroBook | Pickup Management</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="../../CSS/secondStyle.css">
+
+</head>
+
+<body>
+
+
+   
+
+
+    <!-- ==================================================
+         ADMIN NAVIGATION
+    =================================================== -->
+
+    <nav class="admin-navbar">
+
+
+        <!-- Logo and company name -->
+
+        <div class="navbar-brand">
+
+            <img src="../../Images/logo.png"
+                 class="navbar-logo"
+                 alt="LaundroBook Logo">
+
+            <span>
+                LaundroBook
+            </span>
+
+        </div>
+
+
+        <!-- Navigation links -->
+
+        <ul>
+
+            <li>
+                <a href="adminDash.html">
+                    Dashboard
+                </a>
+            </li>
+
+            <li>
+                <a href="bookingMan.html">
+                    Bookings
+                </a>
+            </li>
+
+            <li>
+                <a href="pickUpMan.html" class="active">
+                    Pickups
+                </a>
+            </li>
+
+            <li>
+                <a href="DeliveryMan.html">
+                    Deliveries
+                </a>
+            </li>
+
+            <li>
+                <a href="MachineMan.html">
+                    Machines
+                </a>
+            </li>
+
+            <li>
+                <a href="CustomerMan.html">
+                    Customers
+                </a>
+            </li>
+
+            <li>
+                <a href="Reports.html">
+                    Reports
+                </a>
+            </li>
+
+            <li>
+                <a href="login.html">
+                    Logout
+                </a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+    <!-- ==================================================
+         MAIN PICKUP MANAGEMENT CONTENT
+    =================================================== -->
+
+    <main class="pickup-management-container">
+
+
+        <!-- ==================================================
+             PAGE HEADING
+        =================================================== -->
+
+        <section class="pickup-page-heading">
+
+            <h2>
+                Pickup Management
+            </h2>
+
+            <p>
+                Monitor laundry processing and manage customer pickups.
+            </p>
+
+        </section>
+
+
+        <!-- ==================================================
+             RECENT PICKUP UPDATES
+
+             Backend:
+             Populate #pickupUpdatesContainer with the
+             latest laundry status changes.
+        =================================================== -->
+
+        <section class="pickup-updates-section">
+
+
+            <div class="pickup-section-heading">
+
+                <h2>
+
+                    <i class="fa-solid fa-bell"></i>
+
+                    Recent Updates
+
+                </h2>
+
+                <p>
+                    Latest changes made to laundry processing and pickups.
+                </p>
+
+            </div>
+
+
+            <!-- Backend: Populate recent updates here -->
+
+            <div id="pickupUpdatesContainer">
+
+
+                <!-- Example update -->
+
+                <div class="pickup-update">
+
+                    <div class="update-icon">
+
+                        <i class="fa-solid fa-rotate"></i>
+
+                    </div>
+
+
+                    <div class="update-content">
+
+                        <p>
+
+                            Booking
+
+                            <strong class="update-booking-reference">
+                                #412
+                            </strong>
+
+                            was updated to
+
+                            <strong class="update-pickup-status">
+                                Drying
+                            </strong>.
+
+                        </p>
+
+
+                        <!-- Backend: Populate date/time -->
+
+                        <span class="update-time">
+                            Recently updated
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             PICKUP SUMMARY CARDS
+
+             Backend:
+             Populate each value from the database.
+        =================================================== -->
+
+        <section class="pickup-summary">
+
+
+            <!-- PENDING PICKUPS -->
+
+            <div class="pickup-stat-card">
+
+                <div class="pickup-stat-icon">
+
+                    <i class="fa-solid fa-clock"></i>
+
+                </div>
+
+
+                <div class="pickup-stat-info">
+
+                    <h3>
+                        Pending Pickups
+                    </h3>
+
+                    <!-- Backend: Count pending pickups -->
+
+                    <h2 id="pendingPickups">
+                        --
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <!-- LAUNDRY IN PROGRESS -->
+
+            <div class="pickup-stat-card">
+
+                <div class="pickup-stat-icon">
+
+                    <i class="fa-solid fa-soap"></i>
+
+                </div>
+
+
+                <div class="pickup-stat-info">
+
+                    <h3>
+                        Laundry in Progress
+                    </h3>
+
+                    <!-- Backend: Count laundry currently processing -->
+
+                    <h2 id="laundryInProgress">
+                        --
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <!-- READY FOR COLLECTION -->
+
+            <div class="pickup-stat-card">
+
+                <div class="pickup-stat-icon">
+
+                    <i class="fa-solid fa-bag-shopping"></i>
+
+                </div>
+
+
+                <div class="pickup-stat-info">
+
+                    <h3>
+                        Ready for Collection
+                    </h3>
+
+                    <!-- Backend: Count laundry ready for collection -->
+
+                    <h2 id="readyForCollection">
+                        --
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <!-- CUSTOMER ARRIVED -->
+
+            <div class="pickup-stat-card">
+
+                <div class="pickup-stat-icon">
+
+                    <i class="fa-solid fa-user-check"></i>
+
+                </div>
+
+
+                <div class="pickup-stat-info">
+
+                    <h3>
+                        Customer Arrived
+                    </h3>
+
+                    <!-- Backend: Count customers who arrived -->
+
+                    <h2 id="customerArrived">
+                        --
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <!-- COMPLETED PICKUPS -->
+
+            <div class="pickup-stat-card">
+
+                <div class="pickup-stat-icon">
+
+                    <i class="fa-solid fa-check"></i>
+
+                </div>
+
+
+                <div class="pickup-stat-info">
+
+                    <h3>
+                        Completed Pickups
+                    </h3>
+
+                    <!-- Backend: Count completed pickups -->
+
+                    <h2 id="completedPickups">
+                        --
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- ==================================================
+             SEARCH PICKUPS
+
+             Backend:
+             Can later connect this search to the database.
+        =================================================== -->
+
+        <section class="pickup-search-section">
+
+
+            <div class="pickup-section-heading">
+
+                <h2>
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    Search Pickups
+
+                </h2>
+
+                <p>
+                    Search using the booking reference or customer name.
+                </p>
+
+            </div>
+
+
+            <form
+                id="pickupSearchForm"
+                class="pickup-search-form"
+                action="#"
+                method="GET">
+
+
+                <div class="pickup-search-input">
+
+                    <label for="pickupSearch">
+                        Search Pickup
+                    </label>
+
+
+                    <!-- Backend:
+                         Use this value to search pickup records.
+                    -->
+
+                    <input
+                        type="text"
+                        id="pickupSearch"
+                        name="pickupSearch"
+                        placeholder="Enter booking reference or customer name..."
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    id="searchPickupBtn">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    Search
+
+                </button>
+
+
+            </form>
+
+        </section>
+
+
+        <!-- ==================================================
+             LAUNDRY STATUS
+
+             Admin:
+             Update the current laundry status and estimated
+             completion time.
+
+             Backend:
+             Save these values against the relevant
+             booking/pickup.
+
+             Customer side:
+             Display the saved status and estimated
+             completion time on the tracking page.
+
+             IMPORTANT:
+             The visual progress tracker belongs on the
+             CUSTOMER side, not this admin page.
+        =================================================== -->
+
+        <section class="laundry-status-section">
+
+
+            <div class="pickup-section-heading">
+
+                <h2>
+
+                    <i class="fa-solid fa-shirt"></i>
+
+                    Laundry Status
+
+                </h2>
+
+                <p>
+                    Update the current laundry status and estimated completion time.
+                </p>
+
+            </div>
+
+
+            <div class="laundry-status-form">
+
+
+                <!-- ==================================================
+                     BOOKING REFERENCE
+                =================================================== -->
+
+                <div class="laundry-status-item">
+
+                    <label for="statusBookingReference">
+
+                        Booking Reference
+
+                    </label>
+
+
+                    <!-- Backend:
+                         Populate the booking reference.
+                    -->
+
+                    <strong id="statusBookingReference">
+
+                        #412
+
+                    </strong>
+
+                </div>
+
+
+                <!-- ==================================================
+                     CURRENT STATUS
+                =================================================== -->
+
+                <div class="laundry-status-item">
+
+                    <label for="currentLaundryStatus">
+
+                        Current Status
+
+                    </label>
+
+
+                    <!--
+                        Admin:
+                        Select the current laundry stage.
+
+                        Backend:
+                        Save the selected status against
+                        the booking/pickup ID.
+
+                        Customer side:
+                        Display the saved status.
+                    -->
+
+                    <select
+                        id="currentLaundryStatus"
+                        name="currentLaundryStatus"
+                        data-booking-id="412">
+
+
+                        <option value="order_confirmed">
+
+                            Order Confirmed
+
+                        </option>
+
+
+                        <option value="laundry_received">
+
+                            Laundry Received
+
+                        </option>
+
+
+                        <option value="washing_in_progress">
+
+                            Washing in Progress
+
+                        </option>
+
+
+                        <option value="drying" selected>
+
+                            Drying
+
+                        </option>
+
+
+                        <option value="folding">
+
+                            Folding
+
+                        </option>
+
+
+                        <option value="ready_for_collection">
+
+                            Ready for Collection
+
+                        </option>
+
+
+                    </select>
+
+                </div>
+
+
+                <!-- ==================================================
+                     ESTIMATED COMPLETION TIME
+                =================================================== -->
+
+                <div class="laundry-status-item">
+
+                    <label for="estimatedCompletionTime">
+
+                        Estimated Completion Time
+
+                    </label>
+
+
+                    <!--
+                        Admin:
+                        Enter estimated completion date/time.
+
+                        Backend:
+                        Save this value with the booking/pickup.
+
+                        Customer side:
+                        Display the saved completion time.
+                    -->
+
+                    <input
+                        type="datetime-local"
+                        id="estimatedCompletionTime"
+                        name="estimatedCompletionTime"
+                        data-booking-id="412">
+
+                </div>
+
+
+                <!-- ==================================================
+                     SAVE LAUNDRY STATUS
+                =================================================== -->
+
+                <div class="laundry-status-action">
+
+
+                    <!--
+                        Backend:
+                        Save both the selected status and
+                        estimated completion time.
+                    -->
+
+                    <button
+                        type="button"
+                        id="saveLaundryStatus"
+                        data-booking-id="412">
+
+                        <i class="fa-solid fa-check"></i>
+
+                        Save Status
+
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             PICKUP TABLE
+
+             Backend:
+             Populate #pickupTableBody with real pickup
+             records from the database.
+        =================================================== -->
+
+        <section class="pickup-table-section">
+
+
+            <div class="pickup-section-heading">
+
+                <h2>
+
+                    <i class="fa-solid fa-list"></i>
+
+                    All Pickups
+
+                </h2>
+
+                <p>
+                    View laundry processing information and update pickup status.
+                </p>
+
+            </div>
+
+
+            <div class="pickup-table-container">
+
+
+                <table
+                    class="pickup-table"
+                    id="pickupTable">
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Booking Ref
+                            </th>
+
+                            <th>
+                                Customer
+                            </th>
+
+                            <th>
+                                Service
+                            </th>
+
+                            <th>
+                                Current Status
+                            </th>
+
+                            <th>
+                                Estimated Completion
+                            </th>
+
+                            <th>
+                                Update
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <!-- Backend:
+                         Populate this tbody with real pickup records.
+                    -->
+
+                    <tbody id="pickupTableBody">
+
+
+                        <!-- ==================================================
+                             EXAMPLE PICKUP #412
+                        =================================================== -->
+
+                        <tr
+                            class="pickup-row"
+                            data-pickup-id="412"
+                            data-booking-id="412">
+
+
+                            <!-- BOOKING REFERENCE -->
+
+                            <td>
+
+                                <!-- Backend: Populate booking reference -->
+
+                                <strong class="pickup-booking-reference">
+
+                                    #412
+
+                                </strong>
+
+                            </td>
+
+
+                            <!-- CUSTOMER -->
+
+                            <td>
+
+                                <div class="pickup-customer-details">
+
+
+                                    <!-- Backend: Populate customer name -->
+
+                                    <strong class="pickup-customer-name">
+
+                                        John Smith
+
+                                    </strong>
+
+
+                                    <!-- Backend: Populate customer email -->
+
+                                    <span class="pickup-customer-email">
+
+                                        john@email.com
+
+                                    </span>
+
+
+                                    <!-- Backend: Populate customer phone -->
+
+                                    <span class="pickup-customer-phone">
+
+                                        071 234 5678
+
+                                    </span>
+
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- SERVICE -->
+
+                            <td>
+
+                                <!-- Backend: Populate selected service -->
+
+                                <span class="pickup-service">
+
+                                    Heavy Wash
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- CURRENT STATUS -->
+
+                            <td>
+
+                                <!-- Backend: Populate current status -->
+
+                                <span
+                                    class="pickup-status-badge drying"
+                                    data-status="drying">
+
+
+                                    <span class="pickup-current-status">
+
+                                        Drying
+
+                                    </span>
+
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- ESTIMATED COMPLETION -->
+
+                            <td>
+
+                                <!-- Backend: Populate estimated completion -->
+
+                                <span class="pickup-completion-time">
+
+                                    Today at 16:30
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- UPDATE STATUS -->
+
+                            <td>
+
+                                <div class="pickup-status-update">
+
+
+                                    <select
+                                        class="pickup-status-select"
+                                        id="pickupStatus412"
+                                        name="pickupStatus"
+                                        data-pickup-id="412">
+
+
+                                        <option value="">
+                                            Select Status
+                                        </option>
+
+
+                                        <option value="order_confirmed">
+                                            Order Confirmed
+                                        </option>
+
+
+                                        <option value="laundry_received">
+                                            Laundry Received
+                                        </option>
+
+
+                                        <option value="washing_in_progress">
+                                            Washing in Progress
+                                        </option>
+
+
+                                        <option value="drying">
+                                            Drying
+                                        </option>
+
+
+                                        <option value="folding">
+                                            Folding
+                                        </option>
+
+
+                                        <option value="ready_for_collection">
+                                            Ready for Collection
+                                        </option>
+
+
+                                    </select>
+
+
+                                    <!-- Backend:
+                                         Save selected status.
+                                    -->
+
+                                    <button
+                                        type="button"
+                                        class="save-pickup-status-btn"
+                                        id="savePickupStatus412"
+                                        data-pickup-id="412">
+
+                                        <i class="fa-solid fa-check"></i>
+
+                                        Save
+
+                                    </button>
+
+
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+
+
+                        <!-- ==================================================
+                             EXAMPLE PICKUP #405
+                        =================================================== -->
+
+                        <tr
+                            class="pickup-row"
+                            data-pickup-id="405"
+                            data-booking-id="405">
+
+
+                            <td>
+
+                                <strong class="pickup-booking-reference">
+
+                                    #405
+
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="pickup-customer-details">
+
+                                    <strong class="pickup-customer-name">
+
+                                        Sarah Jones
+
+                                    </strong>
+
+                                    <span class="pickup-customer-email">
+
+                                        sarah@email.com
+
+                                    </span>
+
+                                    <span class="pickup-customer-phone">
+
+                                        082 555 1234
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="pickup-service">
+
+                                    Normal Wash
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="pickup-status-badge washing"
+                                    data-status="washing_in_progress">
+
+
+                                    <span class="pickup-current-status">
+
+                                        Washing in Progress
+
+                                    </span>
+
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="pickup-completion-time">
+
+                                    Today at 17:00
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="pickup-status-update">
+
+
+                                    <select
+                                        class="pickup-status-select"
+                                        id="pickupStatus405"
+                                        name="pickupStatus"
+                                        data-pickup-id="405">
+
+
+                                        <option value="">
+                                            Select Status
+                                        </option>
+
+
+                                        <option value="order_confirmed">
+                                            Order Confirmed
+                                        </option>
+
+
+                                        <option value="laundry_received">
+                                            Laundry Received
+                                        </option>
+
+
+                                        <option value="washing_in_progress">
+                                            Washing in Progress
+                                        </option>
+
+
+                                        <option value="drying">
+                                            Drying
+                                        </option>
+
+
+                                        <option value="folding">
+                                            Folding
+                                        </option>
+
+
+                                        <option value="ready_for_collection">
+                                            Ready for Collection
+                                        </option>
+
+
+                                    </select>
+
+
+                                    <button
+                                        type="button"
+                                        class="save-pickup-status-btn"
+                                        id="savePickupStatus405"
+                                        data-pickup-id="405">
+
+                                        <i class="fa-solid fa-check"></i>
+
+                                        Save
+
+                                    </button>
+
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                        <!-- ==================================================
+                             EXAMPLE PICKUP #398
+                        =================================================== -->
+
+                        <tr
+                            class="pickup-row"
+                            data-pickup-id="398"
+                            data-booking-id="398">
+
+
+                            <td>
+
+                                <strong class="pickup-booking-reference">
+
+                                    #398
+
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="pickup-customer-details">
+
+                                    <strong class="pickup-customer-name">
+
+                                        Michael Brown
+
+                                    </strong>
+
+                                    <span class="pickup-customer-email">
+
+                                        michael@email.com
+
+                                    </span>
+
+                                    <span class="pickup-customer-phone">
+
+                                        076 444 8899
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="pickup-service">
+
+                                    Quick Wash
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="pickup-status-badge ready-collection"
+                                    data-status="ready_for_collection">
+
+
+                                    <span class="pickup-current-status">
+
+                                        Ready for Collection
+
+                                    </span>
+
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="pickup-completion-time">
+
+                                    Completed
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="pickup-status-update">
+
+
+                                    <select
+                                        class="pickup-status-select"
+                                        id="pickupStatus398"
+                                        name="pickupStatus"
+                                        data-pickup-id="398">
+
+
+                                        <option value="">
+                                            Select Status
+                                        </option>
+
+
+                                        <option value="order_confirmed">
+                                            Order Confirmed
+                                        </option>
+
+
+                                        <option value="laundry_received">
+                                            Laundry Received
+                                        </option>
+
+
+                                        <option value="washing_in_progress">
+                                            Washing in Progress
+                                        </option>
+
+
+                                        <option value="drying">
+                                            Drying
+                                        </option>
+
+
+                                        <option value="folding">
+                                            Folding
+                                        </option>
+
+
+                                        <option value="ready_for_collection">
+                                            Ready for Collection
+                                        </option>
+
+
+                                    </select>
+
+
+                                    <button
+                                        type="button"
+                                        class="save-pickup-status-btn"
+                                        id="savePickupStatus398"
+                                        data-pickup-id="398">
+
+                                        <i class="fa-solid fa-check"></i>
+
+                                        Save
+
+                                    </button>
+
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- ==================================================
+         FOOTER
+    =================================================== -->
+
+    <footer class="admin-footer">
+
+        <p>
+            &copy; 2026 LaundroBook. Admin Management System.
+        </p>
+
+    </footer>
+
+
+    <!-- ==================================================
+         PICKUP MANAGEMENT JAVASCRIPT
+
+         Frontend:
+         Handles search and pickup status interactions.
+
+         Backend:
+         Can later connect these actions to the database.
+    =================================================== -->
+
+    <script src="../../JS/pickupManagement.js"></script>
+
+
+</body>
+
+</html>

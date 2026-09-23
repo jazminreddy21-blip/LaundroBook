@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Machine Management | LaundroBook</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Admin CSS -->
+    <link rel="stylesheet" href="../../CSS/secondStyle.css">
+
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     ADMIN NAVBAR
+     ========================================================= -->
+
+<nav class="admin-navbar">
+
+    <div class="navbar-brand">
+
+        <img src="../../Images/logo.png"
+             class="navbar-logo"
+             alt="LaundroBook Logo">
+
+        <span>LaundroBook</span>
+
+    </div>
+
+
+    <ul>
+
+        <li>
+            <a href="adminDash.html">
+                Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="bookingMan.html">
+                Bookings
+            </a>
+        </li>
+
+        <li>
+            <a href="pickUpMan.html">
+                Pickups
+            </a>
+        </li>
+
+        <li>
+            <a href="DeliveryMan.html">
+                Deliveries
+            </a>
+        </li>
+
+        <li>
+            <a href="MachineMan.html"
+               class="active">
+                Machines
+            </a>
+        </li>
+
+        <li>
+            <a href="CustomerMan.html">
+                Customers
+            </a>
+        </li>
+
+        <li>
+            <a href="Reports.html">
+                Reports
+            </a>
+        </li>
+
+        <li>
+            <a href="login.html">
+                Logout
+            </a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+
+<!-- =========================================================
+     MACHINE MANAGEMENT
+     ========================================================= -->
+
+<main class="machine-management-container">
+
+
+    <!-- =====================================================
+         PAGE HEADING
+         ===================================================== -->
+
+    <section class="machine-page-heading">
+
+        <h2>Machine Management</h2>
+
+        <p>
+            View machine availability and current machine usage.
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         RECENT UPDATES
+         ===================================================== -->
+
+    <section class="machine-updates-section">
+
+        <div class="machine-section-heading">
+
+            <h2>
+                <i class="fa-solid fa-bell"></i>
+                Recent Updates
+            </h2>
+
+            <p>
+                Recent changes to machine availability.
+            </p>
+
+        </div>
+
+
+        <!--
+            Backend:
+            Populate this container with recent machine
+            availability updates from the database.
+        -->
+
+        <div id="machineUpdatesContainer">
+
+
+            <!-- Dummy update -->
+
+            <div class="machine-update">
+
+                <div class="update-icon">
+
+                    <i class="fa-solid fa-rotate"></i>
+
+                </div>
+
+
+                <div class="update-content">
+
+                    <p>
+
+                        <strong class="update-machine-reference">
+                            Machine 04
+                        </strong>
+
+                        was changed to
+
+                        <strong class="update-machine-status">
+                            Available
+                        </strong>.
+
+                    </p>
+
+                    <span class="update-time">
+                        10 minutes ago
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MACHINE SUMMARY
+         ===================================================== -->
+
+    <section class="machine-summary">
+
+
+        <!-- AVAILABLE MACHINES -->
+
+        <div class="machine-stat-card">
+
+            <div class="machine-stat-icon">
+
+                <i class="fa-solid fa-circle-check"></i>
+
+            </div>
+
+
+            <div class="machine-stat-info">
+
+                <h3>Available Machines</h3>
+
+                <!--
+                    Backend:
+                    Populate this value from the database.
+                    Count machines where status = available.
+                -->
+
+                <h2 id="availableMachines">
+                    --
+                </h2>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- MACHINES IN USE -->
+
+        <div class="machine-stat-card">
+
+            <div class="machine-stat-icon">
+
+                <i class="fa-solid fa-spinner"></i>
+
+            </div>
+
+
+            <div class="machine-stat-info">
+
+                <h3>Machines In Use</h3>
+
+                <!--
+                    Backend:
+                    Populate this value from the database.
+                    Count machines where status = in_use.
+                -->
+
+                <h2 id="machinesInUse">
+                    --
+                </h2>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- TOTAL MACHINES -->
+
+        <div class="machine-stat-card">
+
+            <div class="machine-stat-icon">
+
+                <i class="fa-solid fa-boxes-stacked"></i>
+
+            </div>
+
+
+            <div class="machine-stat-info">
+
+                <h3>Total Machines</h3>
+
+                <!--
+                    Backend:
+                    Populate this value from the database.
+                -->
+
+                <h2 id="totalMachines">
+                    --
+                </h2>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MACHINE SEARCH
+         ===================================================== -->
+
+    <section class="machine-search-section">
+
+
+        <div class="machine-section-heading">
+
+            <h2>
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Search Machines
+            </h2>
+
+            <p>
+                Search for a specific machine by machine number.
+            </p>
+
+        </div>
+
+
+        <form id="machineSearchForm"
+              class="machine-search-form">
+
+
+            <div class="machine-search-input">
+
+                <label for="machineSearch">
+                    Machine Number
+                </label>
+
+                <input
+                    type="text"
+                    id="machineSearch"
+                    name="machineSearch"
+                    placeholder="Example: Machine 04">
+
+            </div>
+
+
+            <button
+                type="submit"
+                id="searchMachineBtn">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                Search
+
+            </button>
+
+
+        </form>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         MACHINE AVAILABILITY
+         ===================================================== -->
+
+    <section class="machine-availability-section">
+
+
+        <div class="machine-section-heading">
+
+            <h2>
+                <i class="fa-solid fa-calendar-check"></i>
+                Machine Availability
+            </h2>
+
+            <p>
+                View current machine availability and booking
+                information.
+            </p>
+
+        </div>
+
+
+        <div class="machine-availability-container">
+
+
+            <!-- CURRENT AVAILABILITY -->
+
+            <div class="availability-info-card">
+
+                <div class="availability-info-icon">
+
+                    <i class="fa-solid fa-clock"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h3>Current Availability</h3>
+
+                    <!--
+                        Backend:
+                        Populate this information from the database.
+                        This should reflect the current availability
+                        of the machines.
+                    -->
+
+                    <p id="currentAvailability">
+                        Availability information will be
+                        loaded from the database.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- NEXT AVAILABLE MACHINE -->
+
+            <div class="availability-info-card">
+
+                <div class="availability-info-icon">
+
+                    <i class="fa-solid fa-calendar-days"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h3>Next Available Machine</h3>
+
+                    <!--
+                        Backend:
+                        Determine the next machine that becomes
+                        available based on current machine usage
+                        and bookings.
+                    -->
+
+                    <p id="nextAvailableMachine">
+                        --
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ALL MACHINES
+         ===================================================== -->
+
+    <section class="machine-table-section">
+
+
+        <div class="machine-section-heading">
+
+            <h2>
+                <i class="fa-solid fa-list"></i>
+                All Machines
+            </h2>
+
+            <p>
+                View and update the availability of each machine.
+            </p>
+
+        </div>
+
+
+        <div class="machine-table-container">
+
+
+            <table
+                class="machine-table"
+                id="machineTable">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Machine
+                        </th>
+
+                        <th>
+                            Type
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Current Booking
+                        </th>
+
+                        <th>
+                            Available At
+                        </th>
+
+                        <th>
+                            Update Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <!--
+                    Backend:
+                    Populate this tbody with machine records
+                    retrieved from the database.
+                -->
+
+                <tbody id="machineTableBody">
+
+
+                    <!-- =================================================
+                         DUMMY MACHINE 01
+                         ================================================= -->
+
+                    <tr
+                        class="machine-row"
+                        data-machine-id="1">
+
+
+                        <!-- MACHINE -->
+
+                        <td>
+
+                            <strong class="machine-number">
+                                Machine 01
+                            </strong>
+
+                        </td>
+
+
+                        <!-- TYPE -->
+
+                        <td>
+
+                            <span class="machine-type">
+                                Washing Machine
+                            </span>
+
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            <span
+                                class="machine-status-badge available"
+                                data-status="available">
+
+                                Available
+
+                            </span>
+
+
+                            <!--
+                                Backend:
+                                This value represents the current
+                                machine status retrieved from the DB.
+                            -->
+
+                            <span
+                                class="machine-current-status"
+                                hidden>
+
+                                Available
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- CURRENT BOOKING -->
+
+                        <td>
+
+                            <!--
+                                Backend:
+                                Populate with the current booking
+                                reference if the machine is in use.
+                            -->
+
+                            <span class="machine-booking">
+                                No Current Booking
+                            </span>
+
+                        </td>
+
+
+                        <!-- AVAILABLE AT -->
+
+                        <td>
+
+                            <!--
+                                Backend:
+                                Populate the time when this machine
+                                will next become available.
+                            -->
+
+                            <span class="machine-available-time">
+                                Available Now
+                            </span>
+
+                        </td>
+
+
+                        <!-- UPDATE STATUS -->
+
+                        <td>
+
+                            <div class="machine-status-update">
+
+
+                                <select
+                                    class="machine-status-select"
+                                    data-machine-id="1">
+
+                                    <option
+                                        value="available"
+                                        selected>
+
+                                        Available
+
+                                    </option>
+
+                                    <option
+                                        value="in_use">
+
+                                        In Use
+
+                                    </option>
+
+                                </select>
+
+
+                                <button
+                                    type="button"
+                                    class="save-machine-status-btn"
+                                    data-machine-id="1">
+
+                                    <i class="fa-solid fa-save"></i>
+
+                                    Save
+
+                                </button>
+
+
+                            </div>
+
+
+                            <!--
+                                Backend:
+                                Save the selected status against
+                                this machine ID in the database.
+
+                                Available = machine can be used
+                                for new bookings.
+
+                                In Use = machine is currently being
+                                used.
+
+                                The updated availability should be
+                                reflected on the customer booking
+                                page.
+                            -->
+
+                        </td>
+
+                    </tr>
+
+
+
+                    <!-- =================================================
+                         DUMMY MACHINE 02
+                         ================================================= -->
+
+                    <tr
+                        class="machine-row"
+                        data-machine-id="2">
+
+
+                        <td>
+
+                            <strong class="machine-number">
+                                Machine 02
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="machine-type">
+                                Washing Machine
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="machine-status-badge in-use"
+                                data-status="in_use">
+
+                                In Use
+
+                            </span>
+
+
+                            <span
+                                class="machine-current-status"
+                                hidden>
+
+                                In Use
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <!--
+                                Backend:
+                                Populate the booking reference
+                                currently using this machine.
+                            -->
+
+                            <span class="machine-booking">
+                                #412
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <!--
+                                Backend:
+                                Calculate and populate when the
+                                machine becomes available.
+                            -->
+
+                            <span class="machine-available-time">
+                                14:45
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="machine-status-update">
+
+
+                                <select
+                                    class="machine-status-select"
+                                    data-machine-id="2">
+
+                                    <option
+                                        value="available">
+
+                                        Available
+
+                                    </option>
+
+                                    <option
+                                        value="in_use"
+                                        selected>
+
+                                        In Use
+
+                                    </option>
+
+                                </select>
+
+
+                                <button
+                                    type="button"
+                                    class="save-machine-status-btn"
+                                    data-machine-id="2">
+
+                                    <i class="fa-solid fa-save"></i>
+
+                                    Save
+
+                                </button>
+
+
+                            </div>
+
+
+                            <!--
+                                Backend:
+                                Save the selected availability status
+                                against machine ID 2.
+                            -->
+
+                        </td>
+
+                    </tr>
+
+
+
+                    <!-- =================================================
+                         DUMMY MACHINE 03
+                         ================================================= -->
+
+                    <tr
+                        class="machine-row"
+                        data-machine-id="3">
+
+
+                        <td>
+
+                            <strong class="machine-number">
+                                Machine 03
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="machine-type">
+                                Washing Machine
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="machine-status-badge available"
+                                data-status="available">
+
+                                Available
+
+                            </span>
+
+
+                            <span
+                                class="machine-current-status"
+                                hidden>
+
+                                Available
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="machine-booking">
+                                No Current Booking
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="machine-available-time">
+                                Available Now
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="machine-status-update">
+
+
+                                <select
+                                    class="machine-status-select"
+                                    data-machine-id="3">
+
+                                    <option
+                                        value="available"
+                                        selected>
+
+                                        Available
+
+                                    </option>
+
+                                    <option
+                                        value="in_use">
+
+                                        In Use
+
+                                    </option>
+
+                                </select>
+
+
+                                <button
+                                    type="button"
+                                    class="save-machine-status-btn"
+                                    data-machine-id="3">
+
+                                    <i class="fa-solid fa-save"></i>
+
+                                    Save
+
+                                </button>
+
+
+                            </div>
+
+
+                            <!--
+                                Backend:
+                                Save the selected availability status
+                                against machine ID 3.
+                            -->
+
+                        </td>
+
+                    </tr>
+
+
+
+                    <!-- =================================================
+                         DUMMY MACHINE 04
+                         ================================================= -->
+
+                    <tr
+                        class="machine-row"
+                        data-machine-id="4">
+
+
+                        <td>
+
+                            <strong class="machine-number">
+                                Machine 04
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="machine-type">
+                                Washing Machine
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="machine-status-badge in-use"
+                                data-status="in_use">
+
+                                In Use
+
+                            </span>
+
+
+                            <span
+                                class="machine-current-status"
+                                hidden>
+
+                                In Use
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="machine-booking">
+                                #405
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="machine-available-time">
+                                15:30
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="machine-status-update">
+
+
+                                <select
+                                    class="machine-status-select"
+                                    data-machine-id="4">
+
+                                    <option
+                                        value="available">
+
+                                        Available
+
+                                    </option>
+
+                                    <option
+                                        value="in_use"
+                                        selected>
+
+                                        In Use
+
+                                    </option>
+
+                                </select>
+
+
+                                <button
+                                    type="button"
+                                    class="save-machine-status-btn"
+                                    data-machine-id="4">
+
+                                    <i class="fa-solid fa-save"></i>
+
+                                    Save
+
+                                </button>
+
+
+                            </div>
+
+
+                            <!--
+                                Backend:
+                                Save the selected availability status
+                                against machine ID 4.
+                            -->
+
+                        </td>
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
+<footer class="admin-footer">
+
+    <p>
+        &copy; 2026 LaundroBook. All rights reserved.
+    </p>
+
+</footer>
+
+
+
+<!-- Machine Management JavaScript -->
+<script src="../../JS/machineManagement.js"></script>
+
+
+</body>
+
+</html>
