@@ -1,4 +1,21 @@
+<?php
+    if(session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
 
+    require_once __DIR__ . '/../../Interfaces/Repositoryinterfaces.php';
+    require_once __DIR__ . '/../../Repositories/SystemManagerRepo.php';
+    require_once __DIR__ . '/../../Controllers/AdminController.php';
+
+    $controller = new AdminController(new SystemManagerRepo());
+
+    //block access if it's directly from url without logging in
+    $controller->requireAuthentication();
+
+    $dashboard = $controller->getDashboardData();
+    $stats = $dashboard['stats'];
+    $notifications = $dashboard['notifications'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,7 +24,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>LaundroBook Admin Login</title>
+    <!-- FIXED: was "LaundroBook Admin Login", a leftover copy-paste
+         from login.php - this page is the dashboard, not the login
+         screen. -->
+    <title>LaundroBook | Admin Dashboard</title>
 
     <!-- Font Awesome -->
     <link rel="stylesheet"
@@ -27,89 +47,70 @@
 
     <div class="logo">
 
+        <!-- ADDED from new-style version. If Images/logo.png doesn't
+             actually exist in your project yet, this shows a broken
+             image icon - either add the file, or remove this <img>
+             line and keep just the <h1> as before. -->
+        <img src="../../Images/logo.png" class="admin-logo" alt="LaundroBook Logo">
         <h1>LaundroBook Admin</h1>
 
     </div>
 
-    <!-- =======================================================
-         BACKEND INTEGRATION
-
-         Data Source:
-         Admin Table
-
-         Purpose:
-         Display the name of the currently logged-in administrator.
-
-         Expected Output:
-         Administrator Name
-
-         Example:
-         Welcome, Jazmin
-
-         Insert the value inside the element below.
-
-    ======================================================== -->
-
     <div class="admin-user">
 
-        <p id="adminName" name="adminName"></p>
-
+        <p id="adminName" name="adminName"><?= htmlspecialchars($_SESSION['username']?? 'Admin');?></p>
     </div>
 
 </header>
-
-<!------------------------------------------------------------
-                    NAVIGATION BAR
-------------------------------------------------------------->
 
 <nav class="admin-navbar">
 
     <ul>
 
         <li>
-            <a href="adminDash.html" class="active">
+            <a href="adminDash.php" class="active">
                 Dashboard
             </a>
         </li>
 
         <li>
-            <a href="bookingManagement.html">
+            <a href="bookingManagement.php">
                 Bookings
             </a>
         </li>
 
         <li>
-            <a href="pickupManagement.html">
+            <a href="pickupManagement.php">
                 Pickups
             </a>
         </li>
 
         <li>
-            <a href="deliveryManagement.html">
+            <a href="deliveryManagement.php">
                 Deliveries
             </a>
         </li>
 
         <li>
-            <a href="machineManagement.html">
+            <a href="machineManagement.php">
                 Machines
             </a>
         </li>
 
         <li>
-            <a href="customerManagement.html">
+            <a href="customerManagement.php">
                 Customers
             </a>
         </li>
 
         <li>
-            <a href="reports.html">
+            <a href="reports.php">
                 Reports
             </a>
         </li>
 
         <li>
-            <a href="adminLogin.html">
+            <a href="../../Public/adminLogout.php">
                 Logout
             </a>
         </li>
@@ -147,28 +148,11 @@
 
     </div>
 
-    <!-- =======================================================
-         BACKEND INTEGRATION
-
-         Data Source:
-         System Date
-
-         Purpose:
-         Display today's date.
-
-         Expected Output:
-         Saturday, 1 August 2026
-
-         Display the value inside the element below.
-
-    ======================================================== -->
-
     <div class="welcome-date">
 
         <p>
 
-            <strong>Today's Date:</strong>
-
+            <strong>Today's Date: <?=htmlspecialchars(date("F j, Y"));?></strong>
             <span id="currentDate"
                   name="currentDate">
 
@@ -185,156 +169,57 @@
 ------------------------------------------------------------->
 <section class="dashboard-stats">
 
-    <!-- ======================================================
-         TODAY'S BOOKINGS
-
-         BACKEND INTEGRATION
-
-         Data Source:
-         Bookings Table
-
-         Purpose:
-         Count the total number of bookings
-         created for the current day.
-
-         Display the result inside the element below.
-
-    ======================================================= -->
-
     <div class="stat-card">
 
         <h3>Today's Bookings</h3>
 
         <h2 id="todayBookings"
-            name="todayBookings"></h2>
+            name="todayBookings"><?= (int)$stats['today_bookings']; ?></h2>
 
     </div>
-
-    <!-- ======================================================
-         PENDING BOOKINGS
-
-         BACKEND INTEGRATION
-
-         Data Source:
-         Bookings Table
-
-         Purpose:
-         Count all bookings with a status of
-         'Pending'.
-
-         Display the result inside the element below.
-
-    ======================================================= -->
 
     <div class="stat-card">
 
         <h3>Pending Bookings</h3>
 
         <h2 id="pendingBookings"
-            name="pendingBookings"></h2>
+            name="pendingBookings"><?= (int)$stats['pending_bookings']; ?></h2>
 
     </div>
-
-    <!-- ======================================================
-         TODAY'S PICKUPS
-
-         BACKEND INTEGRATION
-
-         Data Source:
-         Pickups Table
-
-         Purpose:
-         Count all pickup requests scheduled
-         for today.
-
-         Display the result inside the element below.
-
-    ======================================================= -->
 
     <div class="stat-card">
 
         <h3>Today's Pickups</h3>
 
         <h2 id="todayPickups"
-            name="todayPickups"></h2>
+            name="todayPickups"><?= (int)$stats['today_pickups']; ?></h2>
 
     </div>
-
-    <!-- ======================================================
-         TODAY'S DELIVERIES
-
-         BACKEND INTEGRATION
-
-         Data Source:
-         Deliveries Table
-
-         Purpose:
-         Count all deliveries scheduled
-         for today.
-
-         Display the result inside the element below.
-
-    ======================================================= -->
 
     <div class="stat-card">
 
         <h3>Today's Deliveries</h3>
 
         <h2 id="todayDeliveries"
-            name="todayDeliveries"></h2>
+            name="todayDeliveries"><?= (int)$stats['today_deliveries']; ?></h2>
 
     </div>
-
-    <!-- ======================================================
-         AVAILABLE MACHINES
-
-         BACKEND INTEGRATION
-
-         Data Source:
-         Machines Table
-
-         Purpose:
-         Count all machines currently available
-         for customer bookings.
-
-         Display the result inside the element below.
-
-    ======================================================= -->
 
     <div class="stat-card">
 
         <h3>Available Machines</h3>
 
         <h2 id="availableMachines"
-            name="availableMachines"></h2>
+            name="availableMachines"><?= (int)$stats['available_machines']; ?></h2>
 
     </div>
-
-    <!-- ======================================================
-         TODAY'S REVENUE
-
-         BACKEND INTEGRATION
-
-         Data Source:
-         Payments Table
-
-         Purpose:
-         Calculate the total revenue received
-         for the current day.
-
-         Format:
-         South African Rand (R)
-
-         Display the result inside the element below.
-
-    ======================================================= -->
 
     <div class="stat-card">
 
         <h3>Today's Revenue</h3>
 
         <h2 id="todayRevenue"
-            name="todayRevenue"></h2>
+            name="todayRevenue">R<?= number_format((float)$stats['today_revenue'], 2); ?></h2>
 
     </div>
 
@@ -355,59 +240,24 @@
 
     </div>
 
-    <!-- ======================================================
-         BACKEND INTEGRATION
-
-         Data Source:
-         Bookings Table
-         Machines Table
-         Pickups Table
-         Deliveries Table
-
-         Purpose:
-         Display notifications that require
-         administrator attention.
-
-         Populate:
-         #notificationContainer
-
-         The backend should generate one
-         notification card for each notification.
-
-         Suggested Notification Types:
-
-         - Pending booking approvals
-         - Machines requiring maintenance
-         - Pickups awaiting driver assignment
-         - Deliveries requiring attention
-
-    ======================================================= -->
-
     <div id="notificationContainer"
          name="notificationContainer">
 
+        <?php foreach ($notifications as $notification): ?>
+            <a class="notification-card notification-<?= htmlspecialchars($notification['type']); ?>"
+               href="<?= htmlspecialchars($notification['link']); ?>">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span><?= htmlspecialchars($notification['message']); ?></span>
+            </a>
+        <?php endforeach; ?>
+
     </div>
 
-    <!-- ======================================================
-         BACKEND INTEGRATION
-
-         Purpose:
-         If there are no notifications to display,
-         populate the element below with a suitable
-         message such as:
-
-         "There are currently no notifications."
-
-         Hide this message whenever notifications
-         are displayed.
-
-         Populate:
-         #noNotificationsMessage
-
-    ======================================================= -->
-
     <p id="noNotificationsMessage"
-       name="noNotificationsMessage">
+       name="noNotificationsMessage"
+       <?= !empty($notifications) ? 'style="display:none;"' : ''; ?>>
+
+        <?= empty($notifications) ? 'There are currently no notifications.' : ''; ?>
 
     </p>
 

@@ -3,38 +3,27 @@
 require_once __DIR__ . '/../Database/Connection.php';
 require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
 
+
 class BookingRepo implements BookingRepoInterface{
     private mysqli $db;
 
     public function __construct()
     {
-        // Grabs the one shared database connection instead of opening a
-        // new one every time a BookingRepo gets created.
         $this->db = Connection::getConnection();
     }
 
-    // Small helper so every method below doesn't repeat the same
-    // prepare -> bind -> execute steps by hand. $types is mysqli's
-    // bind_param type string (e.g. 'i' for one int, 'ss' for two
-    // strings) and must have one letter per value in $params, in order.
     private function run(string $sql, string $types = '', array $params = []): mysqli_stmt
     {
         $stmt = $this->db->prepare($sql);
         if ($types !== '') {
-            $stmt->bind_param($types, ...$params); //uses spread/splat operator '...' to unpack array into individual arguments
+            $stmt->bind_param($types, ...$params);
         }
         $stmt->execute();
         return $stmt;
     }
 
-    // Creates a new booking row. Status always starts as 'Pending',
-    // nothing here decides otherwise. Returns the new booking's ID so
-    // whoever called this can generate a reference number, insert a
-    // second row for Heavy Wash, etc.
     public function insert(int $customerId, int $managerId, array $service, array $data): int
     {
-        // Reference gets written properly further down, this is just
-        // a placeholder so the column isn't left blank while we insert.
         $placeholderRef = 'PENDING';
  
         $sql = "INSERT INTO booking
@@ -52,24 +41,17 @@ class BookingRepo implements BookingRepoInterface{
             (float)$service['price'],
         ]);
  
-        // insert_id is the auto-increment value MySQL just generated
-        // for this row, this is how we find out the new booking_id.
         $bookingId = $stmt->insert_id;
         $stmt->close();
  
-        // The reference (e.g. LB-00001) needs the real booking_id,
-        // which only exists after the row is inserted, so it can't be
-        // included in the first INSERT above. This runs a quick second
-        // query right after to fill it in.
+        // booking_reference needs the real booking_id, which only exists
+        // after the insert - so it's set in a quick follow-up update.
         $reference = 'LB-' . str_pad((string)$bookingId, 5, '0', STR_PAD_LEFT);
         $this->updateReference($bookingId, $reference);
  
         return $bookingId;
     }
 
-    // Fills in the real booking_reference after insert(). Kept private
-    // since nothing outside this class should ever need to update a
-    // reference on its own, it's only ever a follow-up step to insert().
     private function updateReference(int $bookingId, string $reference): void
     {
         $sql = "UPDATE booking SET booking_reference = ? WHERE booking_id = ?";
@@ -77,10 +59,8 @@ class BookingRepo implements BookingRepoInterface{
         $stmt->close();
     }
 
-    // Returns which machine/slot combinations are already booked on a
-    // given date, so AvailabilityService can figure out what's still
-    // free. Cancelled bookings don't count as taken, since that slot
-    // is effectively open again.
+    // Used by AvailabilityService to know which machine/slot pairs are
+    // already taken on a given date. Excludes cancelled bookings.
     public function getBookedCombosForDate(string $bookingDate): array
     {
         $sql = "SELECT machine_id, slot_id
@@ -94,18 +74,12 @@ class BookingRepo implements BookingRepoInterface{
         return $result;
     }
  
-    // Every booking needs a manager_id, assuming that there is one
-    // manager in the system right now, so this just grabs whichever
-    // row happens to exist.
     public function getPrimaryManager(): array
     {
         $result = $this->db->query("SELECT manager_id FROM system_manager LIMIT 1");
         return $result->fetch_assoc();
     }
  
-    // Looks up a single booking by its ID. Returns null instead of an
-    // empty array if nothing matches, so callers can do a simple
-    // if ($booking === null) check.
     public function findBooking(int $bookingId): ?array
     {
         $sql = "SELECT * FROM booking WHERE booking_id = ?";
@@ -117,32 +91,12 @@ class BookingRepo implements BookingRepoInterface{
         return $result ?: null;
     }
 
-    /*This is the fix for the Polling-Based Machine Release weakness
-    (Analysis Phase Section 3.5), AND the fix for the Heavy Wash
-    timing gap flagged in 4.2/4.6 - a Heavy Wash occupies two
-    consecutive slots as two separate booking rows, and the earlier
-    version of this method released a machine the moment the FIRST
-    row's slot ended, even while the second row (and the actual
-    wash) was still genuinely running.
-    
-    Both rows of one Heavy Wash booking share the same customer_id,
-    machine_id, booking_date, and service_id - there's no separate
-    grouping column, since each row gets its own independent
-    booking_reference (see insert() above). That shared combination
-    is used here as the "time block" key: a row is only considered
-    released if NO sibling row sharing that same key is still
-    Pending with a slot that hasn't ended yet. For a standard
-    (single-slot) booking, a row has no siblings, so this behaves
-    exactly as before.
-    */
-
-    // The date reconstruction matters: slot.end_time only stores a
-    // time-of-day, not which date it applies to - a slot labelled
-    // "09:30 - 10:15" is reused every day. Comparing it against NOW()
-    // directly would be meaningless for a booking on a different date
-    // than today. CONCAT(b.booking_date, ' ', TIME(s.end_time)) builds
-    // the real moment this specific booking actually ends, then
-    // compares THAT against NOW() - not the bare slot time on its own.
+    // Finds every still-Pending booking whose slot has genuinely
+    // finished, so AvailabilityService can flip the machine back to
+    // available. A Heavy Wash books two consecutive slots as two
+    // separate rows sharing the same customer/machine/date/service -
+    // the NOT EXISTS check below makes sure a row only releases once
+    // BOTH rows are done, not just the first one.
     public function getBookingsPastEndTime(): array
     {
         $sql = "SELECT b.booking_id, b.machine_id
@@ -166,16 +120,117 @@ class BookingRepo implements BookingRepoInterface{
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
-    // Marks a booking completed once its slot has ended - called
-    // alongside flipping the machine back to available, so the two
-    // stay in sync with each other.
     public function markCompleted(int $bookingId): bool
     {
-        $sql = "UPDATE booking SET status = 'completed' WHERE booking_id = ?";
-        $stmt = $this->run($sql, 'i', [$bookingId]);
-        $success = $stmt->affected_rows >= 0;
+        $stmt = $this->run("UPDATE booking SET status = 'completed' WHERE booking_id = ?", 'i', [$bookingId]);
         $stmt->close();
-        return $success;
+        return true;
+    }
+
+    // Admin dashboard stat card
+    public function todaysBookings(): int
+    {
+        $result = $this->db->query("SELECT COUNT(*) AS total FROM booking WHERE booking_date = CURDATE()")->fetch_assoc();
+        return (int)$result['total'];
+    }
+
+    // Admin dashboard stat card
+    public function pendingBookingsCount(): int
+    {
+        $result = $this->db->query("SELECT COUNT(*) AS total FROM booking WHERE status = 'pending'")->fetch_assoc();
+        return (int)$result['total'];
+    }
+
+    // Admin dashboard stat card
+    public function todaysRevenue(): float
+    {
+        $sql = "SELECT COALESCE(SUM(total_price), 0) AS revenue FROM booking WHERE booking_date = CURDATE() AND status != 'cancelled'";
+        $result = $this->db->query($sql)->fetch_assoc();
+        return (float)$result['revenue'];
+    }
+
+    // Booking Management page - joins in the columns the admin table
+    // actually shows per row, so no second lookup is needed per booking.
+    public function getAllBookings(array $filters = []): array
+    {
+        $sql = "SELECT b.booking_id, b.booking_reference, b.booking_date, b.total_price, b.status,
+                       c.customer_name,
+                       m.machine_name,
+                       s.slot_label,
+                       sv.wash_type, sv.load_type
+                FROM booking b
+                JOIN customer c ON b.customer_id = c.customer_id
+                JOIN machine m ON b.machine_id = m.machine_id
+                JOIN slot s ON b.slot_id = s.slot_id
+                JOIN service sv ON b.service_id = sv.service_id
+                WHERE 1=1";
+
+        $types = '';
+        $params = [];
+
+        if (!empty($filters['search'])) {
+            $sql .= " AND (b.booking_reference LIKE ? OR c.customer_name LIKE ?)";
+            $like = '%' . $filters['search'] . '%';
+            $types .= 'ss';
+            $params[] = $like;
+            $params[] = $like;
+        }
+
+        if (!empty($filters['status'])) {
+            $sql .= " AND b.status = ?";
+            $types .= 's';
+            $params[] = $filters['status'];
+        }
+
+        if (!empty($filters['date'])) {
+            $sql .= " AND b.booking_date = ?";
+            $types .= 's';
+            $params[] = $filters['date'];
+        }
+
+        $sql .= " ORDER BY b.booking_date DESC, b.booking_id DESC";
+
+        $stmt = $this->run($sql, $types, $params);
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function findBookingByReference(string $reference): ?array
+    {
+        $sql = "SELECT * FROM booking WHERE booking_reference = ?";
+        $stmt = $this->run($sql, 's', [$reference]);
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $result ?: null;
+    }
+
+    // Admin's manual status change on the Booking Management page -
+    // different from markCompleted() above, which is the automatic
+    // "slot has ended" completion path.
+    public function updateStatus(int $bookingId, string $status): bool
+    {
+        $stmt = $this->run("UPDATE booking SET status = ? WHERE booking_id = ?", 'si', [$status, $bookingId]);
+        $stmt->close();
+        return true;
+    }
+
+    // Reports page
+    public function revenueBetween(string $startDate, string $endDate): float
+    {
+        $sql = "SELECT COALESCE(SUM(total_price), 0) AS revenue FROM booking WHERE booking_date BETWEEN ? AND ? AND status != 'cancelled'";
+        $stmt = $this->run($sql, 'ss', [$startDate, $endDate]);
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return (float)$result['revenue'];
+    }
+
+    // Reports page
+    public function countByStatusBetween(string $status, string $startDate, string $endDate): int
+    {
+        $sql = "SELECT COUNT(*) AS total FROM booking WHERE status = ? AND booking_date BETWEEN ? AND ?";
+        $stmt = $this->run($sql, 'sss', [$status, $startDate, $endDate]);
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return (int)$result['total'];
     }
 
 }

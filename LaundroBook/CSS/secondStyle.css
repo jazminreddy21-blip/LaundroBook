@@ -10,10 +10,9 @@
 }
 
 body{
-    background:#F5F6F8;
+    background:#F0F9FF;
     min-height:100vh;
-	
-	color:#374151;
+    color:#334155;
 }
 
 /* ========================================= */
@@ -23,27 +22,20 @@ body{
 .login-container{
     width:100%;
     min-height:100vh;
-
     display:flex;
     justify-content:center;
     align-items:center;
-
     padding:20px;
+    background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 55%, #FFFFFF 100%);
 }
 
 .login-card{
     background:#FFFFFF;
-
     width:100%;
     max-width:450px;
-
     padding:40px;
-
     border-radius:18px;
-
-    box-shadow:
-    0 10px 25px rgba(0,0,0,0.08);
-
+    box-shadow: 0 10px 25px rgba(7, 89, 133, 0.12);
     transition:0.3s ease;
 }
 
@@ -58,18 +50,27 @@ body{
 
 .login-header i{
     font-size:55px;
-    color:#4B5563;
+    color:#0284C7;
+    margin-bottom:15px;
+}
+
+/* ADDED: sizes the actual <img> logo, since without this the raw
+   image renders at its unstyled native pixel size. */
+.login-logo{
+    height:60px;
+    width:auto;
     margin-bottom:15px;
 }
 
 .login-header h1{
-    color:#1F2937;
+    color:#075985;
     font-size:32px;
     margin-bottom:8px;
+    font-weight:700;
 }
 
 .login-header p{
-    color:#6B7280;
+    color:#64748B;
     font-size:15px;
 }
 
@@ -84,47 +85,73 @@ body{
 .input-group label{
     display:block;
     margin-bottom:8px;
-
-    color:#374151;
+    color:#075985;
     font-weight:600;
     font-size:14px;
 }
 
 .input-group input{
     width:100%;
-
     padding:14px;
-
-    border:1px solid #D1D5DB;
-
+    border:1px solid #CBD5E1;
     border-radius:10px;
-
     font-size:15px;
-
     outline:none;
-
     transition:0.3s;
 }
 
 .input-group input:focus{
-    border-color:#4B5563;
+    border-color:#0284C7;
+    box-shadow: 0 0 0 3px rgba(14,165,233,0.15);
+}
 
-    box-shadow:
-    0 0 0 3px rgba(75,85,99,0.15);
+/* Matches the labels/inputs used directly in login.php's markup
+   (.form-group), same styling as .input-group above. */
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:8px;
+    color:#075985;
+    font-weight:600;
+    font-size:14px;
+}
+
+.form-group input{
+    width:100%;
+    padding:14px;
+    border:1px solid #CBD5E1;
+    border-radius:10px;
+    font-size:15px;
+    outline:none;
+    transition:0.3s;
+}
+
+.form-group input:focus{
+    border-color:#0284C7;
+    box-shadow: 0 0 0 3px rgba(14,165,233,0.15);
 }
 
 /* ========================================= */
 /* ERROR MESSAGE */
 /* ========================================= */
 
-.error-message{
+.error-message,
+.login-error{
     min-height:20px;
-
     color:#DC2626;
-
     font-size:14px;
-
     margin-bottom:15px;
+}
+
+.login-error.visible{
+    background:#FEF2F2;
+    border:1px solid #FCA5A5;
+    border-left:4px solid #DC2626;
+    border-radius:8px;
+    padding:12px 16px;
 }
 
 /* ========================================= */
@@ -133,29 +160,22 @@ body{
 
 .login-btn{
     width:100%;
-
     padding:14px;
-
-    border:none;
-
+    border:1px solid #0284C7;
     border-radius:10px;
-
-    background:#4B5563;
-
+    background:#0284C7;
     color:white;
-
     font-size:16px;
-
     font-weight:600;
-
     cursor:pointer;
-
     transition:0.3s ease;
 }
 
-
 .login-btn:hover{
-    background:#374151;
+    background:#075985;
+    border-color:#075985;
+    transform:translateY(-3px);
+    box-shadow: 0 5px 12px rgba(2, 132, 199, 0.25);
 }
 
 /* ========================================= */
@@ -163,50 +183,47 @@ body{
 /* ========================================= */
 
 @media(max-width:500px){
-
-    .login-card{
-
-        padding:30px 25px;
-
-    }
-
-    .login-header h1{
-
-        font-size:28px;
-
-    }
-
+    .login-card{ padding:30px 25px; }
+    .login-header h1{ font-size:28px; }
 }
+
 /*Admin Dashboard*/
 /* ========================================= */
 /* HEADER */
 /* ========================================= */
 
 .admin-header{
-
-    background:#4B5563;
-    color:#FFFFFF;
-
+    background:#FFFFFF;
+    color:#075985;
     display:flex;
     justify-content:space-between;
     align-items:center;
-
     padding:20px 40px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+}
 
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
 .logo h1{
-
-    font-size:30px;
+    font-size:26px;
     font-weight:700;
+    color:#075985;
+}
 
+/* ADDED: sizes the header logo image, previously unstyled. */
+.admin-logo{
+    height:45px;
+    width:auto;
 }
 
 .admin-user p{
-
     font-size:16px;
     font-weight:500;
-
+    color:#0284C7;
 }
 
 /* ========================================= */
@@ -214,48 +231,33 @@ body{
 /* ========================================= */
 
 .admin-navbar{
-
-    background:#6B7280;
-
+    background:#075985;
 }
 
 .admin-navbar ul{
-
     display:flex;
     justify-content:center;
     align-items:center;
     gap:35px;
-
     list-style:none;
-
     padding:15px;
-
 }
 
 .admin-navbar ul li a{
-
-    color:#FFFFFF;
-
+    color:#E0F2FE;
     text-decoration:none;
-
     font-weight:600;
-
     transition:0.3s;
-
 }
 
 .admin-navbar ul li a:hover{
-
-    color:#E5E7EB;
-
+    color:#FFFFFF;
 }
 
 .admin-navbar ul li a.active{
-
-    border-bottom:3px solid #FFFFFF;
-
+    border-bottom:3px solid #22D3EE;
     padding-bottom:5px;
-
+    color:#FFFFFF;
 }
 
 /* ========================================= */
@@ -263,12 +265,9 @@ body{
 /* ========================================= */
 
 .dashboard-container{
-
     width:90%;
     max-width:1200px;
-
     margin:40px auto;
-
 }
 
 /* ========================================= */
@@ -276,211 +275,133 @@ body{
 /* ========================================= */
 
 .welcome-section{
-
     background:#FFFFFF;
-
     border-radius:12px;
-
     padding:30px;
-
     margin-bottom:35px;
-
     display:flex;
     justify-content:space-between;
     align-items:center;
-
-    box-shadow:0 4px 10px rgba(0,0,0,0.08);
-
+    box-shadow: 0 4px 10px rgba(7, 89, 133, 0.08);
 }
 
 .welcome-text h2{
-
     font-size:30px;
-
-    color:#374151;
-
+    color:#075985;
     margin-bottom:10px;
-
+    font-weight:700;
 }
 
 .welcome-text p{
-
-    color:#6B7280;
-
+    color:#64748B;
     line-height:1.6;
-
     max-width:650px;
-
 }
 
 .welcome-date{
-
-    background:#F9FAFB;
-
-    border:1px solid #D1D5DB;
-
+    background:#F0F9FF;
+    border:1px solid #E0F2FE;
     border-radius:10px;
-
     padding:18px 25px;
-
     text-align:center;
-
     min-width:220px;
-
 }
 
 .welcome-date strong{
-
     display:block;
-
     margin-bottom:8px;
-
-    color:#374151;
-
+    color:#075985;
 }
 
 #currentDate{
-
     font-weight:600;
+    color:#0284C7;
+}
 
-    color:#6B7280;
-
-}/* ========================================= */
+/* ========================================= */
 /* DASHBOARD STATISTICS */
 /* ========================================= */
 
 .dashboard-stats{
-
     display:grid;
-
     grid-template-columns:repeat(3, 1fr);
-
     gap:25px;
-
     margin-bottom:40px;
-
 }
 
 .stat-card{
-
     background:#FFFFFF;
-
-    border:1px solid #D1D5DB;
-
+    border:1px solid #E0F2FE;
     border-radius:12px;
-
     padding:30px 20px;
-
     text-align:center;
-
     transition:0.3s ease;
-
-    box-shadow:0 2px 8px rgba(0,0,0,0.08);
-
+    box-shadow: 0 2px 8px rgba(7, 89, 133, 0.08);
 }
 
 .stat-card:hover{
-
     transform:translateY(-4px);
-
-    box-shadow:0 6px 16px rgba(0,0,0,0.12);
-
+    box-shadow: 0 6px 16px rgba(7, 89, 133, 0.15);
 }
 
 .stat-card h3{
-
     font-size:18px;
-
-    color:#4B5563;
-
+    color:#0284C7;
     margin-bottom:20px;
-
 }
 
 .stat-card h2{
-
     font-size:40px;
-
-    color:#1F2937;
-
+    color:#075985;
     min-height:48px;
-
     font-weight:700;
+}
 
-}.stat-card h2:empty::after{
-
+.stat-card h2:empty::after{
     content:"--";
+    color:#94A3B8;
+}
 
-    color:#9CA3AF;
-
-}/* ========================================= */
+/* ========================================= */
 /* TASKS REQUIRING ATTENTION */
 /* ========================================= */
 
 .notifications-section{
-
     background:#FFFFFF;
-
-    border:1px solid #D1D5DB;
-
+    border:1px solid #E0F2FE;
     border-radius:12px;
-
     padding:30px;
-
     margin-bottom:40px;
-
-    box-shadow:0 2px 8px rgba(0,0,0,0.08);
-
+    box-shadow: 0 2px 8px rgba(7, 89, 133, 0.08);
 }
 
 .section-heading{
-
     margin-bottom:25px;
-
 }
 
 .section-heading h2{
-
-    color:#374151;
-
+    color:#075985;
     font-size:26px;
-
     margin-bottom:8px;
-
+    font-weight:700;
 }
 
 .section-heading p{
-
-    color:#6B7280;
-
+    color:#64748B;
     font-size:15px;
-
 }
-
-/* Backend will generate notification cards */
 
 #notificationContainer{
-
     display:flex;
-
     flex-direction:column;
-
     gap:15px;
-
 }
 
-/* Message shown when there are no notifications */
-
 #noNotificationsMessage{
-
-    color:#6B7280;
-
+    color:#94A3B8;
     text-align:center;
-
     padding:20px 0;
-
     font-style:italic;
-
 }
 
 /* ========================================= */
@@ -488,23 +409,304 @@ body{
 /* ========================================= */
 
 .admin-footer{
-
-    background:#4B5563;
-
-    color:#FFFFFF;
-
+    background:#075985;
+    color:#E0F2FE;
     text-align:center;
-
     padding:20px;
-
     margin-top:40px;
-
 }
 
 .admin-footer p{
-
     font-size:15px;
+}
 
+/* ========================================= */
+/* MANAGEMENT PAGES (Bookings, Pickups,      */
+/* Deliveries, Machines, Customers, Reports) */
+/* ========================================= */
+
+.page-heading{
+    background:#FFFFFF;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    padding:25px 30px;
+    margin-bottom:30px;
+    box-shadow: 0 2px 8px rgba(7, 89, 133, 0.08);
+}
+
+.page-heading h2{
+    color:#075985;
+    font-size:26px;
+    margin-bottom:6px;
+    font-weight:700;
+}
+
+.page-heading p{
+    color:#64748B;
+    font-size:15px;
+}
+
+.filter-section{
+    background:#FFFFFF;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    padding:20px 25px;
+    margin-bottom:25px;
+    box-shadow: 0 2px 8px rgba(7, 89, 133, 0.08);
+}
+
+.filter-section form{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    gap:18px;
+}
+
+.filter-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.filter-group label{
+    font-size:13px;
+    color:#075985;
+    font-weight:600;
+}
+
+.filter-group input,
+.filter-group select{
+    padding:9px 12px;
+    border:1px solid #CBD5E1;
+    border-radius:8px;
+    font-size:14px;
+    min-width:180px;
+    color:#334155;
+}
+
+.filter-group input:focus,
+.filter-group select:focus{
+    outline:none;
+    border-color:#0284C7;
+    box-shadow: 0 0 0 3px rgba(14,165,233,0.15);
+}
+
+.filter-section button{
+    padding:10px 22px;
+    background:#0284C7;
+    color:#FFFFFF;
+    border:1px solid #0284C7;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+    transition:0.2s ease;
+}
+
+.filter-section button:hover{
+    background:#075985;
+    border-color:#075985;
+}
+
+.table-section{
+    background:#FFFFFF;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    padding:10px 15px;
+    margin-bottom:30px;
+    box-shadow: 0 2px 8px rgba(7, 89, 133, 0.08);
+    overflow-x:auto;
+}
+
+.admin-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+}
+
+.admin-table th{
+    text-align:left;
+    padding:14px 12px;
+    color:#0284C7;
+    border-bottom:2px solid #E0F2FE;
+    white-space:nowrap;
+}
+
+.admin-table td{
+    padding:14px 12px;
+    border-bottom:1px solid #E0F2FE;
+    color:#334155;
+    vertical-align:middle;
+}
+
+.admin-table tbody tr:hover{
+    background:#F0F9FF;
+}
+
+.empty-row td{
+    text-align:center;
+    color:#94A3B8;
+    padding:30px 0;
+    font-style:italic;
+}
+
+/* Status / result banners for redirects like ?updated=1 or ?error=... */
+.page-banner{
+    padding:14px 20px;
+    border-radius:8px;
+    margin-bottom:20px;
+    font-size:14px;
+    font-weight:600;
+}
+
+.page-banner.success{
+    background:#DCFCE7;
+    color:#166534;
+    border:1px solid #86EFAC;
+}
+
+.page-banner.error{
+    background:#FEE2E2;
+    color:#991B1B;
+    border:1px solid #FCA5A5;
+}
+
+/* Status pills used across bookings/pickups/deliveries/machines */
+.status-pill{
+    display:inline-block;
+    padding:5px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+    text-transform:capitalize;
+    white-space:nowrap;
+}
+
+.status-pending{ background:#FEF3C7; color:#92400E; }
+.status-in_progress{ background:#E0F2FE; color:#075985; }
+.status-completed{ background:#DCFCE7; color:#166534; }
+.status-cancelled{ background:#FEE2E2; color:#991B1B; }
+.status-available{ background:#DCFCE7; color:#166534; }
+.status-in_use{ background:#E0F2FE; color:#075985; }
+.status-under_maintenance{ background:#FEE2E2; color:#991B1B; }
+
+.action-form{
+    display:inline-flex;
+    gap:6px;
+    align-items:center;
+}
+
+.action-form select{
+    padding:6px 8px;
+    border:1px solid #CBD5E1;
+    border-radius:6px;
+    font-size:13px;
+    color:#334155;
+}
+
+.action-btn{
+    padding:6px 14px;
+    border:1px solid #0284C7;
+    border-radius:6px;
+    background:#0284C7;
+    color:#FFFFFF;
+    font-size:13px;
+    cursor:pointer;
+    font-weight:600;
+    transition:0.2s ease;
+}
+
+.action-btn:hover{
+    background:#075985;
+    border-color:#075985;
+}
+
+.action-btn.danger{
+    background:#DC2626;
+    border-color:#DC2626;
+}
+
+.action-btn.danger:hover{
+    background:#B91C1C;
+    border-color:#B91C1C;
+}
+
+/* Notification cards on the dashboard */
+.notification-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:16px 20px;
+    border-radius:10px;
+    text-decoration:none;
+    background:#FEF3C7;
+    color:#92400E;
+    font-size:14px;
+    font-weight:600;
+    transition:0.2s ease;
+}
+
+.notification-card:hover{
+    filter:brightness(0.97);
+}
+
+.notification-card i{
+    font-size:18px;
+}
+
+/* Simple summary cards used on Reports/Booking/Delivery/Pickup/Machine pages */
+.report-grid,
+.booking-summary,
+.customer-summary{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:25px;
+    margin-bottom:30px;
+}
+
+.customer-summary{
+    grid-template-columns:repeat(2, 1fr);
+}
+
+.booking-stat-card,
+.customer-stat-card{
+    background:#FFFFFF;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    padding:20px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    box-shadow: 0 2px 8px rgba(7, 89, 133, 0.08);
+}
+
+.booking-stat-icon,
+.customer-stat-icon{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    background:#E0F2FE;
+    color:#0284C7;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    flex-shrink:0;
+}
+
+.booking-stat-info h3,
+.customer-stat-info h3{
+    font-size:14px;
+    color:#64748B;
+    margin-bottom:4px;
+    font-weight:600;
+}
+
+.booking-stat-info h2,
+.customer-stat-info h2{
+    font-size:28px;
+    color:#075985;
+    font-weight:700;
 }
 
 /* ========================================= */
@@ -512,83 +714,28 @@ body{
 /* ========================================= */
 
 @media(max-width:992px){
-
-    .dashboard-stats{
-
-        grid-template-columns:repeat(2,1fr);
-
-    }
-
+    .dashboard-stats{ grid-template-columns:repeat(2,1fr); }
+    .report-grid,
+    .booking-summary{ grid-template-columns:repeat(2,1fr); }
 }
 
 @media(max-width:768px){
-
-    .admin-header{
-
-        flex-direction:column;
-
-        gap:15px;
-
-        text-align:center;
-
-    }
-
-    .admin-navbar ul{
-
-        flex-wrap:wrap;
-
-        gap:15px;
-
-    }
-
-    .welcome-section{
-
-        flex-direction:column;
-
-        text-align:center;
-
-        gap:25px;
-
-    }
-
-    .welcome-date{
-
-        width:100%;
-
-    }
-
-    .dashboard-stats{
-
-        grid-template-columns:1fr;
-
-    }
-
+    .admin-header{ flex-direction:column; gap:15px; text-align:center; }
+    .admin-navbar ul{ flex-wrap:wrap; gap:15px; }
+    .welcome-section{ flex-direction:column; text-align:center; gap:25px; }
+    .welcome-date{ width:100%; }
+    .dashboard-stats{ grid-template-columns:1fr; }
+    .report-grid,
+    .booking-summary,
+    .customer-summary{ grid-template-columns:1fr; }
+    .filter-section form{ flex-direction:column; align-items:stretch; }
+    .filter-group input,
+    .filter-group select{ min-width:0; width:100%; }
 }
 
 @media(max-width:480px){
-
-    .dashboard-container{
-
-        width:95%;
-
-    }
-
-    .logo h1{
-
-        font-size:24px;
-
-    }
-
-    .welcome-text h2{
-
-        font-size:24px;
-
-    }
-
-    .stat-card h2{
-
-        font-size:32px;
-
-    }
-
+    .dashboard-container{ width:95%; }
+    .logo h1{ font-size:22px; }
+    .welcome-text h2{ font-size:24px; }
+    .stat-card h2{ font-size:32px; }
 }

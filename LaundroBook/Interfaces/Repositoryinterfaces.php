@@ -1,10 +1,13 @@
 <?php
 
 /**
- 
- * BookingRepoInterface now includes getBookingsPastEndTime()
- * and markCompleted(), the two methods needed to actually implement
- * the Polling-Based Machine Release fix,used by AvailabilityService::releaseExpiredMachines().
+ * BookingRepoInterface includes getBookingsPastEndTime() and
+ * markCompleted(), the two methods needed to actually implement the
+ * Polling-Based Machine Release fix, used by
+ * AvailabilityService::releaseExpiredMachines(). It also includes the
+ * admin-facing methods AdminController relies on for the management
+ * pages (bookings, reports, etc.), both sets are required, not
+ * alternatives to each other.
  */
 
 require_once __DIR__ . '/../Models/Customer.php'; // needed for the Customer type hint below
@@ -15,6 +18,8 @@ interface MachineRepoInterface
     public function getMachineById(int $machineId): ?array;
     public function updateStatus(int $machineId, string $status): bool;
     public function machineExists(int $machineId): bool;
+    public function getAllMachines(): array;
+    public function countByStatus(string $status): int;
 }
 
 interface SlotRepoInterface
@@ -32,6 +37,8 @@ interface CustomerRepoInterface
 
     // Reuses an existing customer by email, or creates a new one.
     public function findOrCreate(array $data): Customer;
+    public function getAllCustomers(string $search = ''): array;
+    public function countAll(): int;
 }
 
 interface BookingRepoInterface
@@ -54,12 +61,37 @@ interface BookingRepoInterface
 
     // Marks a booking completed once its slot has ended.
     public function markCompleted(int $bookingId): bool;
+
+    // Admin-facing methods, used by AdminController/DashboardService
+    // for the dashboard stats, booking management page, and reports.
+    public function todaysBookings(): int;
+    public function pendingBookingsCount(): int;
+    public function todaysRevenue(): float;
+    public function getAllBookings(array $filters = []): array;
+    public function findBookingByReference(string $reference): ?array;
+    public function updateStatus(int $bookingId, string $status): bool;
+    public function revenueBetween(string $startDate, string $endDate): float;
+    public function countByStatusBetween(string $status, string $startDate, string $endDate): int;
 }
 
 interface ServiceRepoInterface
 {
     public function findByType(string $washType, string $loadType): ?array;
     public function getServiceById(int $serviceId): ?array;
+    public function getAllServices(): array;
+}
+
+interface SystemManagerRepoInterface
+{
+    public function findManager(string $username): ?SystemManager;
+}
+
+interface DeliveryRepoInterface
+{
+    public function todaysCountByType(string $type): int;
+    public function getAll(array $filters = []): array;
+    public function findById(int $deliveryId): ?array;
+    public function updateStatus(int $deliveryId, string $status): bool;
 }
 
 interface EnquiryRepoInterface
