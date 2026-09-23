@@ -223,7 +223,7 @@ class bookingController{
     public function getData(){
         return $this->data;
     }
-
+    
     /*
         The actual write endpoint, what "Confirm Booking" calls.
         Not to be confused with a read-only availability check, which
@@ -297,7 +297,6 @@ if(($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && basename($_SERVER['SCRIPT_NA
     $customerRepo = new CustomerRepo();
     $bookingRepo = new BookingRepo();
     $serviceRepo = new ServiceRepo();
-
     $emailConfig = require __DIR__ . '/../Config/EmailConfig.php';
     $emailService = new EmailService($emailConfig);
 

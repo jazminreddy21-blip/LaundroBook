@@ -36,6 +36,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // filtering (further down) has something to filter against.
     let availableCombos = [];
 
+    // ADDED: TEST MODE SWITCH, point this at the real AvailabilityController.php
+    // once the backend is connected. Swap this one line only.
     const AVAILABILITY_ENDPOINT = "../Controllers/availabilityController.php";
 
     async function loadPricingData(){
@@ -71,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: new URLSearchParams({
+                    action: "check_availability", 
                     booking_date: bookingDate,
                     duration_slots: durationSlots
                 })
@@ -94,7 +97,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // loadAvailability() returned.
     function populateAvailability(combos) {
         availableCombos = combos;
-
         if (combos.length === 0) {
             //Select tags get disabled when there are no active combos
             machineSelect.innerHTML = '<option value="">No machines available for this date</option>';

@@ -25,7 +25,6 @@ class MachineRepo implements MachineRepoInterface{
         return $stmt;
     }
 
-
     // Returns every machine not administratively taken offline. This is
     // what AvailabilityService uses to figure out which machines a
     // customer is even allowed to consider booking.
@@ -44,7 +43,7 @@ class MachineRepo implements MachineRepoInterface{
     // decision has to come from AvailabilityService cross-referencing
     // real booking rows via getBookedCombosForDate(), which is exactly
     // what happens after this method returns its machine list.
-    public function getAvailableMachines(): array{
+        public function getAvailableMachines(): array{
         $sql = "SELECT machine_id, machine_name, machine_status
                 FROM machine
                 WHERE machine_status != 'under_maintenance'
@@ -100,6 +99,32 @@ class MachineRepo implements MachineRepoInterface{
     // with a clear error instead of a confusing database problem.
     public function machineExists(int $machineId):bool{
         return $this->getMachineById($machineId) !== null;
+    }
+
+    // ------------------------------------------------------------
+    // Added for the admin dashboard ("Available Machines" stat card)
+    // and the Machine Management page.
+    // ------------------------------------------------------------
+
+    // Every machine regardless of status, for the management table.
+    public function getAllMachines(): array{
+        $sql = "SELECT machine_id, machine_name, machine_status
+                FROM machine
+                ORDER BY machine_id";
+
+        $result = $this->db->query($sql);
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
+    // Generic count by status, used for "Available Machines" on the
+    // dashboard but works for any of the three valid statuses.
+    public function countByStatus(string $status): int{
+        $sql = "SELECT COUNT(*) as total FROM machine WHERE machine_status = ?";
+        $stmt = $this->run($sql, 's', [$status]);
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return (int)($result['total'] ?? 0);
     }
 
 }

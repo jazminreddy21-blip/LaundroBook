@@ -82,4 +82,42 @@ class CustomerRepo implements CustomerRepoInterface
             $data['delivery_address'] ?? null
         );
     }
+
+    // ------------------------------------------------------------
+    // Added for the admin Customer Management page.
+    // ------------------------------------------------------------
+
+    // Every customer, with their total number of bookings, optionally
+    // narrowed down by a free-text search on name/email/phone.
+    public function getAllCustomers(string $search = ''): array
+    {
+        $sql = "SELECT c.customer_id, c.customer_name, c.customer_email, c.customer_phone, c.address,
+                       COUNT(b.booking_id) as total_bookings
+                FROM customer c
+                LEFT JOIN booking b ON b.customer_id = c.customer_id";
+
+        $types = '';
+        $params = [];
+
+        if ($search !== '') {
+            $sql .= " WHERE c.customer_name LIKE ? OR c.customer_email LIKE ? OR c.customer_phone LIKE ?";
+            $like = '%' . $search . '%';
+            $types = 'sss';
+            $params = [$like, $like, $like];
+        }
+
+        $sql .= " GROUP BY c.customer_id ORDER BY c.customer_name";
+
+        $stmt = $this->run($sql, $types, $params);
+        $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return $result;
+    }
+
+    public function countAll(): int
+    {
+        $result = $this->db->query("SELECT COUNT(*) as total FROM customer")->fetch_assoc();
+        return (int)($result['total'] ?? 0);
+    }
 }
