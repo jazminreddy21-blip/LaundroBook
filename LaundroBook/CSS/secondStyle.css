@@ -589,6 +589,7 @@ body{
 .status-available{ background:#DCFCE7; color:#166534; }
 .status-in_use{ background:#E0F2FE; color:#075985; }
 .status-under_maintenance{ background:#FEE2E2; color:#991B1B; }
+.status-responded{ background:#E0F2FE; color:#075985; }
 
 .action-form{
     display:inline-flex;
