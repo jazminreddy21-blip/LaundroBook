@@ -72,6 +72,27 @@ class CustomerRepo implements CustomerRepoInterface
     {
         $existing = $this->findByEmail($data['customer_email']);
         if ($existing !== null) {
+            $newName = $data['customer_name'];
+            $newPhone = $data['customer_phone'];
+            $newAddress = $data['delivery_address'] ?? null;
+
+            $nameChanged = $newName !== $existing->getCustomerName();
+            $phoneChanged = $newPhone !== $existing->getCustomerPhone();
+            $addressChanged = $newAddress !== null && $newAddress !== $existing->getAddress();
+
+            if ($nameChanged || $phoneChanged || $addressChanged) {
+                $finalAddress = $addressChanged ? $newAddress : $existing->getAddress();
+                $this->updateDetails($existing->getCustomerId(), $newName, $newPhone, $finalAddress);
+
+                return new Customer(
+                    $existing->getCustomerId(),
+                    $newName,
+                    $existing->getCustomerEmail(),
+                    $newPhone,
+                    $finalAddress
+                );
+            }
+
             return $existing;
         }
 
@@ -83,24 +104,30 @@ class CustomerRepo implements CustomerRepoInterface
         );
     }
 
-    // ------------------------------------------------------------
-    // Added for the admin Customer Management page.
-    // ------------------------------------------------------------
-
-    // Every customer, with their total number of bookings, optionally
-    // narrowed down by a free-text search on name/email/phone.
+    private function updateDetails(int $customerId, string $name, string $phone, ?string $address): bool
+    {
+        $stmt = $this->run(
+            "UPDATE customer SET customer_name = ?, customer_phone = ?, address = ? WHERE customer_id = ?",
+            'sssi',
+            [$name, $phone, $address, $customerId]
+        );
+        $stmt->close();
+        return true;
+    }
+    
     public function getAllCustomers(string $search = ''): array
     {
         $sql = "SELECT c.customer_id, c.customer_name, c.customer_email, c.customer_phone, c.address,
-                       COUNT(b.booking_id) as total_bookings
+                       COUNT(b.booking_id) AS total_bookings
                 FROM customer c
-                LEFT JOIN booking b ON b.customer_id = c.customer_id";
+                LEFT JOIN booking b ON b.customer_id = c.customer_id
+                WHERE 1=1";
 
         $types = '';
         $params = [];
 
         if ($search !== '') {
-            $sql .= " WHERE c.customer_name LIKE ? OR c.customer_email LIKE ? OR c.customer_phone LIKE ?";
+            $sql .= " AND (c.customer_name LIKE ? OR c.customer_email LIKE ? OR c.customer_phone LIKE ?)";
             $like = '%' . $search . '%';
             $types = 'sss';
             $params = [$like, $like, $like];
@@ -109,15 +136,12 @@ class CustomerRepo implements CustomerRepoInterface
         $sql .= " GROUP BY c.customer_id ORDER BY c.customer_name";
 
         $stmt = $this->run($sql, $types, $params);
-        $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
-
-        return $result;
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
     public function countAll(): int
     {
-        $result = $this->db->query("SELECT COUNT(*) as total FROM customer")->fetch_assoc();
-        return (int)($result['total'] ?? 0);
+        $result = $this->db->query("SELECT COUNT(*) AS total FROM customer")->fetch_assoc();
+        return (int)$result['total'];
     }
 }
