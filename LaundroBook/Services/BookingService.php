@@ -4,6 +4,7 @@ require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
 require_once __DIR__ . '/../Interfaces/EmailServiceInterface.php';
 require_once __DIR__ . '/AvailabilityService.php';
 require_once __DIR__ . '/../Database/Connection.php';
+require_once __DIR__ . '/../Repositories/GroundworkerRepo.php';
 
 /**
  * BookingService
@@ -24,6 +25,8 @@ class BookingService
     private ServiceRepoInterface $serviceRepo;
     private AvailabilityService $availability;
     private EmailServiceInterface $emailService;
+    private DeliveryRepoInterface $deliveryRepo;
+    private GroundworkerRepo $groundworkerRepo;
     private mysqli $db;
 
     public function __construct(
@@ -33,7 +36,9 @@ class BookingService
         BookingRepoInterface $bookingRepo,
         ServiceRepoInterface $serviceRepo,
         AvailabilityService $availability,
-        EmailServiceInterface $emailService
+        EmailServiceInterface $emailService,
+        DeliveryRepoInterface $deliveryRepo,
+        GroundworkerRepo $groundworkerRepo
     ) {
         $this->machineRepo = $machineRepo;
         $this->slotRepo = $slotRepo;
@@ -42,6 +47,8 @@ class BookingService
         $this->serviceRepo = $serviceRepo;
         $this->availability = $availability;
         $this->emailService = $emailService;
+        $this->deliveryRepo = $deliveryRepo;
+        $this->groundworkerRepo = $groundworkerRepo;
         $this->db = Connection::getConnection();
     }
 
@@ -93,8 +100,8 @@ class BookingService
                 $data
             );
 
-            // Heavy Wash occupies two consecutive slots, lock the second
-            // one with its own booking row so it also shows as taken.
+            $reference = 'LB-' . str_pad((string)$bookingId, 5, '0', STR_PAD_LEFT);
+
             if ((int)$service['duration_slots'] === 2 && !empty($data['second_slot_id'])) {
                 $secondData = $data;
                 $secondData['slot_id'] = $data['second_slot_id'];
@@ -116,6 +123,58 @@ class BookingService
                 $this->machineRepo->updateStatus($data['machine_id'], 'in_use');
             }
 
+            // Creates the collection/delivery rows this booking needs,
+            // for anything other than a plain in-store pickup with no
+            // tracking involved. Kept inside this same transaction,
+            // not fire-and-forget like the email below, since a
+            // delivery booking with no matching rows would be a real,
+            // meaningful data inconsistency, not something safe to
+            // silently let fail.
+            //
+            // 'delivery' (the form's "Home Pickup and Delivery" option)
+            // is genuinely two real-world events, not one - a
+            // groundworker collects the dirty laundry, then later a
+            // groundworker returns it clean. This creates one row per
+            // leg: a 'collection' row scheduled before the wash, and a
+            // 'delivery' row scheduled after. The form's other option,
+            // 'pickup' ("Self Drop off and Pickup"), correctly creates
+            // no rows at all here - no groundworker is ever involved.
+            if ($data['collection_method'] === 'delivery') {
+                $groundworker = $this->groundworkerRepo->getAnyGroundworker();
+                if ($groundworker === null) {
+                    throw new Exception('No groundworker available to assign this delivery');
+                }
+
+                $firstSlot = $this->slotRepo->getSlotById($data['slot_id']);
+                $lastSlot = $firstSlot;
+                if (!empty($data['second_slot_id'])) {
+                    $secondSlotData = $this->slotRepo->getSlotById((int)$data['second_slot_id']);
+                    if ($secondSlotData !== null) {
+                        $lastSlot = $secondSlotData;
+                    }
+                }
+
+                $slotStartTime = date('H:i:s', strtotime($firstSlot['start_time']));
+                $slotEndTime = date('H:i:s', strtotime($lastSlot['end_time']));
+
+                $collectionTime = date('Y-m-d H:i:s', strtotime($data['booking_date'] . ' ' . $slotStartTime . ' -1 hour'));
+                $deliveryTime = date('Y-m-d H:i:s', strtotime($data['booking_date'] . ' ' . $slotEndTime . ' +2 hours'));
+
+                $this->deliveryRepo->insert(
+                    $bookingId,
+                    $groundworker->getGroundworkerId(),
+                    'collection',
+                    $collectionTime
+                );
+
+                $this->deliveryRepo->insert(
+                    $bookingId,
+                    $groundworker->getGroundworkerId(),
+                    'delivery',
+                    $deliveryTime
+                );
+            }
+
             $this->db->commit();
         } catch (Exception $e) {
             $this->db->rollback();
@@ -132,8 +191,6 @@ class BookingService
 
             return ['success' => false, 'errors' => ['Booking could not be saved, please try again']];
         }
-
-        $reference = 'LB-' . str_pad((string)$bookingId, 5, '0', STR_PAD_LEFT);
 
         // Looked up here, after the transaction commits, purely for the
         // receipt page - none of this affects whether the booking
