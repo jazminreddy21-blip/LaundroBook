@@ -1,32 +1,47 @@
 <?php
 
-// Single entry point for the small write actions the admin pages
-
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
 require_once __DIR__ . '/../Repositories/SystemManagerRepo.php';
 require_once __DIR__ . '/../Controllers/AdminController.php';
 
-$repository = new SystemManagerRepo();
-$controller = new AdminController($repository);
+// This is the single entry point every admin management page's
+// status-update / reassignment forms post to. Dispatches purely on
+// $_POST['action'] - each handler method re-checks authentication
+// itself, so this file doesn't need to.
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 
-$action = $_POST['action'] ?? '';
+    $controller = new AdminController(new SystemManagerRepo());
 
-switch ($action) {
-    case 'update_booking_status':
-        $controller->updateBookingStatus();
-        break;
+    $action = trim($_POST['action'] ?? '');
 
-    case 'update_machine_status':
-        $controller->updateMachineStatusAction();
-        break;
+    switch ($action) {
+        case 'update_booking_status':
+            $controller->updateBookingStatus();
+            break;
 
-    case 'update_delivery_status':
-        $controller->updateDeliveryStatusAction();
-        break;
+        case 'update_machine_status':
+            $controller->updateMachineStatusAction();
+            break;
 
-    default:
-        http_response_code(400);
-        echo 'Unknown admin action.';
+        case 'update_delivery_status':
+            $controller->updateDeliveryStatusAction();
+            break;
+
+        case 'reassign_groundworker':
+            $controller->reassignGroundworker();
+            break;
+
+        case 'update_enquiry_status':
+            $controller->updateEnquiryStatusAction();
+            break;
+
+        default:
+            http_response_code(400);
+            echo 'Unknown action.';
+            break;
+    }
 }
