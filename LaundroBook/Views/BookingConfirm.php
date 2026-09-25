@@ -326,15 +326,8 @@ You can track the progress of your laundry at any time using your booking refere
 
 <div class="nav-buttons">
 
-<a href="TrackingDel.html" class="btn btn-secondary">
-
-Track Delivery
-
-</a>
-
-<a href="TrackingPick.html" class="btn btn-primary">
-
-Track Pickup
+<a href="TrackingOrder.php" id= "track-pickup-btn" class=" btn btn-primary">
+Track Order
 
 </a>
 

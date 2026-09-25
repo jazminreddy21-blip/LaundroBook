@@ -87,20 +87,11 @@ if ($hasErrors) {
 
     <div class="nav-buttons">
 
-        <a href="TrackingDel.html"
-        id="track-delivery-btn"
-        class="btn btn-secondary">
-
-            Track Laundry Delivery
-
-        </a>
-
-        <a href="TrackingPick.html"
-        id="track-progress-btn"
-        class="btn btn-primary">
-
-            Track Progress for Pickup
-
+        <a href="TrackingOrder.php" 
+        id= "track-pickup-btn" 
+        class=" btn btn-primary">
+        Track Order
+    
         </a>
 
     </div>
