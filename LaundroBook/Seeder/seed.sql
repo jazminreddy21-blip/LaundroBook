@@ -29,3 +29,11 @@ INSERT INTO service (manager_id, wash_type, load_type, price, duration_minutes, 
 (1, 'heavy',  'clothes',  55.00, 65, 2),
 (1, 'heavy',  'beddings', 70.00, 65, 2),
 (1, 'heavy',  'towels',   65.00, 65, 2);
+
+-- Seeds a few groundworker rows. Delivery/pickup bookings will fail
+-- with "no groundworker available" until at least one row exists here.
+
+INSERT INTO groundworker (groundworker_name, groundworker_phone, groundworker_role) VALUES
+('John Smith', '0821234567', 'driver'),
+('Sarah Johnson', '0839876543', 'driver'),
+('Michael Brown', '0721112233', 'collector');
