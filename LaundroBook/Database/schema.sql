@@ -177,7 +177,6 @@ ALTER TABLE `booking`
 ALTER TABLE `customer`
   ADD PRIMARY KEY (`customer_id`),
   ADD UNIQUE KEY `customer_email` (`customer_email`),
-  ADD UNIQUE KEY `customer_phone` (`customer_phone`);
 
 --
 -- Indexes for table `delivery`
