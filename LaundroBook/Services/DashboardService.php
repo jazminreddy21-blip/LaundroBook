@@ -20,15 +20,18 @@ class DashboardService
     private BookingRepoInterface $bookingRepo;
     private MachineRepoInterface $machineRepo;
     private DeliveryRepoInterface $deliveryRepo;
+    private EnquiryRepoInterface $enquiryRepo;
 
     public function __construct(
         BookingRepoInterface $bookingRepo,
         MachineRepoInterface $machineRepo,
-        DeliveryRepoInterface $deliveryRepo
+        DeliveryRepoInterface $deliveryRepo,
+        EnquiryRepoInterface $enquiryRepo
     ) {
         $this->bookingRepo = $bookingRepo;
         $this->machineRepo = $machineRepo;
         $this->deliveryRepo = $deliveryRepo;
+        $this->enquiryRepo = $enquiryRepo;
     }
 
     // One call for every stat card on the dashboard.
@@ -100,6 +103,19 @@ class DashboardService
                     ? '1 delivery needs attention.'
                     : "{$pendingDeliveries} deliveries need attention.",
                 'link' => 'deliveryManagement.php?status=pending',
+            ];
+        }
+
+        // ADDED: pending enquiries, matching the exact same pattern as
+        // the four checks above.
+        $pendingEnquiries = $this->enquiryRepo->countByStatus('Pending');
+        if ($pendingEnquiries > 0) {
+            $notifications[] = [
+                'type' => 'enquiry',
+                'message' => $pendingEnquiries === 1
+                    ? '1 enquiry is awaiting a response.'
+                    : "{$pendingEnquiries} enquiries are awaiting a response.",
+                'link' => 'enquiryManagement.php',
             ];
         }
 
