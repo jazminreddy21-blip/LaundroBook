@@ -25,7 +25,7 @@ class BookingRepo implements BookingRepoInterface{
     public function insert(int $customerId, int $managerId, array $service, array $data): int
     {
         $placeholderRef = 'PENDING';
- 
+
         $sql = "INSERT INTO booking
                 (customer_id, manager_id, machine_id, slot_id, service_id, booking_reference, booking_date, total_price, status)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Pending')";
@@ -130,33 +130,68 @@ class BookingRepo implements BookingRepoInterface{
     // Admin dashboard stat card
     public function todaysBookings(): int
     {
-        $result = $this->db->query("SELECT COUNT(*) AS total FROM booking WHERE booking_date = CURDATE()")->fetch_assoc();
+        $sql = "SELECT COUNT(*) AS total FROM (
+                    SELECT 1
+                    FROM booking
+                    WHERE booking_date = CURDATE()
+                    GROUP BY customer_id, machine_id, booking_date, service_id
+                ) AS grouped";
+        $result = $this->db->query($sql)->fetch_assoc();
         return (int)$result['total'];
     }
 
     // Admin dashboard stat card
     public function pendingBookingsCount(): int
     {
-        $result = $this->db->query("SELECT COUNT(*) AS total FROM booking WHERE status = 'pending'")->fetch_assoc();
+        $sql = "SELECT COUNT(*) AS total FROM (
+                    SELECT 1
+                    FROM booking
+                    WHERE status = 'pending'
+                    GROUP BY customer_id, machine_id, booking_date, service_id
+                ) AS grouped";
+        $result = $this->db->query($sql)->fetch_assoc();
         return (int)$result['total'];
     }
 
     // Admin dashboard stat card
     public function todaysRevenue(): float
     {
-        $sql = "SELECT COALESCE(SUM(total_price), 0) AS revenue FROM booking WHERE booking_date = CURDATE() AND status != 'cancelled'";
+        $sql = "SELECT COALESCE(SUM(group_total), 0) AS revenue FROM (
+                    SELECT MAX(total_price) AS group_total
+                    FROM booking
+                    WHERE booking_date = CURDATE() AND status != 'cancelled'
+                    GROUP BY customer_id, machine_id, booking_date, service_id
+                ) AS grouped";
         $result = $this->db->query($sql)->fetch_assoc();
         return (float)$result['revenue'];
     }
 
     // Booking Management page - joins in the columns the admin table
     // actually shows per row, so no second lookup is needed per booking.
+    //
+    // FIXED: previously returned one raw row per booking row, meaning
+    // a Heavy Wash booking (two rows sharing the same customer,
+    // machine, date, and service - the same grouping key already
+    // proven in getBookingsPastEndTime()) showed up as two entirely
+    // separate entries in the admin table, each with its own
+    // reference, looking like two unrelated bookings. Now grouped by
+    // that same key: slot_label combines both times, total_price uses
+    // MAX rather than SUM (both rows store the FULL price, not a
+    // split amount, so summing would double it), and MIN(booking_id)
+    // picks one consistent representative row - the earlier-created
+    // one - whose reference and booking_id the admin table's action
+    // form uses. A standard single-slot booking has no sibling row to
+    // group with, so GROUP BY has no visible effect on it at all.
     public function getAllBookings(array $filters = []): array
     {
-        $sql = "SELECT b.booking_id, b.booking_reference, b.booking_date, b.total_price, b.status,
+        $sql = "SELECT MIN(b.booking_id) AS booking_id,
+                       MIN(b.booking_reference) AS booking_reference,
+                       b.booking_date,
+                       MAX(b.status) AS status,
+                       MAX(b.total_price) AS total_price,
                        c.customer_name,
                        m.machine_name,
-                       s.slot_label,
+                       GROUP_CONCAT(s.slot_label ORDER BY s.start_time SEPARATOR ' & ') AS slot_label,
                        sv.wash_type, sv.load_type
                 FROM booking b
                 JOIN customer c ON b.customer_id = c.customer_id
@@ -188,7 +223,8 @@ class BookingRepo implements BookingRepoInterface{
             $params[] = $filters['date'];
         }
 
-        $sql .= " ORDER BY b.booking_date DESC, b.booking_id DESC";
+        $sql .= " GROUP BY b.customer_id, b.machine_id, b.booking_date, b.service_id
+                  ORDER BY b.booking_date DESC, booking_id DESC";
 
         $stmt = $this->run($sql, $types, $params);
         return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -213,10 +249,47 @@ class BookingRepo implements BookingRepoInterface{
         return true;
     }
 
+    // Updates every booking row sharing the same customer+machine+date
+    // +service as $bookingId - the same grouping key used everywhere
+    // else a Heavy Wash's two rows need to be treated as one logical
+    // booking. Without this, updating a Heavy Wash's status via
+    // updateStatus() above would only change ONE of its two rows,
+    // leaving the pair out of sync (one 'completed', the other still
+    // 'pending') even though the admin table now displays them as one
+    // combined entry. For a standard single-slot booking, this
+    // behaves identically to updateStatus() above, since it has no
+    // sibling row to find.
+    public function updateStatusForGroup(int $bookingId, string $status): bool
+    {
+        $groupRow = $this->findBooking($bookingId);
+        if ($groupRow === null) {
+            return false;
+        }
+
+        $sql = "UPDATE booking
+                SET status = ?
+                WHERE customer_id = ? AND machine_id = ? AND booking_date = ? AND service_id = ?";
+        $stmt = $this->run($sql, 'siisi', [
+            $status,
+            (int)$groupRow['customer_id'],
+            (int)$groupRow['machine_id'],
+            $groupRow['booking_date'],
+            (int)$groupRow['service_id'],
+        ]);
+        $stmt->close();
+        return true;
+    }
+
     // Reports page
+    // Reports page - same double-counting fix as todaysRevenue() above.
     public function revenueBetween(string $startDate, string $endDate): float
     {
-        $sql = "SELECT COALESCE(SUM(total_price), 0) AS revenue FROM booking WHERE booking_date BETWEEN ? AND ? AND status != 'cancelled'";
+        $sql = "SELECT COALESCE(SUM(group_total), 0) AS revenue FROM (
+                    SELECT MAX(total_price) AS group_total
+                    FROM booking
+                    WHERE booking_date BETWEEN ? AND ? AND status != 'cancelled'
+                    GROUP BY customer_id, machine_id, booking_date, service_id
+                ) AS grouped";
         $stmt = $this->run($sql, 'ss', [$startDate, $endDate]);
         $result = $stmt->get_result()->fetch_assoc();
         $stmt->close();
@@ -224,9 +297,17 @@ class BookingRepo implements BookingRepoInterface{
     }
 
     // Reports page
+    // FIXED: same double-counting bug - used by the Reports page for
+    // "Completed" and "Cancelled" booking counts, which were similarly
+    // inflated for every Heavy Wash booking.
     public function countByStatusBetween(string $status, string $startDate, string $endDate): int
     {
-        $sql = "SELECT COUNT(*) AS total FROM booking WHERE status = ? AND booking_date BETWEEN ? AND ?";
+        $sql = "SELECT COUNT(*) AS total FROM (
+                    SELECT 1
+                    FROM booking
+                    WHERE status = ? AND booking_date BETWEEN ? AND ?
+                    GROUP BY customer_id, machine_id, booking_date, service_id
+                ) AS grouped";
         $stmt = $this->run($sql, 'sss', [$status, $startDate, $endDate]);
         $result = $stmt->get_result()->fetch_assoc();
         $stmt->close();
