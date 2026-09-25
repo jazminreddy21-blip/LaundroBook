@@ -3,51 +3,69 @@
 require_once __DIR__ . '/../Database/Connection.php';
 require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
 
-// This class has one job: read and write the `delivery` table.
-
-class DeliveryRepo implements DeliveryRepoInterface{
+class DeliveryRepo implements DeliveryRepoInterface
+{
     private mysqli $db;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->db = Connection::getConnection();
     }
 
-    private function run(string $sql, string $types = '', array $params = []): mysqli_stmt{
+    private function run(string $sql, string $types = '', array $params = []): mysqli_stmt
+    {
         $stmt = $this->db->prepare($sql);
-        if($types !== ''){
+        if ($types !== '') {
             $stmt->bind_param($types, ...$params);
         }
         $stmt->execute();
         return $stmt;
     }
 
-    public function todaysCountByType(string $type): int{
-        $sql = "SELECT COUNT(*) as total
-                FROM delivery
-                WHERE delivery_type = ? AND DATE(scheduled_time) = CURDATE()";
+    // Called by BookingService right after a booking commits, for any
+    // booking where collection_method is 'delivery' or 'collection'.
+    // Nothing else in this project currently creates a delivery row -
+    // without this being wired in, the delivery table stays empty
+    // regardless of what a customer picks at booking time.
+    public function insert(int $bookingId, int $groundworkerId, string $deliveryType, string $scheduledTime): int
+    {
+        $sql = "INSERT INTO delivery (booking_id, groundworker_id, delivery_type, delivery_status, scheduled_time)
+                VALUES (?, ?, ?, 'pending', ?)";
 
+        $stmt = $this->run($sql, 'iiss', [$bookingId, $groundworkerId, $deliveryType, $scheduledTime]);
+        $deliveryId = $stmt->insert_id;
+        $stmt->close();
+
+        return $deliveryId;
+    }
+
+    public function todaysCountByType(string $type): int
+    {
+        $sql = "SELECT COUNT(*) AS total
+                FROM delivery d
+                JOIN booking b ON d.booking_id = b.booking_id
+                WHERE d.delivery_type = ? AND b.booking_date = CURDATE()";
         $stmt = $this->run($sql, 's', [$type]);
         $result = $stmt->get_result()->fetch_assoc();
         $stmt->close();
-
-        return (int)($result['total'] ?? 0);
+        return (int)$result['total'];
     }
 
-    // Full list for the Pickup/Delivery Management pages, joined with
-    // booking/customer/groundworker so the table can show names
-    // instead of raw IDs. $filters supports 'type' (collection /
-    // delivery - each page fixes this so admins never mix the two),
-    // 'status' and free-text 'search' on the customer name or booking
-    // reference.
-    public function getAll(array $filters = []): array{
-        $sql = "SELECT d.delivery_id, d.booking_id, d.delivery_type, d.delivery_status, d.scheduled_time,
+    // Joins in exactly what deliveryManagement.php / pickupManagement.php
+    // display per row - booking_reference and customer_name/address via
+    // booking->customer, groundworker_name via groundworker. $filters
+    // always includes delivery_type (set by the two admin pages to
+    // 'delivery' or 'collection' respectively) plus optional search/status.
+    public function getAll(array $filters = []): array
+    {
+        $sql = "SELECT d.delivery_id, d.delivery_status, d.scheduled_time, d.groundworker_id,
                        b.booking_reference,
-                       c.customer_name, c.customer_phone, c.address,
-                       g.groundworker_name, g.groundworker_phone
+                       c.customer_name, c.address,
+                       g.groundworker_name
                 FROM delivery d
-                JOIN booking b ON b.booking_id = d.booking_id
-                JOIN customer c ON c.customer_id = b.customer_id
-                JOIN groundworker g ON g.groundworker_id = d.groundworker_id
+                JOIN booking b ON d.booking_id = b.booking_id
+                JOIN customer c ON b.customer_id = c.customer_id
+                JOIN groundworker g ON d.groundworker_id = g.groundworker_id
                 WHERE 1=1";
 
         $types = '';
@@ -59,12 +77,6 @@ class DeliveryRepo implements DeliveryRepoInterface{
             $params[] = $filters['type'];
         }
 
-        if (!empty($filters['status'])) {
-            $sql .= " AND LOWER(d.delivery_status) = LOWER(?)";
-            $types .= 's';
-            $params[] = $filters['status'];
-        }
-
         if (!empty($filters['search'])) {
             $sql .= " AND (b.booking_reference LIKE ? OR c.customer_name LIKE ?)";
             $like = '%' . $filters['search'] . '%';
@@ -73,45 +85,55 @@ class DeliveryRepo implements DeliveryRepoInterface{
             $params[] = $like;
         }
 
+        if (!empty($filters['status'])) {
+            $sql .= " AND d.delivery_status = ?";
+            $types .= 's';
+            $params[] = $filters['status'];
+        }
+
         $sql .= " ORDER BY d.scheduled_time DESC";
 
         $stmt = $this->run($sql, $types, $params);
-        $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
-
-        return $result;
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     }
 
-    public function findById(int $deliveryId): ?array{
-        $sql = "SELECT d.delivery_id, d.booking_id, d.delivery_type, d.delivery_status, d.scheduled_time,
-                       b.booking_reference,
-                       c.customer_name, c.customer_phone, c.address,
-                       g.groundworker_name, g.groundworker_phone
-                FROM delivery d
-                JOIN booking b ON b.booking_id = d.booking_id
-                JOIN customer c ON c.customer_id = b.customer_id
-                JOIN groundworker g ON g.groundworker_id = d.groundworker_id
-                WHERE d.delivery_id = ?";
-
+    public function findById(int $deliveryId): ?array
+    {
+        $sql = "SELECT * FROM delivery WHERE delivery_id = ?";
         $stmt = $this->run($sql, 'i', [$deliveryId]);
         $result = $stmt->get_result()->fetch_assoc();
         $stmt->close();
-
         return $result ?: null;
     }
 
-    // Only the three statuses the CHECK constraint allows are accepted.
-    public function updateStatus(int $deliveryId, string $status): bool{
-        $valid = ['pending', 'in_progress', 'completed'];
-        if(!in_array(strtolower($status), $valid, true)){
-            throw new InvalidArgumentException("Invalid delivery status {$status}");
-        }
-
-        $sql = "UPDATE delivery SET delivery_status = ? WHERE delivery_id = ?";
-        $stmt = $this->run($sql, 'si', [strtolower($status), $deliveryId]);
-        $success = $stmt->affected_rows >= 0;
+    public function findByBookingId(int $bookingId, string $deliveryType): ?array
+    {
+        $sql = "SELECT d.delivery_id, d.delivery_type, d.delivery_status, d.scheduled_time,
+                       b.booking_reference,
+                       c.customer_name, c.address,
+                       g.groundworker_name, g.groundworker_phone
+                FROM delivery d
+                JOIN booking b ON d.booking_id = b.booking_id
+                JOIN customer c ON b.customer_id = c.customer_id
+                JOIN groundworker g ON d.groundworker_id = g.groundworker_id
+                WHERE d.booking_id = ? AND d.delivery_type = ?";
+        $stmt = $this->run($sql, 'is', [$bookingId, $deliveryType]);
+        $result = $stmt->get_result()->fetch_assoc();
         $stmt->close();
+        return $result ?: null;
+    }
 
-        return $success;
+    public function updateStatus(int $deliveryId, string $status): bool
+    {
+        $stmt = $this->run("UPDATE delivery SET delivery_status = ? WHERE delivery_id = ?", 'si', [$status, $deliveryId]);
+        $stmt->close();
+        return true;
+    }
+
+    public function reassignGroundworker(int $deliveryId, int $groundworkerId): bool
+    {
+        $stmt = $this->run("UPDATE delivery SET groundworker_id = ? WHERE delivery_id = ?", 'ii', [$groundworkerId, $deliveryId]);
+        $stmt->close();
+        return true;
     }
 }
