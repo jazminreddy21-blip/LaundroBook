@@ -60,6 +60,7 @@
         <li><a href="deliveryManagement.php">Deliveries</a></li>
         <li><a href="machineManagement.php" class="active">Machines</a></li>
         <li><a href="customerManagement.php">Customers</a></li>
+        <li><a href="enquiryManagement.php">Enquiries</a></li>
         <li><a href="reports.php">Reports</a></li>
         <li><a href="../../Public/adminLogout.php">Logout</a></li>
     </ul>

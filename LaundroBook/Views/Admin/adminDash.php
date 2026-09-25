@@ -104,6 +104,12 @@
         </li>
 
         <li>
+            <a href="enquiryManagement.php">
+                Enquiries
+            </a>
+        </li>
+
+        <li>
             <a href="reports.php">
                 Reports
             </a>
