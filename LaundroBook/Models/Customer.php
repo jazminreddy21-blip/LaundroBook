@@ -20,9 +20,6 @@ class Customer{
         return $this->customer_id;
     }
 
-    // ADDED: needed by CustomerRepo::findOrCreate()'s address-update
-    // logic, which reads back an existing customer's current fields
-    // to rebuild the object with just the address changed.
     public function getCustomerName(){
         return $this->customer_name;
     }
