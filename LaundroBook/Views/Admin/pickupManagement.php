@@ -18,6 +18,7 @@
     // getPickups() forces delivery_type = 'collection' internally, so
     // this page only ever shows pickups, never deliveries.
     $pickups = $controller->getPickups($filters);
+    $groundworkers = $controller->getGroundworkers();
 
     $totalPickups = count($pickups);
     $completedCount = count(array_filter($pickups, fn($p) => strtolower($p['delivery_status']) === 'completed'));
@@ -60,6 +61,7 @@
         <li><a href="deliveryManagement.php">Deliveries</a></li>
         <li><a href="machineManagement.php">Machines</a></li>
         <li><a href="customerManagement.php">Customers</a></li>
+        <li><a href="enquiryManagement.php">Enquiries</a></li>
         <li><a href="reports.php">Reports</a></li>
         <li><a href="../../Public/adminLogout.php">Logout</a></li>
     </ul>
@@ -74,6 +76,8 @@
 
 <?php if (isset($_GET['updated'])): ?>
     <div class="page-banner success">Pickup status updated.</div>
+<?php elseif (isset($_GET['error']) && $_GET['error'] === 'booking_not_started'): ?>
+    <div class="page-banner error">This booking hasn't started yet - it must be marked "In Progress" on the Booking Management page before pickup or delivery can begin.</div>
 <?php elseif (isset($_GET['error'])): ?>
     <div class="page-banner error">That status update was not valid.</div>
 <?php endif; ?>
@@ -169,6 +173,25 @@
                                     <?php endforeach; ?>
                                 </select>
                                 <button type="submit" class="action-btn">Update</button>
+                            </form>
+
+                            <!-- ADDED: separate form for reassigning which
+                                 groundworker is handling this pickup - kept
+                                 as its own form/action rather than combined
+                                 with the status update above, matching
+                                 deliveryManagement.php's identical pattern. -->
+                            <form class="action-form" method="POST" action="../../Public/adminAction.php" style="margin-top:6px;">
+                                <input type="hidden" name="action" value="reassign_groundworker">
+                                <input type="hidden" name="delivery_id" value="<?= (int)$pickup['delivery_id']; ?>">
+                                <input type="hidden" name="delivery_type" value="collection">
+                                <select name="groundworker_id">
+                                    <?php foreach ($groundworkers as $gw): ?>
+                                        <option value="<?= (int)$gw['groundworker_id']; ?>" <?= (int)$pickup['groundworker_id'] === (int)$gw['groundworker_id'] ? 'selected' : ''; ?>>
+                                            <?= htmlspecialchars($gw['groundworker_name']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <button type="submit" class="action-btn">Reassign</button>
                             </form>
                         </td>
                     </tr>
