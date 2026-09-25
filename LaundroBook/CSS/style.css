@@ -1644,6 +1644,23 @@ body {
     top: 6px; 
     font-size: 13px; 
 } 
+
+.validation-message.success {
+    display: block;
+    background: #F0FDF4;
+    border: 1px solid #86EFAC;
+    border-left: 4px solid #16A34A;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 25px;
+}
+
+.validation-message.success p {
+    color: #16A34A;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
  
 /* ========================================================= 
    AVAILABILITY / SUMMARY SECTION 
@@ -1929,4 +1946,189 @@ body {
 #laundryProgress li.current i{
     background:#0EA5E9;
     color:#FFFFFF;
+}
+
+/* ========================================= */
+/* TRACKING FORM                             */
+/* ========================================= */
+
+.tracking-form{
+    max-width:500px;
+    margin:0 auto;
+    background:#FFFFFF;
+    border:1px solid #E0F2FE;
+    border-radius:14px;
+    padding:28px;
+    box-shadow:0 4px 14px rgba(7, 89, 133, 0.08);
+}
+
+.tracking-form label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:#075985;
+    margin-bottom:8px;
+}
+
+.tracking-form input{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid #CBD5E1;
+    border-radius:8px;
+    font-size:14px;
+    margin-bottom:16px;
+    outline:none;
+}
+
+.tracking-form input:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.15);
+}
+
+.tracking-form button{
+    width:100%;
+}
+
+/* ========================================= */
+/* TRACKING RESULTS - CARD LAYOUT            */
+/* ========================================= */
+
+.tracking-results{
+    max-width:600px;
+    margin:25px auto 0;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.tracking-card{
+    background:#FFFFFF;
+    border:1px solid #E0F2FE;
+    border-radius:14px;
+    padding:24px 28px;
+    box-shadow:0 4px 14px rgba(7, 89, 133, 0.08);
+}
+
+.tracking-card h3{
+    font-size:16px;
+    color:#075985;
+    font-weight:700;
+    margin-bottom:14px;
+    padding-bottom:12px;
+    border-bottom:1px solid #E0F2FE;
+}
+
+.tracking-card p{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 0;
+    font-size:14px;
+}
+
+.tracking-card p strong{
+    color:#64748B;
+    font-weight:600;
+}
+
+.tracking-card p span{
+    color:#334155;
+    font-weight:700;
+    text-align:right;
+}
+
+/* ========================================= */
+/* DELIVERY PROGRESS STEPS                   */
+/* ========================================= */
+
+.delivery-progress{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.delivery-progress li{
+    position:relative;
+    padding:14px 0 14px 30px;
+    font-size:14px;
+    font-weight:600;
+    color:#94A3B8;
+    border-left:2px solid #E0F2FE;
+    margin-left:10px;
+}
+
+.delivery-progress li::before{
+    content:"";
+    position:absolute;
+    left:-9px;
+    top:18px;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:#FFFFFF;
+    border:2px solid #E0F2FE;
+}
+
+.delivery-progress li:last-child{
+    border-left:2px solid transparent;
+}
+
+.delivery-progress li.active{
+    color:#075985;
+}
+
+.delivery-progress li.active::before{
+    background:#0284C7;
+    border-color:#0284C7;
+}
+
+/* ========================================= */
+/* DRIVER INFORMATION CARD                   */
+/* ========================================= */
+
+.driver-info-card{
+    background:#F0F9FF;
+    border:1px solid #E0F2FE;
+    border-radius:14px;
+    padding:24px 28px;
+}
+
+.driver-info-card h2{
+    font-size:16px;
+    color:#075985;
+    margin-bottom:14px;
+    font-weight:700;
+    padding-bottom:12px;
+    border-bottom:1px solid #E0F2FE;
+}
+
+.driver-details p{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 0;
+    font-size:14px;
+}
+
+.driver-details strong{
+    color:#64748B;
+    font-weight:600;
+}
+
+.driver-details span{
+    color:#334155;
+    font-weight:700;
+}
+
+@media(max-width:480px){
+    .tracking-card p,
+    .driver-details p{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:4px;
+    }
+    .tracking-card p span,
+    .driver-details span{
+        text-align:left;
+    }
 }
