@@ -6,6 +6,8 @@
     require_once __DIR__ . '/../Repositories/DeliveryRepo.php';
     require_once __DIR__ . '/../Repositories/CustomerRepo.php';
     require_once __DIR__ . '/../Repositories/ServiceRepo.php';
+    require_once __DIR__ . '/../Repositories/GroundworkerRepo.php';
+    require_once __DIR__ . '/../Repositories/EnquiryRepo.php';
     require_once __DIR__ . '/../Services/DashboardService.php';
 
     class AdminController{
@@ -18,6 +20,8 @@
         private DeliveryRepoInterface $deliveryRepository;
         private CustomerRepoInterface $customerRepository;
         private ServiceRepoInterface $serviceRepository;
+        private GroundworkerRepo $groundworkerRepository;
+        private EnquiryRepoInterface $enquiryRepository;
         private DashboardService $dashboardService;
 
         // The extra repositories all default to the real concrete
@@ -32,7 +36,9 @@
             ?MachineRepoInterface $machineRepository = null,
             ?DeliveryRepoInterface $deliveryRepository = null,
             ?CustomerRepoInterface $customerRepository = null,
-            ?ServiceRepoInterface $serviceRepository = null
+            ?ServiceRepoInterface $serviceRepository = null,
+            ?GroundworkerRepo $groundworkerRepository = null,
+            ?EnquiryRepoInterface $enquiryRepository = null
         ){
             $this->systemManagerRepository = $systemManagerRepository;
             $this->bookingRepository = $bookingRepository ?? new BookingRepo();
@@ -40,11 +46,14 @@
             $this->deliveryRepository = $deliveryRepository ?? new DeliveryRepo();
             $this->customerRepository = $customerRepository ?? new CustomerRepo();
             $this->serviceRepository = $serviceRepository ?? new ServiceRepo();
+            $this->groundworkerRepository = $groundworkerRepository ?? new GroundworkerRepo();
+            $this->enquiryRepository = $enquiryRepository ?? new EnquiryRepo();
 
             $this->dashboardService = new DashboardService(
                 $this->bookingRepository,
                 $this->machineRepository,
-                $this->deliveryRepository
+                $this->deliveryRepository,
+                $this->enquiryRepository
             );
             }
 
@@ -165,6 +174,19 @@
             return $this->machineRepository->getAllMachines();
         }
 
+        // Used by deliveryManagement.php / pickupManagement.php to
+        // populate the reassignment dropdown.
+        public function getGroundworkers(): array
+        {
+            return $this->groundworkerRepository->getAllGroundworkers();
+        }
+
+        // Used by enquiryManagement.php.
+        public function getEnquiries(string $search = ''): array
+        {
+            return $this->enquiryRepository->getAll($search);
+        }
+
         public function getCustomers(string $search = ''): array
         {
             return $this->customerRepository->getAllCustomers($search);
@@ -212,7 +234,7 @@
             }
 
             try {
-                $this->bookingRepository->updateStatus((int)$booking['booking_id'], $status);
+                $this->bookingRepository->updateStatusForGroup((int)$booking['booking_id'], $status);
 
                 // Declining/cancelling a booking frees up the machine
                 // again, the same way BookingService flips it to
@@ -256,14 +278,101 @@
             $type = trim($_POST['delivery_type'] ?? 'collection');
             $redirectPage = $type === 'delivery' ? 'deliveryManagement.php' : 'pickupManagement.php';
 
-            try {
-                $this->deliveryRepository->updateStatus($deliveryId, $status);
-            } catch (InvalidArgumentException $e) {
-                header("Location: ../Views/{$redirectPage}?error=invalid_status");
+            $deliveryRow = $this->deliveryRepository->findById($deliveryId);
+
+            if ($deliveryRow === null) {
+                header("Location: ../Views/Admin/{$redirectPage}?error=invalid_status");
                 exit;
             }
 
-            header("Location: ../Views/{$redirectPage}?updated=1");
+            $bookingId = (int)$deliveryRow['booking_id'];
+
+            // The full chain: neither leg can move past pending while
+            // the booking itself is still pending (an admin has to
+            // explicitly move the booking to in_progress first, via
+            // bookingManagement.php, before any pickup/delivery work
+            // is considered to have genuinely started). On top of
+            // that, the delivery leg specifically also can't move past
+            // pending until the collection leg is completed - the
+            // laundry has to actually be collected before it can be
+            // washed and returned.
+            if ($status !== 'pending') {
+                $booking = $this->bookingRepository->findBooking($bookingId);
+
+                if ($booking === null || strtolower($booking['status']) === 'pending') {
+                    header("Location: ../Views/Admin/{$redirectPage}?error=booking_not_started");
+                    exit;
+                }
+
+                if ($type === 'delivery') {
+                    $collectionLeg = $this->deliveryRepository->findByBookingId($bookingId, 'collection');
+
+                    if ($collectionLeg !== null && strtolower($collectionLeg['delivery_status']) !== 'completed') {
+                        header("Location: ../Views/Admin/{$redirectPage}?error=collection_not_complete");
+                        exit;
+                    }
+                }
+            }
+
+            try {
+                $this->deliveryRepository->updateStatus($deliveryId, $status);
+            } catch (InvalidArgumentException $e) {
+                header("Location: ../Views/Admin/{$redirectPage}?error=invalid_status");
+                exit;
+            }
+
+            // The last link in the chain - once the delivery leg is
+            // genuinely completed, the whole booking is done, so the
+            // booking itself is automatically marked completed too,
+            // rather than requiring the admin to separately remember
+            // to do this on bookingManagement.php as well.
+            if ($type === 'delivery' && $status === 'completed') {
+                $this->bookingRepository->updateStatus($bookingId, 'completed');
+            }
+
+            header("Location: ../Views/Admin/{$redirectPage}?updated=1");
+            exit;
+        }
+
+        // Admin's manual reassignment of which groundworker is handling
+        // a delivery/pickup - separate action from the status update
+        // above, since they're conceptually different changes even
+        // though they both act on the same delivery row.
+        public function reassignGroundworker(): void
+        {
+            $this->requireAuthentication();
+
+            $deliveryId = (int)($_POST['delivery_id'] ?? 0);
+            $groundworkerId = (int)($_POST['groundworker_id'] ?? 0);
+            $type = trim($_POST['delivery_type'] ?? 'collection');
+            $redirectPage = $type === 'delivery' ? 'deliveryManagement.php' : 'pickupManagement.php';
+
+            if ($deliveryId <= 0 || $groundworkerId <= 0) {
+                header("Location: ../Views/Admin/{$redirectPage}?error=invalid_status");
+                exit;
+            }
+
+            $this->deliveryRepository->reassignGroundworker($deliveryId, $groundworkerId);
+
+            header("Location: ../Views/Admin/{$redirectPage}?updated=1");
+            exit;
+        }
+
+        public function updateEnquiryStatusAction(): void
+        {
+            $this->requireAuthentication();
+
+            $enquiryId = (int)($_POST['enquiry_id'] ?? 0);
+            $status = trim($_POST['status'] ?? '');
+
+            try {
+                $this->enquiryRepository->updateStatus($enquiryId, $status);
+            } catch (InvalidArgumentException $e) {
+                header('Location: ../Views/Admin/enquiryManagement.php?error=invalid_status');
+                exit;
+            }
+
+            header('Location: ../Views/Admin/enquiryManagement.php?updated=1');
             exit;
         }
     }
