@@ -289,6 +289,8 @@ if(($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && basename($_SERVER['SCRIPT_NA
     require_once __DIR__ . '/../Repositories/CustomerRepo.php';
     require_once __DIR__ . '/../Repositories/BookingRepo.php';
     require_once __DIR__ . '/../Repositories/ServiceRepo.php';
+    require_once __DIR__ . '/../Repositories/DeliveryRepo.php';
+    require_once __DIR__ . '/../Repositories/GroundworkerRepo.php';
     require_once __DIR__ . '/../Services/AvailabilityService.php';
     require_once __DIR__ . '/../Services/EmailService.php';
 
@@ -297,11 +299,13 @@ if(($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && basename($_SERVER['SCRIPT_NA
     $customerRepo = new CustomerRepo();
     $bookingRepo = new BookingRepo();
     $serviceRepo = new ServiceRepo();
+    $deliveryRepo = new DeliveryRepo();
+    $groundworkerRepo = new GroundworkerRepo();
     $emailConfig = require __DIR__ . '/../Config/EmailConfig.php';
     $emailService = new EmailService($emailConfig);
 
     $availability = new AvailabilityService($machineRepo, $slotRepo, $bookingRepo);
-    $bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability, $emailService);
+    $bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability, $emailService, $deliveryRepo, $groundworkerRepo);
 
     $controller = new bookingController($bookingService);
     $controller->confirmBooking();
