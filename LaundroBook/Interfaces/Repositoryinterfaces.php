@@ -6,7 +6,7 @@
  * Polling-Based Machine Release fix, used by
  * AvailabilityService::releaseExpiredMachines(). It also includes the
  * admin-facing methods AdminController relies on for the management
- * pages (bookings, reports, etc.), both sets are required, not
+ * pages (bookings, reports, etc.) - both sets are required, not
  * alternatives to each other.
  */
 
@@ -70,6 +70,11 @@ interface BookingRepoInterface
     public function getAllBookings(array $filters = []): array;
     public function findBookingByReference(string $reference): ?array;
     public function updateStatus(int $bookingId, string $status): bool;
+
+    // Updates every booking row sharing the same customer+machine+date
+    // +service as $bookingId - see BookingRepo for why this matters
+    // specifically for Heavy Wash's two-row bookings.
+    public function updateStatusForGroup(int $bookingId, string $status): bool;
     public function revenueBetween(string $startDate, string $endDate): float;
     public function countByStatusBetween(string $status, string $startDate, string $endDate): int;
 }
@@ -88,10 +93,27 @@ interface SystemManagerRepoInterface
 
 interface DeliveryRepoInterface
 {
+    // Creates the delivery/collection row a booking needs once it's
+    // confirmed - called by BookingService right after the booking
+    // itself commits, for any booking where collection_method is
+    // 'delivery' or 'collection' (matching check_delivery_type).
+    public function insert(int $bookingId, int $groundworkerId, string $deliveryType, string $scheduledTime): int;
     public function todaysCountByType(string $type): int;
     public function getAll(array $filters = []): array;
     public function findById(int $deliveryId): ?array;
+
+    // Used by the customer-facing tracking pages - a customer only
+    // knows their booking_reference, not a delivery_id, so lookup
+    // starts from the booking side. Needs the expected leg type too,
+    // since one booking can now have both a collection and a
+    // delivery row.
+    public function findByBookingId(int $bookingId, string $deliveryType): ?array;
     public function updateStatus(int $deliveryId, string $status): bool;
+
+    // Admin's manual reassignment of which groundworker is handling a
+    // delivery - separate from updateStatus(), same one-concern-per-
+    // method pattern as the rest of this interface.
+    public function reassignGroundworker(int $deliveryId, int $groundworkerId): bool;
 }
 
 interface EnquiryRepoInterface
@@ -99,4 +121,18 @@ interface EnquiryRepoInterface
     // Subject and message are combined into one value before this is
     // called, see EnquiryRepo::insert() for exactly how.
     public function insert(string $name, string $email, string $message): int;
+
+    // Used by the admin Enquiry Management page.
+    public function getAll(string $search = ''): array;
+
+    // Used by DashboardService for the "pending enquiries" system
+    // notification - matches the naming convention already used by
+    // MachineRepoInterface::countByStatus().
+    public function countByStatus(string $status): int;
+
+    // enquiry.status has no CHECK constraint in the schema, unlike
+    // booking.status - the allowed values (Pending/Responded) are only
+    // enforced here in code, matching how the column was already
+    // being used with a plain 'Pending' default at insert time.
+    public function updateStatus(int $enquiryId, string $status): bool;
 }
