@@ -9,6 +9,8 @@
     require_once __DIR__ . '/../Repositories/GroundworkerRepo.php';
     require_once __DIR__ . '/../Repositories/EnquiryRepo.php';
     require_once __DIR__ . '/../Services/DashboardService.php';
+    require_once __DIR__ . '/../Interfaces/EmailServiceInterface.php';
+    require_once __DIR__ . '/../Services/EmailService.php';
 
     class AdminController{
         //validate the inputs on the server side by checking the database 
@@ -22,6 +24,7 @@
         private ServiceRepoInterface $serviceRepository;
         private GroundworkerRepo $groundworkerRepository;
         private EnquiryRepoInterface $enquiryRepository;
+        private EmailServiceInterface $emailService;
         private DashboardService $dashboardService;
 
         // The extra repositories all default to the real concrete
@@ -38,7 +41,8 @@
             ?CustomerRepoInterface $customerRepository = null,
             ?ServiceRepoInterface $serviceRepository = null,
             ?GroundworkerRepo $groundworkerRepository = null,
-            ?EnquiryRepoInterface $enquiryRepository = null
+            ?EnquiryRepoInterface $enquiryRepository = null,
+            ?EmailServiceInterface $emailService = null
         ){
             $this->systemManagerRepository = $systemManagerRepository;
             $this->bookingRepository = $bookingRepository ?? new BookingRepo();
@@ -48,6 +52,9 @@
             $this->serviceRepository = $serviceRepository ?? new ServiceRepo();
             $this->groundworkerRepository = $groundworkerRepository ?? new GroundworkerRepo();
             $this->enquiryRepository = $enquiryRepository ?? new EnquiryRepo();
+            // Same config-loading pattern already used in
+            // bookingController.php's wiring block.
+            $this->emailService = $emailService ?? new EmailService(require __DIR__ . '/../Config/EmailConfig.php');
 
             $this->dashboardService = new DashboardService(
                 $this->bookingRepository,
@@ -96,6 +103,12 @@
             $_SESSION['manager_id'] = $manager->getId();
             $_SESSION['username'] = $manager->getUsername(); 
 
+            // Computed fresh here, not stored on the manager record -
+            // whoever currently has the lowest manager_id is the
+            // super admin, so this stays correct automatically even
+            // if the original super admin account is ever deleted.
+            $_SESSION['is_super_admin'] = $this->systemManagerRepository->isSuperAdmin($manager->getId());
+
 
             
             
@@ -132,6 +145,18 @@
             if(!isset($_SESSION['manager_id'])){
                 header('Location: login.php');
                 exit; 
+            }
+        }
+
+        // Used by adminRegister.php and registerAdmin() below - blocks
+        // any admin whose session wasn't flagged as super admin at
+        // login time. Called AFTER requireAuthentication(), same as
+        // every other page's auth check, this just adds the extra
+        // role restriction on top.
+        public function requireSuperAdmin(){
+            if(!($_SESSION['is_super_admin'] ?? false)){
+                header('Location: adminDash.php?error=not_super_admin');
+                exit;
             }
         }
 
@@ -185,6 +210,22 @@
         public function getEnquiries(string $search = ''): array
         {
             return $this->enquiryRepository->getAll($search);
+        }
+
+        // Used by adminRegister.php's admin list - super-admin gated at
+        // the view level, same as the rest of that page.
+        public function getAdmins(): array
+        {
+            return $this->systemManagerRepository->getAllManagers();
+        }
+
+        // Used by adminRegister.php to mark which row in the admin
+        // list is the super admin, so it can be shown as non-
+        // removable. Thin wrapper around the repo's own dynamic
+        // MIN(manager_id) check.
+        public function isSuperAdmin(int $managerId): bool
+        {
+            return $this->systemManagerRepository->isSuperAdmin($managerId);
         }
 
         public function getCustomers(string $search = ''): array
@@ -241,6 +282,40 @@
                 // 'in_use' when a booking is first created.
                 if (strtolower($status) === 'cancelled') {
                     $this->machineRepository->updateStatus((int)$booking['machine_id'], 'available');
+
+                    // ADDED: let the customer know their booking was
+                    // cancelled, rather than them only finding out by
+                    // checking the tracking page themselves.
+                    $customer = $this->customerRepository->findById((int)$booking['customer_id']);
+                    $service = $this->serviceRepository->getServiceById((int)$booking['service_id']);
+
+                    if ($customer !== null && $service !== null) {
+                        $this->emailService->sendOrderCancelledEmail(
+                            $customer->getCustomerEmail(),
+                            $booking['booking_reference'],
+                            $service
+                        );
+                    }
+                }
+
+                // ADDED: notify the customer their laundry is ready -
+                // fire-and-forget, same contract as the original
+                // booking confirmation email in BookingService. A
+                // walk-in "Self Drop off and Pickup" customer has no
+                // other way of knowing their wash is done, so this
+                // fires for every completed booking, not just
+                // delivery/pickup ones.
+                if (strtolower($status) === 'completed') {
+                    $customer = $this->customerRepository->findById((int)$booking['customer_id']);
+                    $service = $this->serviceRepository->getServiceById((int)$booking['service_id']);
+
+                    if ($customer !== null && $service !== null) {
+                        $this->emailService->sendOrderCompleteEmail(
+                            $customer->getCustomerEmail(),
+                            $booking['booking_reference'],
+                            $service
+                        );
+                    }
                 }
             } catch (InvalidArgumentException $e) {
                 header('Location: ../Views/Admin/bookingManagement.php?error=invalid_status');
@@ -373,6 +448,91 @@
             }
 
             header('Location: ../Views/Admin/enquiryManagement.php?updated=1');
+            exit;
+        }
+
+        // Only reachable by the super admin - requireSuperAdmin() below
+        // sends anyone else back to adminDash.php before this ever
+        // runs. A new admin created here has no special status of its
+        // own - being super admin is purely about having the lowest
+        // manager_id (see SystemManagerRepo::isSuperAdmin()), not
+        // something set at creation time.
+        public function registerAdmin(): void
+        {
+            $this->requireAuthentication();
+            $this->requireSuperAdmin();
+
+            $username = trim($_POST['username'] ?? '');
+            $password = $_POST['password'] ?? '';
+            $confirmPassword = $_POST['confirm_password'] ?? '';
+
+            $errors = [];
+
+            if ($username === '') {
+                $errors[] = 'Username is required.';
+            } elseif (strlen($username) < 3) {
+                $errors[] = 'Username must be at least 3 characters.';
+            } elseif ($this->systemManagerRepository->findManager($username) !== null) {
+                $errors[] = 'That username is already taken.';
+            }
+
+            if ($password === '') {
+                $errors[] = 'Password is required.';
+            } elseif (strlen($password) < 8) {
+                $errors[] = 'Password must be at least 8 characters.';
+            }
+
+            if ($password !== $confirmPassword) {
+                $errors[] = 'Passwords do not match.';
+            }
+
+            if (!empty($errors)) {
+                $_SESSION['admin_register_errors'] = $errors;
+                header('Location: ../Views/Admin/adminRegister.php');
+                exit;
+            }
+
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+            $this->systemManagerRepository->createManager($username, $hash);
+
+            $_SESSION['admin_register_success'] = true;
+            header('Location: ../Views/Admin/adminRegister.php');
+            exit;
+        }
+
+        // Only reachable by the super admin, same as registerAdmin()
+        // above. Two safety checks run before any actual deletion:
+        // never allow removing the last remaining admin (this project
+        // has no account-recovery mechanism, so that would lock
+        // everyone out permanently), and never allow removing an
+        // admin who's ever been attached to real data (booking,
+        // machine, service, slot, or enquiry all have a NOT NULL
+        // manager_id foreign key with no reassignment logic built for
+        // it yet). Only a genuinely unused admin account can actually
+        // be deleted.
+        public function removeAdmin(): void
+        {
+            $this->requireAuthentication();
+            $this->requireSuperAdmin();
+
+            $managerId = (int)($_POST['manager_id'] ?? 0);
+
+            if ($this->systemManagerRepository->countAll() <= 1) {
+                $_SESSION['admin_register_errors'] = ['Cannot remove the last remaining admin account.'];
+                header('Location: ../Views/Admin/adminRegister.php');
+                exit;
+            }
+
+            if ($this->systemManagerRepository->hasAssociatedRecords($managerId)) {
+                $_SESSION['admin_register_errors'] = ['This admin cannot be removed - they are already linked to real bookings or other records in the system.'];
+                header('Location: ../Views/Admin/adminRegister.php');
+                exit;
+            }
+
+            $this->systemManagerRepository->deleteManager($managerId);
+
+            $_SESSION['admin_register_success'] = true;
+            header('Location: ../Views/Admin/adminRegister.php');
             exit;
         }
     }
