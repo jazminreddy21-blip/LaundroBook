@@ -48,6 +48,31 @@ class CustomerRepo implements CustomerRepoInterface
         );
     }
 
+    // Used by AdminController::updateBookingStatus() - a booking row
+    // only has customer_id, so this is how the completion email
+    // actually gets the customer's real email address.
+    public function findById(int $customerId): ?Customer
+    {
+        $sql = "SELECT customer_id, customer_name, customer_email, customer_phone, address
+                FROM customer WHERE customer_id = ?";
+
+        $stmt = $this->run($sql, 'i', [$customerId]);
+        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if (!$row) {
+            return null;
+        }
+
+        return new Customer(
+            $row['customer_id'],
+            $row['customer_name'],
+            $row['customer_email'],
+            $row['customer_phone'],
+            $row['address']
+        );
+    }
+
     // Inserts a brand new customer row and hands back a Customer object
     // built with the ID MySQL generated for it.
     public function createCustomer(string $name, string $email, string $phone, ?string $address): Customer
@@ -114,7 +139,7 @@ class CustomerRepo implements CustomerRepoInterface
         $stmt->close();
         return true;
     }
-    
+
     public function getAllCustomers(string $search = ''): array
     {
         $sql = "SELECT c.customer_id, c.customer_name, c.customer_email, c.customer_phone, c.address,
