@@ -77,7 +77,87 @@ class EmailService implements EmailServiceInterface
         }
     }
 
-    private function buildEmailBody(
+    // Sent when an admin marks a booking (or booking group, for a
+    // Heavy Wash) as completed. Same fire-and-forget contract as
+    // sendBookingConfirmation() above - never throws, always caught
+    // and logged internally, since a completed booking is already a
+    // real, finished fact regardless of whether this notification
+    // email happens to send.
+    public function sendOrderCompleteEmail(
+        string $customerEmail,
+        string $bookingReference,
+        array $service
+    ): bool {
+        $mail = new PHPMailer(true);
+
+        try {
+            $mail->isSMTP();
+            $mail->Host = $this->config['smtp_host'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $this->config['smtp_username'];
+            $mail->Password = $this->config['smtp_password'];
+            $mail->SMTPSecure = $this->config['smtp_secure'];
+            $mail->Port = $this->config['smtp_port'];
+
+            $mail->setFrom($this->config['from_email'], $this->config['from_name']);
+            $mail->addAddress($customerEmail);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Your Laundry Is Ready - ' . $bookingReference;
+            $mail->Body = $this->buildOrderCompleteEmailBody($bookingReference, $service);
+            $mail->AltBody = $this->buildOrderCompletePlainTextBody($bookingReference, $service);
+
+            $mail->send();
+            $this->logResult($bookingReference, true, null);
+            return true;
+
+        } catch (PHPMailerException $e) {
+            $this->logResult($bookingReference, false, $mail->ErrorInfo);
+            return false;
+        }
+    }
+
+
+    // Sent when an admin cancels a booking. Deliberately a separate
+    // method from sendOrderCompleteEmail() rather than reusing it with
+    // a flag - a cancellation is a genuinely different message, not a
+    // variant of "your laundry is ready".
+    public function sendOrderCancelledEmail(
+        string $customerEmail,
+        string $bookingReference,
+        array $service
+    ): bool {
+        $mail = new PHPMailer(true);
+
+        try {
+            $mail->isSMTP();
+            $mail->Host = $this->config['smtp_host'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $this->config['smtp_username'];
+            $mail->Password = $this->config['smtp_password'];
+            $mail->SMTPSecure = $this->config['smtp_secure'];
+            $mail->Port = $this->config['smtp_port'];
+
+            $mail->setFrom($this->config['from_email'], $this->config['from_name']);
+            $mail->addAddress($customerEmail);
+
+            $mail->isHTML(true);
+            $mail->Subject = 'Booking Cancelled - ' . $bookingReference;
+            $mail->Body = $this->buildOrderCancelledEmailBody($bookingReference, $service);
+            $mail->AltBody = $this->buildOrderCancelledPlainTextBody($bookingReference, $service);
+
+            $mail->send();
+            $this->logResult($bookingReference, true, null);
+            return true;
+
+        } catch (PHPMailerException $e) {
+            $this->logResult($bookingReference, false, $mail->ErrorInfo);
+            return false;
+        }
+    }
+
+
+private function buildEmailBody(
         string $reference, array $service, string $date,
         string $machineName, string $slotLabel, ?string $secondSlotLabel
     ): string {
@@ -130,8 +210,7 @@ class EmailService implements EmailServiceInterface
                                     </p>
                                 </td>
                             </tr>
-
-                            <!-- Reference badge -->
+<!-- Reference badge -->
                             <tr>
                                 <td style='padding: 0 40px 20px 40px;'>
                                     <table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px;'>
@@ -171,7 +250,7 @@ class EmailService implements EmailServiceInterface
                                         </tr>
                                         {$secondSlotRow}
                                         <tr>
-                                            <td style='padding: 14px 0 0 0; color: #111827; font-size: 15px; font-weight: 700;'>Total Price</td>
+<td style='padding: 14px 0 0 0; color: #111827; font-size: 15px; font-weight: 700;'>Total Price</td>
                                             <td style='padding: 14px 0 0 0; color: #1e3a8a; font-size: 18px; font-weight: 700; text-align: right;'>R" . htmlspecialchars(number_format((float)$service['price'], 2)) . "</td>
                                         </tr>
                                     </table>
@@ -195,8 +274,7 @@ class EmailService implements EmailServiceInterface
         </div>
         ";
     }
-
-    private function buildPlainTextBody(
+private function buildPlainTextBody(
         string $reference, array $service, string $date,
         string $machineName, string $slotLabel, ?string $secondSlotLabel
     ): string {
@@ -216,10 +294,143 @@ class EmailService implements EmailServiceInterface
         return implode("\n", $lines);
     }
 
+    private function buildOrderCompleteEmailBody(string $reference, array $service): string
+    {
+        return "
+        <div style='margin: 0; padding: 0; background-color: #f3f4f6; font-family: Arial, Helvetica, sans-serif;'>
+            <table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background-color: #f3f4f6; padding: 30px 0;'>
+                <tr>
+                    <td align='center'>
+                        <table role='presentation' width='500' cellpadding='0' cellspacing='0' style='background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);'>
+
+                            <tr>
+                                <td style='background-color: #166534; padding: 30px 40px; text-align: center;'>
+                                    <p style='color: #ffffff; font-size: 26px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: 0.5px;'>
+                                        <span style='color: #86efac;'>Laundro</span>Book
+                                    </p>
+                                    <p style='color: #bbf7d0; font-size: 13px; margin: 0; letter-spacing: 0.5px;'>ORDER READY</p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style='padding: 30px 40px 10px 40px;'>
+                                    <h1 style='color: #111827; font-size: 20px; margin: 0 0 8px 0;'>Your laundry is ready!</h1>
+                                    <p style='color: #6b7280; font-size: 14px; margin: 0 0 20px 0; line-height: 1.5;'>
+                                        Your " . htmlspecialchars(ucfirst($service['wash_type'])) . " wash is complete and ready for collection or delivery.
+                                    </p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style='padding: 0 40px 30px 40px;'>
+                                    <table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background-color: #f0fdf4; border: 1px solid #86efac; border-radius: 8px;'>
+                                        <tr>
+                                            <td style='padding: 14px 20px; text-align: center;'>
+                                                <span style='color: #166534; font-size: 12px; letter-spacing: 0.5px;'>BOOKING REFERENCE</span><br>
+                                                <span style='color: #14532d; font-size: 22px; font-weight: 700;'>" . htmlspecialchars($reference) . "</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style='background-color: #f9fafb; padding: 20px 40px; text-align: center; border-top: 1px solid #e5e7eb;'>
+                                    <p style='color: #9ca3af; font-size: 12px; margin: 0; line-height: 1.5;'>
+                                        Questions about your order? Contact the laundromat directly.<br>
+                                        LaundroBook &copy; " . date('Y') . "
+                                    </p>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        ";
+    }
+
+    private function buildOrderCompletePlainTextBody(string $reference, array $service): string
+    {
+        return implode("\n", [
+            "Your Laundry Is Ready",
+            "Reference: {$reference}",
+            "Service: " . ucfirst($service['wash_type']) . ' - ' . ucfirst($service['load_type']),
+            "Your order is complete and ready for collection or delivery.",
+        ]);
+    }
+
+    private function buildOrderCancelledEmailBody(string $reference, array $service): string
+    {
+        return "
+        <div style='margin: 0; padding: 0; background-color: #f3f4f6; font-family: Arial, Helvetica, sans-serif;'>
+            <table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background-color: #f3f4f6; padding: 30px 0;'>
+                <tr>
+                    <td align='center'>
+                        <table role='presentation' width='500' cellpadding='0' cellspacing='0' style='background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);'>
+
+                            <tr>
+                                <td style='background-color: #991b1b; padding: 30px 40px; text-align: center;'>
+                                    <p style='color: #ffffff; font-size: 26px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: 0.5px;'>
+                                        <span style='color: #fca5a5;'>Laundro</span>Book
+                                    </p>
+                                    <p style='color: #fecaca; font-size: 13px; margin: 0; letter-spacing: 0.5px;'>BOOKING CANCELLED</p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style='padding: 30px 40px 10px 40px;'>
+                                    <h1 style='color: #111827; font-size: 20px; margin: 0 0 8px 0;'>Your booking has been cancelled</h1>
+                                    <p style='color: #6b7280; font-size: 14px; margin: 0 0 20px 0; line-height: 1.5;'>
+                                        Your " . htmlspecialchars(ucfirst($service['wash_type'])) . " wash booking has been cancelled. If this wasn't expected, please contact the laundromat directly.
+                                    </p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style='padding: 0 40px 30px 40px;'>
+                                    <table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background-color: #fef2f2; border: 1px solid #fca5a5; border-radius: 8px;'>
+                                        <tr>
+                                            <td style='padding: 14px 20px; text-align: center;'>
+                                                <span style='color: #991b1b; font-size: 12px; letter-spacing: 0.5px;'>BOOKING REFERENCE</span><br>
+                                                <span style='color: #7f1d1d; font-size: 22px; font-weight: 700;'>" . htmlspecialchars($reference) . "</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style='background-color: #f9fafb; padding: 20px 40px; text-align: center; border-top: 1px solid #e5e7eb;'>
+                                    <p style='color: #9ca3af; font-size: 12px; margin: 0; line-height: 1.5;'>
+                                        Questions about this cancellation? Contact the laundromat directly.<br>
+                                        LaundroBook &copy; " . date('Y') . "
+                                    </p>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        ";
+    }
+
+    private function buildOrderCancelledPlainTextBody(string $reference, array $service): string
+    {
+        return implode("\n", [
+            "Booking Cancelled",
+            "Reference: {$reference}",
+            "Service: " . ucfirst($service['wash_type']) . ' - ' . ucfirst($service['load_type']),
+            "This booking has been cancelled. Contact the laundromat directly if this wasn't expected.",
+        ]);
+    }
+
     // No AuditLogRepository/audit_log table exists yet in this project
-    // (that's part of the Audit Trail functional requirement, not yet
-    // built). this logs to PHP's own error log for now as a
-    // lightweight stand-in.
+    //(that's part of the Audit Trail functional requirement). 
+    //this logs to PHP's own error log for now as a lightweight stand-in.
     private function logResult(string $reference, bool $success, ?string $error): void
     {
         if ($success) {
