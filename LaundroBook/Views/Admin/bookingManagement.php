@@ -47,7 +47,7 @@
 <header class="admin-header">
     <div class="logo">
         <img src="../../Images/logo.png" class="admin-logo" alt="LaundroBook Logo">
-        <h1>LaundroBook Admin</h1>
+        <h1>LaundroBook Admin Page</h1>
     </div>
     <div class="admin-user">
         <p id="adminName" name="adminName"><?= htmlspecialchars($_SESSION['username'] ?? 'Admin'); ?></p>
@@ -64,6 +64,9 @@
         <li><a href="customerManagement.php">Customers</a></li>
         <li><a href="enquiryManagement.php">Enquiries</a></li>
         <li><a href="reports.php">Reports</a></li>
+        <?php if ($_SESSION['is_super_admin'] ?? false): ?>
+            <li><a href="adminRegister.php">Add Admin</a></li>
+        <?php endif; ?>
         <li><a href="../../Public/adminLogout.php">Logout</a></li>
     </ul>
 </nav>

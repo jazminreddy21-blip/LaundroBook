@@ -52,7 +52,7 @@
              image icon - either add the file, or remove this <img>
              line and keep just the <h1> as before. -->
         <img src="../../Images/logo.png" class="admin-logo" alt="LaundroBook Logo">
-        <h1>LaundroBook Admin</h1>
+        <h1>LaundroBook Admin Page</h1>
 
     </div>
 
@@ -114,6 +114,14 @@
                 Reports
             </a>
         </li>
+
+        <?php if ($_SESSION['is_super_admin'] ?? false): ?>
+        <li>
+            <a href="adminRegister.php">
+                Add Admin
+            </a>
+        </li>
+        <?php endif; ?>
 
         <li>
             <a href="../../Public/adminLogout.php">
