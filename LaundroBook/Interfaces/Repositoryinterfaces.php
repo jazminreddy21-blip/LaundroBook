@@ -33,6 +33,7 @@ interface SlotRepoInterface
 interface CustomerRepoInterface
 {
     public function findByEmail(string $email): ?Customer;
+    public function findById(int $customerId): ?Customer;
     public function createCustomer(string $name, string $email, string $phone, ?string $address): Customer;
 
     // Reuses an existing customer by email, or creates a new one.
@@ -89,6 +90,26 @@ interface ServiceRepoInterface
 interface SystemManagerRepoInterface
 {
     public function findManager(string $username): ?SystemManager;
+
+    // Whichever admin currently has the lowest manager_id is the
+    // super admin - see SystemManagerRepo for the full reasoning.
+    public function isSuperAdmin(int $managerId): bool;
+
+    // Used by the super admin's "Add Admin" feature.
+    public function createManager(string $username, string $passwordHash): int;
+
+    // Used by the "Manage Admins" list and to check the last-admin
+    // safety rule before allowing a removal.
+    public function getAllManagers(): array;
+    public function countAll(): int;
+
+    /// Blocks deleting an admin attached to real data (booking/machine/
+    // service/slot/enquiry all have a NOT NULL manager_id). In
+    // practice this is also what stops the super admin being deleted,
+    // since they're the only admin ever attached to anything.
+    public function hasAssociatedRecords(int $managerId): bool;
+
+    public function deleteManager(int $managerId): bool;
 }
 
 interface DeliveryRepoInterface
