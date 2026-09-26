@@ -39,6 +39,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             $controller->updateEnquiryStatusAction();
             break;
 
+        case 'register_admin':
+            $controller->registerAdmin();
+            break;
+
+        case 'remove_admin':
+            $controller->removeAdmin();
+            break;
+
         default:
             http_response_code(400);
             echo 'Unknown action.';
