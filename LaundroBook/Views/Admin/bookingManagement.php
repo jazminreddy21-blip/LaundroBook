@@ -80,6 +80,8 @@
 
 <?php if (isset($_GET['updated'])): ?>
     <div class="page-banner success">Booking status updated.</div>
+<?php elseif (isset($_GET['error']) && $_GET['error'] === 'legs_not_complete'): ?>
+    <div class="page-banner error">This booking cannot be marked completed yet - its pickup and delivery must be completed first.</div>
 <?php elseif (isset($_GET['error'])): ?>
     <div class="page-banner error">
         <?= $_GET['error'] === 'not_found' ? 'That booking could not be found.' : 'That status update was not valid.'; ?>
