@@ -274,6 +274,21 @@
                 exit;
             }
 
+            // A booking with pickup and/or delivery legs can not be
+            // marked completed while any of them is unfinished. A
+            // walk-in booking has no legs at all, so it is never
+            // blocked here.
+            if (strtolower($status) === 'completed') {
+                foreach (['collection', 'delivery'] as $legType) {
+                    $leg = $this->deliveryRepository->findByBookingId((int)$booking['booking_id'], $legType);
+
+                    if ($leg !== null && strtolower($leg['delivery_status']) !== 'completed') {
+                        header('Location: ../Views/Admin/bookingManagement.php?error=legs_not_complete');
+                        exit;
+                    }
+                }
+            }
+
             try {
                 $this->bookingRepository->updateStatusForGroup((int)$booking['booking_id'], $status);
 
@@ -402,7 +417,7 @@
             // rather than requiring the admin to separately remember
             // to do this on bookingManagement.php as well.
             if ($type === 'delivery' && $status === 'completed') {
-                $this->bookingRepository->updateStatus($bookingId, 'completed');
+                $this->bookingRepository->updateStatusForGroup($bookingId, 'completed');
             }
 
             header("Location: ../Views/Admin/{$redirectPage}?updated=1");
