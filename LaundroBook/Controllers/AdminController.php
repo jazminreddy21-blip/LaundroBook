@@ -64,8 +64,14 @@
             );
             }
 
+        // Redirects to the real login page instead of including it here.
+        // This runs inside Public/adminLogin.php, so including the view
+        // directly would serve its HTML from the Public/ URL, where
+        // every relative CSS/image path in it (written for Views/Admin/)
+        // points one folder too high and fails to load.
         public function showLogin(){
-            require_once __DIR__ . '/../Views/Admin/login.php'; 
+            header('Location: ../Views/Admin/login.php');
+            exit;
         }
 
 
@@ -80,21 +86,18 @@
             $password = $_POST["password"] ?? ''; 
 
             if(empty($username) || empty($password)){
-                //technically, this should be 
-                $error = 'Username and password are required'; 
-                require_once __DIR__ . '/../Views/Admin/login.php'; 
-                return;  
+                $_SESSION['login_error'] = 'Username and password are required';
+                header('Location: ../Views/Admin/login.php');
+                exit;
             }
             $manager = $this->systemManagerRepository->findManager($username);
 
            
             
             if($manager == null || !password_verify($password, $manager->getPasswordHash())){
-                $error = "Invalid email or password inserted"; 
-                //need to display errors to show that credentials were wrong
-                require_once __DIR__ . '/../Views/Admin/login.php'; 
-                
-                return; 
+                $_SESSION['login_error'] = 'Invalid username or password';
+                header('Location: ../Views/Admin/login.php');
+                exit;
             }
             
 
