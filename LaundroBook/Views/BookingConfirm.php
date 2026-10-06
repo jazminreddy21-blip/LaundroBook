@@ -38,6 +38,9 @@ $slotLabel = $_SESSION['slot_label'] ?? null;
 $secondSlotLabel = $_SESSION['second_slot_label'] ?? null;
 $collectionMethod = $_SESSION['collection_method'] ?? null;
 $deliveryAddress = $_SESSION['delivery_address'] ?? null;
+$totalPrice = $_SESSION['total_price'] ?? null;
+$servicePrice = $_SESSION['service_price'] ?? null;
+$homeServiceFee = (float)($_SESSION['home_service_fee'] ?? 0);
 
 
 // If someone lands on this page directly (bookmarked it, refreshed
@@ -74,6 +77,16 @@ $slotTimes = $slotTimes ? htmlspecialchars($slotTimes, ENT_QUOTES, 'UTF-8') : 'N
 // address on file for this booking, so nothing gets shown for them.
 $showDeliveryAddress = ($collectionMethod === 'delivery');
 $deliveryAddress = $deliveryAddress ? htmlspecialchars($deliveryAddress, ENT_QUOTES, 'UTF-8') : 'Not Available';
+
+// Prices are stored as plain numbers, so format them as Rand amounts.
+// A home pickup and delivery booking shows the service price and the
+// flat fee as separate lines above the total; a walk-in booking just
+// shows the total.
+$formatRand = fn($amount) => htmlspecialchars('R' . number_format((float)$amount, 2), ENT_QUOTES, 'UTF-8');
+$totalPriceText = $totalPrice !== null ? $formatRand($totalPrice) : 'Not Available';
+$servicePriceText = $servicePrice !== null ? $formatRand($servicePrice) : 'Not Available';
+$homeServiceFeeText = $formatRand($homeServiceFee);
+$showFeeBreakdown = $homeServiceFee > 0;
 ?>
 <!DOCTYPE html>
 
@@ -269,6 +282,44 @@ Thank you for choosing LaundroBook. Your booking has been successfully processed
 
 </p>
 <?php endif; ?>
+
+<?php if ($showFeeBreakdown): ?>
+<p>
+
+<strong>Service Price:</strong>
+
+<span id="service-price">
+
+<?php echo $servicePriceText; ?>
+
+</span>
+
+</p>
+
+<p>
+
+<strong>Home Pickup and Delivery Fee:</strong>
+
+<span id="home-service-fee">
+
+<?php echo $homeServiceFeeText; ?>
+
+</span>
+
+</p>
+<?php endif; ?>
+
+<p>
+
+<strong>Total Price:</strong>
+
+<span id="total-price">
+
+<?php echo $totalPriceText; ?>
+
+</span>
+
+</p>
 
 <p>
 
