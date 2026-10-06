@@ -83,12 +83,12 @@
     </div>
 
     <div class="stat-card">
-        <h3>Completed Bookings (30 Days)</h3>
+        <h3>Completed Bookings (Last 30 Days)</h3>
         <h2><?= (int)$report['completed_30_days']; ?></h2>
     </div>
 
     <div class="stat-card">
-        <h3>Cancelled Bookings (30 Days)</h3>
+        <h3>Cancelled Bookings (Last 30 Days)</h3>
         <h2><?= (int)$report['cancelled_30_days']; ?></h2>
     </div>
 
