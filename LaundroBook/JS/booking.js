@@ -19,6 +19,34 @@ document.addEventListener("DOMContentLoaded", function () {
         validationMessage.scrollIntoView({ behavior: "smooth" });
     }
 
+    // ADDED: slot explanation tooltip. Hover and keyboard focus are
+    // handled in CSS; this adds tap/click toggling, since touch screens
+    // have no hover, and closes it on Escape or a click elsewhere.
+    function closeInfoTips() {
+        document.querySelectorAll(".info-tip.open").forEach(function (tip) {
+            tip.classList.remove("open");
+            tip.querySelector(".info-tip-btn").setAttribute("aria-expanded", "false");
+        });
+    }
+
+    document.querySelectorAll(".info-tip-btn").forEach(function (btn) {
+        btn.addEventListener("click", function (event) {
+            event.stopPropagation();
+            const tip = btn.closest(".info-tip");
+            const wasOpen = tip.classList.contains("open");
+            closeInfoTips();
+            if (!wasOpen) {
+                tip.classList.add("open");
+                btn.setAttribute("aria-expanded", "true");
+            }
+        });
+    });
+
+    document.addEventListener("click", closeInfoTips);
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") closeInfoTips();
+    });
+
     //pricing data (static json, avoiding db calls)
     let pricingData = null; 
 
@@ -44,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if(pricingData) return pricingData;
 
         try {
-            const response = await fetch("../JS/prices.json"); 
+            const response = await fetch("../JS/prices.json", { cache: "no-cache" });
             //probably unnecessary check since a string can be written to console
             if(!response.ok) throw new Error(`HTTP ${response.status}`); 
             pricingData = await response.json(); 
@@ -166,6 +194,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // ADDED: if the customer changes anything that affects the price or
+    // the available slots after the summary is showing, hide it so they
+    // press Book Now again. Otherwise the total on screen could be out of
+    // date - e.g. they see R40, then switch to home delivery and confirm,
+    // and get charged R100.
+    ["booking_date", "wash_type", "load_type", "collection_method"].forEach(function (id) {
+        document.getElementById(id).addEventListener("change", function () {
+            availabilitySection.classList.add("hidden");
+        });
+    });
+
     // =========================================================
     // BOOK NOW - CLIENT-SIDE VALIDATION
     //
@@ -250,6 +289,13 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
 
+        // Home delivery adds one flat fee, read from prices.json (the same
+        // file the server reads it from). Block the booking if it's missing.
+        const homeFee = (collection === "delivery" && pricingData) ? pricingData.home_delivery_fee : 0;
+        if (collection === "delivery" && typeof homeFee !== "number") {
+            errors.push("The home delivery fee is not available right now. Please try again later.");
+        }
+
         // =========================================================
         // SHOW ERRORS OR REVEAL AVAILABILITY SECTION
         // =========================================================
@@ -280,6 +326,19 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("servicePrice").textContent = `${price.toFixed(2)}`;
             // ADDED: was never being set before - element stayed stuck on "-"
             document.getElementById("serviceDuration").textContent = DURATIONS[washType].label;
+
+            // Flat home pickup and delivery fee + total (home delivery only)
+            const feeRow = document.getElementById("homeFeeRow");
+            const totalRow = document.getElementById("totalRow");
+            if (homeFee > 0) {
+                document.getElementById("homeFeeAmount").textContent = `R${homeFee.toFixed(2)}`;
+                document.getElementById("totalAmount").textContent = `R${(price + homeFee).toFixed(2)}`;
+                feeRow.classList.remove("hidden");
+                totalRow.classList.remove("hidden");
+            } else {
+                feeRow.classList.add("hidden");
+                totalRow.classList.add("hidden");
+            }
 
             // ADDED: fetch available machines/slots for this date and
             // duration, then populate the two selects. durationSlots
