@@ -271,6 +271,9 @@ class bookingController{
         $_SESSION['second_slot_label'] = $result['second_slot_label'];
         $_SESSION['collection_method'] = $this->data['collection_method'];
         $_SESSION['delivery_address'] = $this->data['delivery_address'];
+        $_SESSION['total_price'] = $result['total_price'];
+        $_SESSION['service_price'] = $result['service_price'];
+        $_SESSION['home_service_fee'] = $result['home_service_fee'];
 
         header('Location: ../Views/BookingConfirm.php');
         exit;
