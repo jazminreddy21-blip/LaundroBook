@@ -173,6 +173,23 @@ private function buildEmailBody(
               </tr>"
             : '';
 
+        // For a home pickup and delivery booking, break the total into the
+        // service price and the flat fee. Walk-in bookings have no fee, so
+        // they see just the total, as before.
+        $homeFee = (float)($service['home_service_fee'] ?? 0);
+        $feeRows = '';
+        if ($homeFee > 0) {
+            $servicePrice = (float)($service['service_price'] ?? ((float)$service['price'] - $homeFee));
+            $feeRows = "<tr>
+                <td style='padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #6b7280; font-size: 14px;'>Service price</td>
+                <td style='padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #111827; font-size: 14px; font-weight: 600; text-align: right;'>R" . htmlspecialchars(number_format($servicePrice, 2)) . "</td>
+              </tr>
+              <tr>
+                <td style='padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #6b7280; font-size: 14px;'>Home pickup and delivery</td>
+                <td style='padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #111827; font-size: 14px; font-weight: 600; text-align: right;'>R" . htmlspecialchars(number_format($homeFee, 2)) . "</td>
+              </tr>";
+        }
+
         return "
         <div style='margin: 0; padding: 0; background-color: #f3f4f6; font-family: Arial, Helvetica, sans-serif;'>
             <table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background-color: #f3f4f6; padding: 30px 0;'>
@@ -249,6 +266,7 @@ private function buildEmailBody(
                                             <td style='padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #111827; font-size: 14px; font-weight: 600; text-align: right;'>" . htmlspecialchars($slotLabel) . "</td>
                                         </tr>
                                         {$secondSlotRow}
+                                        {$feeRows}
                                         <tr>
 <td style='padding: 14px 0 0 0; color: #111827; font-size: 15px; font-weight: 700;'>Total Price</td>
                                             <td style='padding: 14px 0 0 0; color: #1e3a8a; font-size: 18px; font-weight: 700; text-align: right;'>R" . htmlspecialchars(number_format((float)$service['price'], 2)) . "</td>
@@ -278,13 +296,22 @@ private function buildPlainTextBody(
         string $reference, array $service, string $date,
         string $machineName, string $slotLabel, ?string $secondSlotLabel
     ): string {
+        $homeFee = (float)($service['home_service_fee'] ?? 0);
+        $priceLines = $homeFee > 0
+            ? [
+                "Service price: R" . number_format((float)($service['service_price'] ?? 0), 2),
+                "Home pickup and delivery: R" . number_format($homeFee, 2),
+                "Total price: R" . number_format((float)$service['price'], 2),
+            ]
+            : ["Price: R" . number_format((float)$service['price'], 2)];
+
         $lines = [
             "Booking Confirmed",
             "Reference: {$reference}",
             "Date: {$date}",
             "Service: " . ucfirst($service['wash_type']) . ' - ' . ucfirst($service['load_type']),
             "Duration: {$service['duration_minutes']} minutes",
-            "Price: R" . number_format((float)$service['price'], 2),
+            ...$priceLines,
             "Machine: {$machineName}",
             "Time Slot: {$slotLabel}",
         ];
