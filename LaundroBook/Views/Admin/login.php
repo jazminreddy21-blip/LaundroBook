@@ -1,10 +1,17 @@
 <?php
 /*
-    This file is included via require from AdminController::showLogin(),
-    which runs either on a plain GET request, or after a failed login
-    attempt (in which case $error is already set before this file is
-    included). Not opened directly.
+    The real login page. A failed attempt stores its message in the
+    session and redirects back here, so this page is always served from
+    Views/Admin/ and its relative CSS/image paths always resolve. (It used
+    to be included from inside Public/adminLogin.php, which broke every
+    relative path in it.)
 */
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$error = $_SESSION['login_error'] ?? '';
+unset($_SESSION['login_error']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -91,7 +98,8 @@
 
     </div>
 
+    <script src="../../JS/adminClientValidation.js"></script>
+
 </body>
-<script src="../../JS/adminClientValidation.js"></script>
 
 </html>
