@@ -66,6 +66,27 @@ class BookingService
             return ['success' => false, 'errors' => ['Invalid wash type / load type combination']];
         }
 
+        // Home Pickup and Delivery carries ONE flat fee covering both
+        // trips, added to the booking total. From here on
+        // $service['price'] is what the customer actually pays (service
+        // price + any fee), so the saved total, the email and the receipt
+        // all pick it up with no other changes. service_price and
+        // home_service_fee keep the two parts so the email can show the
+        // breakdown. Worked out here on the server, never taken from the
+        // browser.
+        $homeFee = 0.0;
+        if (($data['collection_method'] ?? '') === 'delivery') {
+            try {
+                $homeFee = $this->homeServiceFee();
+            } catch (RuntimeException $e) {
+                error_log('Home delivery fee unavailable: ' . $e->getMessage());
+                return ['success' => false, 'errors' => ['Home delivery is unavailable right now, please try again later']];
+            }
+        }
+        $service['service_price'] = (float)$service['price'];
+        $service['home_service_fee'] = $homeFee;
+        $service['price'] = $service['service_price'] + $homeFee;
+
         if (!$this->machineRepo->machineExists($data['machine_id'])) {
             return ['success' => false, 'errors' => ['Selected machine does not exist']];
         }
@@ -224,6 +245,8 @@ class BookingService
             'booking_id' => $bookingId,
             'booking_reference' => $reference,
             'total_price' => $service['price'],
+            'service_price' => $service['service_price'],
+            'home_service_fee' => $service['home_service_fee'],
             'wash_type' => $service['wash_type'],
             'load_type' => $service['load_type'],
             'duration_minutes' => $service['duration_minutes'],
@@ -232,7 +255,25 @@ class BookingService
             'second_slot_label' => $secondSlot['slot_label'] ?? null,
         ];
     }
-    
+
+    // The flat fee for Home Pickup and Delivery. Read from JS/prices.json,
+    // the same file the booking page reads to show it, so the number lives
+    // in one place. Throws if it's missing rather than quietly charging 0.
+    private function homeServiceFee(): float
+    {
+        $path = __DIR__ . '/../JS/prices.json';
+        $prices = is_readable($path) ? json_decode((string)file_get_contents($path), true) : null;
+
+        if (!is_array($prices)
+            || !isset($prices['home_delivery_fee'])
+            || !is_numeric($prices['home_delivery_fee'])
+            || $prices['home_delivery_fee'] < 0) {
+            throw new RuntimeException('home_delivery_fee is missing from JS/prices.json');
+        }
+
+        return (float)$prices['home_delivery_fee'];
+    }
+
     public function getTodaysBookings(): int
     {
         return $this->bookingRepo->todaysBookings();
