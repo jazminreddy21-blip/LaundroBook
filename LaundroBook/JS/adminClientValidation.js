@@ -1,7 +1,23 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     const form = document.querySelector("form");
-    const errorContainer = document.querySelector(".login-error");
+
+    // The server only renders .login-error after a failed login, so on a
+    // fresh page load it is not in the page at all. (This used to be looked up once at
+    // page load and was null on a fresh page, so a short password blocked
+    // the submit and then threw a TypeError - nothing visible happened.)
+    function getErrorContainer() {
+        let container = document.querySelector(".login-error");
+
+        if (!container) {
+            container = document.createElement("div");
+            container.className = "login-error";
+            form.insertBefore(container, form.querySelector(".login-btn"));
+        }
+
+        container.classList.add("visible");
+        return container;
+    }
 
     form.addEventListener("submit", function (e) {
 
@@ -29,14 +45,17 @@ document.addEventListener("DOMContentLoaded", function () {
         if (errors.length > 0) {
             e.preventDefault();
 
-            errorContainer.innerHTML = errors
+            getErrorContainer().innerHTML = errors
                 .map(function (err) {
                     return `<p>${err}</p>`;
                 })
                 .join("");
         } else {
             // Clear old errors if validation passes
-            errorContainer.innerHTML = "";
+            const existing = document.querySelector(".login-error");
+            if (existing) {
+                existing.remove();
+            }
         }
     });
 
