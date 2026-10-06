@@ -21,7 +21,9 @@ unset(
     $_SESSION['wash_type'], $_SESSION['load_type'],
     $_SESSION['duration_minutes'], $_SESSION['machine_name'],
     $_SESSION['slot_label'], $_SESSION['second_slot_label'],
-    $_SESSION['collection_method'], $_SESSION['delivery_address']
+    $_SESSION['collection_method'], $_SESSION['delivery_address'],
+    $_SESSION['total_price'], $_SESSION['service_price'],
+    $_SESSION['home_service_fee']
 );
 
 $hasErrors = !empty($bookingErrors);
@@ -178,7 +180,8 @@ if ($hasErrors) {
                     <div id="addressSection" class="hidden">
                         <label for="address">Delivery Address</label>
                         <textarea name="delivery_address" id="address"
-                            placeholder="Enter delivery address"></textarea>
+                            placeholder="Enter delivery address"
+                            autocomplete="street-address"></textarea>
                     </div>
 
                 </section>
@@ -245,10 +248,19 @@ if ($hasErrors) {
                         </div>
 
                         <div class="form-group">
-                            <label for="slotSelect">Available Time Slot</label>
+                            <div class="label-with-tip">
+                                <label for="slotSelect">Available Time Slot</label>
+                                <span class="info-tip">
+                                    <button type="button" class="info-tip-btn" aria-label="What does the time slot mean?" aria-expanded="false" aria-controls="slotInfoTip">i</button>
+                                    <span id="slotInfoTip" class="info-tip-bubble" role="tooltip">
+                                        This is when your wash will run on the machine. It is not when your laundry will be ready for collection or delivery.
+                                    </span>
+                                </span>
+                            </div>
                             <select id="slotSelect" name="slot_id">
                                 <option value="">Select an available time slot</option>
                             </select>
+                            <p class="field-note">Slots are machine booking times, not your collection or delivery time.</p>
                         </div>
                         <input type="hidden" id="secondSlotId" name="second_slot_id" value="">
                     </div>
@@ -257,6 +269,17 @@ if ($hasErrors) {
                     <div class="booking-date-result">
                         <span>Collection Method</span>
                         <strong id="selectedCollectionMethod">-</strong>
+                    </div>
+
+                    <!-- Flat fee and total, shown for Home Pickup and Delivery only -->
+                    <div id="homeFeeRow" class="booking-date-result hidden">
+                        <span>Home Pickup and Delivery Fee (covers both trips)</span>
+                        <strong id="homeFeeAmount">-</strong>
+                    </div>
+
+                    <div id="totalRow" class="booking-date-result hidden">
+                        <span>Total</span>
+                        <strong id="totalAmount">-</strong>
                     </div>
 
                     <!-- Confirm Booking Button -->
