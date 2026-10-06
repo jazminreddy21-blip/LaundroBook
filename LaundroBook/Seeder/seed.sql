@@ -13,10 +13,17 @@ INSERT INTO machine (manager_id, machine_name, machine_status) VALUES
 (1, 'Machine 3', 'available');
 
 -- Slots
+-- start_time/end_time are TIMESTAMP columns, so they need a full date-time,
+-- not a bare time like '08:00:00' (a strict server rejects it, and XAMPP
+-- stores it as 0000-00-00 and loses the time of day). Only the time of day
+-- is used, so the date is arbitrary, but it must be the same for every slot.
 INSERT INTO slot (manager_id, slot_label, start_time, end_time, is_active) VALUES
-(1, '08:00 - 08:45', '08:00:00', '08:45:00', 1),
-(1, '08:45 - 09:30', '08:45:00', '09:30:00', 1),
-(1, '09:30 - 10:15', '09:30:00', '10:15:00', 1);
+(1, '08:00 - 08:45', '2026-01-01 08:00:00', '2026-01-01 08:45:00', 1),
+(1, '08:45 - 09:30', '2026-01-01 08:45:00', '2026-01-01 09:30:00', 1),
+(1, '09:30 - 10:15', '2026-01-01 09:30:00', '2026-01-01 10:15:00', 1),
+(1, '10:15 - 11:00', '2026-01-01 10:15:00', '2026-01-01 11:00:00', 1),
+(1, '11:00 - 11:45', '2026-01-01 11:00:00', '2026-01-01 11:45:00', 1),
+(1, '11:45 - 12:30', '2026-01-01 11:45:00', '2026-01-01 12:30:00', 1);
 
 -- Services
 INSERT INTO service (manager_id, wash_type, load_type, price, duration_minutes, duration_slots) VALUES
