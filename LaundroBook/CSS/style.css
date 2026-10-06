@@ -2132,3 +2132,77 @@ body {
         text-align:left;
     }
 }
+
+/* ========================================= */
+/* TIME SLOT EXPLANATION (booking page)      */
+/* ========================================= */
+
+.label-with-tip{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:8px;
+}
+
+.availability-grid .form-group .label-with-tip label{
+    margin-bottom:0;
+}
+
+.info-tip{
+    display:inline-flex;
+}
+
+.info-tip-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:18px;
+    height:18px;
+    margin:-3px 0;
+    padding:0;
+    border:1.5px solid #0284C7;
+    border-radius:50%;
+    background:#FFFFFF;
+    color:#0284C7;
+    font-family:inherit;
+    font-size:12px;
+    font-weight:700;
+    line-height:1;
+    cursor:pointer;
+}
+
+.info-tip-btn:hover,
+.info-tip-btn:focus-visible{
+    background:#0284C7;
+    color:#FFFFFF;
+}
+
+.info-tip-bubble{
+    display:none;
+    position:absolute;
+    left:0;
+    top:calc(100% + 6px);
+    width:min(280px, 100%);
+    padding:10px 12px;
+    background:#075985;
+    color:#FFFFFF;
+    font-size:13px;
+    font-weight:500;
+    line-height:1.5;
+    border-radius:8px;
+    box-shadow:0 6px 16px rgba(7, 89, 133, 0.25);
+    z-index:20;
+}
+
+.info-tip:hover .info-tip-bubble,
+.info-tip.open .info-tip-bubble{
+    display:block;
+}
+
+.field-note{
+    margin-top:6px;
+    font-size:12px;
+    color:#64748B;
+    line-height:1.4;
+}
