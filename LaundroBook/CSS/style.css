@@ -2206,3 +2206,84 @@ body {
     color:#64748B;
     line-height:1.4;
 }
+
+/*======================================
+   Responsive layout: Home, About, Contact
+======================================*/
+
+img { max-width: 100%; height: auto; }
+
+/* The hero picture has width="550" in the HTML; this lets it shrink */
+.hero-image,
+.hero .container > img { max-width: 100%; height: auto; }
+.logo-image { height: 45px; width: auto; }
+
+/* Tablets and below */
+@media (max-width: 992px) {
+
+    .header-container {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        padding: 12px 0;
+    }
+
+    nav ul { gap: 20px; }
+
+    .nav-buttons {
+        margin-left: 0;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero { min-height: auto; padding: 30px 0 50px; }
+
+    .hero .container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 30px;
+    }
+
+    .hero-content { width: 100%; }
+    .hero-image,
+    .hero .container > img { width: 100%; max-width: 550px; align-self: center; }
+    .hero-title { font-size: 44px; }
+    .hero-subtitle { margin-bottom: 30px; }
+    .hero-text { margin-bottom: 40px; max-width: 100%; }
+
+    .service-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .contact-container { flex-direction: column; gap: 30px; }
+}
+
+/* Phones */
+@media (max-width: 600px) {
+
+    .logo-text { font-size: 24px; }
+
+    nav { gap: 0; }
+    nav ul { gap: 16px; flex-wrap: wrap; justify-content: center; }
+    nav a { font-size: 15px; }
+
+    .nav-buttons { flex-direction: column; width: 100%; gap: 8px; }
+    .nav-buttons .btn { text-align: center; padding: 8px 15px; }
+
+    .hero-title { font-size: 34px; }
+    .hero-title br { display: none; }
+    .hero-subtitle { font-size: 16px; }
+    .hero-buttons { flex-direction: column; gap: 12px; }
+    .hero-buttons .btn { text-align: center; padding: 10px 15px; }
+
+    .section-title { font-size: 30px; }
+    .section-desc { font-size: 16px; }
+
+    .service-grid { grid-template-columns: 1fr; gap: 20px; }
+    .service-img { height: 190px; }
+
+    .about-text { font-size: 16px; max-width: 100%; }
+
+    .contact { padding: 50px 0; }
+    .contact-info,
+    .contact-form { padding: 25px; }
+    .contact-form button { width: 100%; }
+}
