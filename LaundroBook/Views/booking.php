@@ -157,9 +157,9 @@ if ($hasErrors) {
                     <label for="wash_type">Wash Type</label>
                     <select name="wash_type" id="wash_type" required>
                         <option value="">Select Wash Type</option>
-                        <option value="quick">Quick (25 Min)</option>
-                        <option value="normal">Normal (35 Min)</option>
-                        <option value="heavy">Heavy (65 Min)</option>
+                        <option value="priority">Priority</option>
+                        <option value="normal">Normal</option>
+                        <option value="heavy">Heavy</option>
                     </select>
 
                     <label for="load_type">Load Type</label>
