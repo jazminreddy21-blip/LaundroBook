@@ -149,7 +149,7 @@ class bookingController{
         }
 
 
-        $valid_wash_types = ['quick', 'normal', 'heavy'];
+        $valid_wash_types = ['priority', 'normal', 'heavy'];
         if(empty($wash_type) || !in_array($wash_type, $valid_wash_types, true)){
             $this->errors[] = "Please select a valid wash type";
         }
