@@ -50,12 +50,12 @@ document.addEventListener("DOMContentLoaded", function () {
     //pricing data (static json, avoiding db calls)
     let pricingData = null; 
 
-    // ADDED: duration only depends on wash_type, not load_type (Quick is
+    // ADDED: duration only depends on wash_type, not load_type (Priority is
     // always 25 min/1 slot, Heavy is always 65 min/2 slots regardless of
     // whether it's clothes/towels/beddings), so this doesn't need to go
     // into prices.json, a small lookup here is enough.
     const DURATIONS = {
-        quick:  { label: "25 min", durationSlots: 1 },
+        priority: { label: "25 min", durationSlots: 1 },
         normal: { label: "35 min", durationSlots: 1 },
         heavy:  { label: "65 min", durationSlots: 2 },
     };
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if(pricingData) return pricingData;
 
         try {
-            const response = await fetch("../JS/prices.json", { cache: "no-cache" });
+            const response = await fetch("../JS/prices.json"); 
             //probably unnecessary check since a string can be written to console
             if(!response.ok) throw new Error(`HTTP ${response.status}`); 
             pricingData = await response.json(); 
