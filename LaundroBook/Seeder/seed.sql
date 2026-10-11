@@ -1,4 +1,4 @@
--- laundrobook_seed_data.sql
+-- seed.sql
 
 -- Login credentials:
 --   Username: admin
@@ -27,19 +27,18 @@ INSERT INTO slot (manager_id, slot_label, start_time, end_time, is_active) VALUE
 
 -- Services
 INSERT INTO service (manager_id, wash_type, load_type, price, duration_minutes, duration_slots) VALUES
-(1, 'quick',  'clothes',  30.00, 25, 1),
-(1, 'quick',  'beddings', 40.00, 25, 1),
-(1, 'quick',  'towels',   35.00, 25, 1),
-(1, 'normal', 'clothes',  40.00, 35, 1),
-(1, 'normal', 'beddings', 50.00, 35, 1),
-(1, 'normal', 'towels',   45.00, 35, 1),
-(1, 'heavy',  'clothes',  55.00, 65, 2),
-(1, 'heavy',  'beddings', 70.00, 65, 2),
-(1, 'heavy',  'towels',   65.00, 65, 2);
+(1, 'priority', 'clothes',  50.00, 25, 1),
+(1, 'priority', 'beddings', 65.00, 25, 1),
+(1, 'priority', 'towels',   55.00, 25, 1),
+(1, 'normal',   'clothes',  40.00, 35, 1),
+(1, 'normal',   'beddings', 50.00, 35, 1),
+(1, 'normal',   'towels',   45.00, 35, 1),
+(1, 'heavy',    'clothes',  55.00, 65, 2),
+(1, 'heavy',    'beddings', 70.00, 65, 2),
+(1, 'heavy',    'towels',   65.00, 65, 2);
 
--- Seeds a few groundworker rows. Delivery/pickup bookings will fail
--- with "no groundworker available" until at least one row exists here.
-
+-- Groundworkers. Delivery/pickup bookings will fail with
+-- "no groundworker available" until at least one row exists here.
 INSERT INTO groundworker (groundworker_name, groundworker_phone, groundworker_role) VALUES
 ('John Smith', '0821234567', 'driver'),
 ('Sarah Johnson', '0839876543', 'driver'),
