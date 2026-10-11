@@ -13,8 +13,13 @@ class SystemManager{
         $this->password_hash = $password_hash; 
     }
 
-    public function getId(){
+    public function getId(): int{
         return $this->manager_id; 
     }
-
+    public function getUsername() : string{
+        return $this->username; 
+    }
+    public function getPasswordHash() : string{
+        return $this->password_hash; 
+    }
 }

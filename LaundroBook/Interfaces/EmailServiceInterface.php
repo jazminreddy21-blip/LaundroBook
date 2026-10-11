@@ -27,4 +27,28 @@ interface EmailServiceInterface
         string $slotLabel,
         ?string $secondSlotLabel
     ): bool;
+
+    /**
+     * Sent when an admin marks a booking (or booking group, for a
+     * Heavy Wash) as completed - matches sendBookingConfirmation()'s
+     * same fire-and-forget contract, must never throw.
+     */
+    public function sendOrderCompleteEmail(
+        string $customerEmail,
+        string $bookingReference,
+        array $service
+    ): bool;
+
+    /**
+     * Sent when an admin cancels a booking. Deliberately a separate
+     * method from sendOrderCompleteEmail() rather than reusing it with
+     * a flag - reusing "your laundry is ready" wording for a
+     * cancellation would be actively misleading, this needs its own
+     * genuinely different message. Same fire-and-forget contract.
+     */
+    public function sendOrderCancelledEmail(
+        string $customerEmail,
+        string $bookingReference,
+        array $service
+    ): bool;
 }

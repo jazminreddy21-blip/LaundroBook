@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
-
 /**
  * AvailabilityService
  *
@@ -72,8 +71,13 @@ class AvailabilityService
             return true;
         }
 
+        if (!preg_match('/(\d{2}:\d{2}:\d{2})/', (string)$slot['start_time'], $match)) {
+            return false;
+        }
+
+        $startToday = strtotime(date('Y-m-d') . ' ' . $match[1]);
         $cutoff = time() + (self::BOOKING_BUFFER_MINUTES * 60);
-        return strtotime($slot['start_time']) >= $cutoff;
+        return $startToday >= $cutoff;
     }
 
     /**

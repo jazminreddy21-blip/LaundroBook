@@ -1644,6 +1644,23 @@ body {
     top: 6px; 
     font-size: 13px; 
 } 
+
+.validation-message.success {
+    display: block;
+    background: #F0FDF4;
+    border: 1px solid #86EFAC;
+    border-left: 4px solid #16A34A;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 25px;
+}
+
+.validation-message.success p {
+    color: #16A34A;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
  
 /* ========================================================= 
    AVAILABILITY / SUMMARY SECTION 
@@ -1860,4 +1877,413 @@ body {
  
 .service-card h3 { 
     color: #075985 !important; 
+}
+/* =========================================================
+   PICKUP LAUNDRY PROGRESS
+========================================================= */
+
+#laundryProgress{
+    list-style:none;
+    padding:0;
+    margin:0;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+#laundryProgress li{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:15px 18px;
+    border:1px solid #E0F2FE;
+    border-radius:12px;
+    background:#FFFFFF;
+    color:#94A3B8;
+    transition:0.3s ease;
+}
+
+#laundryProgress li i{
+    width:35px;
+    height:35px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#F1F5F9;
+    color:#94A3B8;
+    flex-shrink:0;
+}
+
+#laundryProgress li span{
+    font-weight:600;
+}
+
+
+/* Completed stages */
+
+#laundryProgress li.completed{
+    background:#F0F9FF;
+    border-color:#BAE6FD;
+    color:#075985;
+}
+
+#laundryProgress li.completed i{
+    background:#0284C7;
+    color:#FFFFFF;
+}
+
+
+/* Current stage */
+
+#laundryProgress li.current{
+    background:#E0F2FE;
+    border-color:#0EA5E9;
+    color:#075985;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.12);
+}
+
+#laundryProgress li.current i{
+    background:#0EA5E9;
+    color:#FFFFFF;
+}
+
+/* ========================================= */
+/* TRACKING FORM                             */
+/* ========================================= */
+
+.tracking-form{
+    max-width:500px;
+    margin:0 auto;
+    background:#FFFFFF;
+    border:1px solid #E0F2FE;
+    border-radius:14px;
+    padding:28px;
+    box-shadow:0 4px 14px rgba(7, 89, 133, 0.08);
+}
+
+.tracking-form label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    color:#075985;
+    margin-bottom:8px;
+}
+
+.tracking-form input{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid #CBD5E1;
+    border-radius:8px;
+    font-size:14px;
+    margin-bottom:16px;
+    outline:none;
+}
+
+.tracking-form input:focus{
+    border-color:#0284C7;
+    box-shadow:0 0 0 3px rgba(14,165,233,0.15);
+}
+
+.tracking-form button{
+    width:100%;
+}
+
+/* ========================================= */
+/* TRACKING RESULTS - CARD LAYOUT            */
+/* ========================================= */
+
+.tracking-results{
+    max-width:600px;
+    margin:25px auto 0;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.tracking-card{
+    background:#FFFFFF;
+    border:1px solid #E0F2FE;
+    border-radius:14px;
+    padding:24px 28px;
+    box-shadow:0 4px 14px rgba(7, 89, 133, 0.08);
+}
+
+.tracking-card h3{
+    font-size:16px;
+    color:#075985;
+    font-weight:700;
+    margin-bottom:14px;
+    padding-bottom:12px;
+    border-bottom:1px solid #E0F2FE;
+}
+
+.tracking-card p{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 0;
+    font-size:14px;
+}
+
+.tracking-card p strong{
+    color:#64748B;
+    font-weight:600;
+}
+
+.tracking-card p span{
+    color:#334155;
+    font-weight:700;
+    text-align:right;
+}
+
+/* ========================================= */
+/* DELIVERY PROGRESS STEPS                   */
+/* ========================================= */
+
+.delivery-progress{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.delivery-progress li{
+    position:relative;
+    padding:14px 0 14px 30px;
+    font-size:14px;
+    font-weight:600;
+    color:#94A3B8;
+    border-left:2px solid #E0F2FE;
+    margin-left:10px;
+}
+
+.delivery-progress li::before{
+    content:"";
+    position:absolute;
+    left:-9px;
+    top:18px;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:#FFFFFF;
+    border:2px solid #E0F2FE;
+}
+
+.delivery-progress li:last-child{
+    border-left:2px solid transparent;
+}
+
+.delivery-progress li.active{
+    color:#075985;
+}
+
+.delivery-progress li.active::before{
+    background:#0284C7;
+    border-color:#0284C7;
+}
+
+/* ========================================= */
+/* DRIVER INFORMATION CARD                   */
+/* ========================================= */
+
+.driver-info-card{
+    background:#F0F9FF;
+    border:1px solid #E0F2FE;
+    border-radius:14px;
+    padding:24px 28px;
+}
+
+.driver-info-card h2{
+    font-size:16px;
+    color:#075985;
+    margin-bottom:14px;
+    font-weight:700;
+    padding-bottom:12px;
+    border-bottom:1px solid #E0F2FE;
+}
+
+.driver-details p{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 0;
+    font-size:14px;
+}
+
+.driver-details strong{
+    color:#64748B;
+    font-weight:600;
+}
+
+.driver-details span{
+    color:#334155;
+    font-weight:700;
+}
+
+@media(max-width:480px){
+    .tracking-card p,
+    .driver-details p{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:4px;
+    }
+    .tracking-card p span,
+    .driver-details span{
+        text-align:left;
+    }
+}
+
+/* ========================================= */
+/* TIME SLOT EXPLANATION (booking page)      */
+/* ========================================= */
+
+.label-with-tip{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:8px;
+}
+
+.availability-grid .form-group .label-with-tip label{
+    margin-bottom:0;
+}
+
+.info-tip{
+    display:inline-flex;
+}
+
+.info-tip-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:18px;
+    height:18px;
+    margin:-3px 0;
+    padding:0;
+    border:1.5px solid #0284C7;
+    border-radius:50%;
+    background:#FFFFFF;
+    color:#0284C7;
+    font-family:inherit;
+    font-size:12px;
+    font-weight:700;
+    line-height:1;
+    cursor:pointer;
+}
+
+.info-tip-btn:hover,
+.info-tip-btn:focus-visible{
+    background:#0284C7;
+    color:#FFFFFF;
+}
+
+.info-tip-bubble{
+    display:none;
+    position:absolute;
+    left:0;
+    top:calc(100% + 6px);
+    width:min(280px, 100%);
+    padding:10px 12px;
+    background:#075985;
+    color:#FFFFFF;
+    font-size:13px;
+    font-weight:500;
+    line-height:1.5;
+    border-radius:8px;
+    box-shadow:0 6px 16px rgba(7, 89, 133, 0.25);
+    z-index:20;
+}
+
+.info-tip:hover .info-tip-bubble,
+.info-tip.open .info-tip-bubble{
+    display:block;
+}
+
+.field-note{
+    margin-top:6px;
+    font-size:12px;
+    color:#64748B;
+    line-height:1.4;
+}
+
+/*======================================
+   Responsive layout: Home, About, Contact
+======================================*/
+
+img { max-width: 100%; height: auto; }
+
+/* The hero picture has width="550" in the HTML; this lets it shrink */
+.hero-image,
+.hero .container > img { max-width: 100%; height: auto; }
+.logo-image { height: 45px; width: auto; }
+
+/* Tablets and below */
+@media (max-width: 992px) {
+
+    .header-container {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        padding: 12px 0;
+    }
+
+    nav ul { gap: 20px; }
+
+    .nav-buttons {
+        margin-left: 0;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero { min-height: auto; padding: 30px 0 50px; }
+
+    .hero .container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 30px;
+    }
+
+    .hero-content { width: 100%; }
+    .hero-image,
+    .hero .container > img { width: 100%; max-width: 550px; align-self: center; }
+    .hero-title { font-size: 44px; }
+    .hero-subtitle { margin-bottom: 30px; }
+    .hero-text { margin-bottom: 40px; max-width: 100%; }
+
+    .service-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .contact-container { flex-direction: column; gap: 30px; }
+}
+
+/* Phones */
+@media (max-width: 600px) {
+
+    .logo-text { font-size: 24px; }
+
+    nav { gap: 0; }
+    nav ul { gap: 16px; flex-wrap: wrap; justify-content: center; }
+    nav a { font-size: 15px; }
+
+    .nav-buttons { flex-direction: column; width: 100%; gap: 8px; }
+    .nav-buttons .btn { text-align: center; padding: 8px 15px; }
+
+    .hero-title { font-size: 34px; }
+    .hero-title br { display: none; }
+    .hero-subtitle { font-size: 16px; }
+    .hero-buttons { flex-direction: column; gap: 12px; }
+    .hero-buttons .btn { text-align: center; padding: 10px 15px; }
+
+    .section-title { font-size: 30px; }
+    .section-desc { font-size: 16px; }
+
+    .service-grid { grid-template-columns: 1fr; gap: 20px; }
+    .service-img { height: 190px; }
+
+    .about-text { font-size: 16px; max-width: 100%; }
+
+    .contact { padding: 50px 0; }
+    .contact-info,
+    .contact-form { padding: 25px; }
+    .contact-form button { width: 100%; }
 }

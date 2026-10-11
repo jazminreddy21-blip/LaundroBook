@@ -4,6 +4,7 @@ require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
 require_once __DIR__ . '/../Interfaces/EmailServiceInterface.php';
 require_once __DIR__ . '/AvailabilityService.php';
 require_once __DIR__ . '/../Database/Connection.php';
+require_once __DIR__ . '/../Repositories/GroundworkerRepo.php';
 
 /**
  * BookingService
@@ -24,6 +25,8 @@ class BookingService
     private ServiceRepoInterface $serviceRepo;
     private AvailabilityService $availability;
     private EmailServiceInterface $emailService;
+    private DeliveryRepoInterface $deliveryRepo;
+    private GroundworkerRepo $groundworkerRepo;
     private mysqli $db;
 
     public function __construct(
@@ -33,7 +36,9 @@ class BookingService
         BookingRepoInterface $bookingRepo,
         ServiceRepoInterface $serviceRepo,
         AvailabilityService $availability,
-        EmailServiceInterface $emailService
+        EmailServiceInterface $emailService,
+        DeliveryRepoInterface $deliveryRepo,
+        GroundworkerRepo $groundworkerRepo
     ) {
         $this->machineRepo = $machineRepo;
         $this->slotRepo = $slotRepo;
@@ -42,6 +47,8 @@ class BookingService
         $this->serviceRepo = $serviceRepo;
         $this->availability = $availability;
         $this->emailService = $emailService;
+        $this->deliveryRepo = $deliveryRepo;
+        $this->groundworkerRepo = $groundworkerRepo;
         $this->db = Connection::getConnection();
     }
 
@@ -58,6 +65,27 @@ class BookingService
         if ($service === null) {
             return ['success' => false, 'errors' => ['Invalid wash type / load type combination']];
         }
+
+        // Home Pickup and Delivery carries ONE flat fee covering both
+        // trips, added to the booking total. From here on
+        // $service['price'] is what the customer actually pays (service
+        // price + any fee), so the saved total, the email and the receipt
+        // all pick it up with no other changes. service_price and
+        // home_service_fee keep the two parts so the email can show the
+        // breakdown. Worked out here on the server, never taken from the
+        // browser.
+        $homeFee = 0.0;
+        if (($data['collection_method'] ?? '') === 'delivery') {
+            try {
+                $homeFee = $this->homeServiceFee();
+            } catch (RuntimeException $e) {
+                error_log('Home delivery fee unavailable: ' . $e->getMessage());
+                return ['success' => false, 'errors' => ['Home delivery is unavailable right now, please try again later']];
+            }
+        }
+        $service['service_price'] = (float)$service['price'];
+        $service['home_service_fee'] = $homeFee;
+        $service['price'] = $service['service_price'] + $homeFee;
 
         if (!$this->machineRepo->machineExists($data['machine_id'])) {
             return ['success' => false, 'errors' => ['Selected machine does not exist']];
@@ -93,8 +121,8 @@ class BookingService
                 $data
             );
 
-            // Heavy Wash occupies two consecutive slots, lock the second
-            // one with its own booking row so it also shows as taken.
+            $reference = 'LB-' . str_pad((string)$bookingId, 5, '0', STR_PAD_LEFT);
+
             if ((int)$service['duration_slots'] === 2 && !empty($data['second_slot_id'])) {
                 $secondData = $data;
                 $secondData['slot_id'] = $data['second_slot_id'];
@@ -116,6 +144,58 @@ class BookingService
                 $this->machineRepo->updateStatus($data['machine_id'], 'in_use');
             }
 
+            // Creates the collection/delivery rows this booking needs,
+            // for anything other than a plain in-store pickup with no
+            // tracking involved. Kept inside this same transaction,
+            // not fire-and-forget like the email below, since a
+            // delivery booking with no matching rows would be a real,
+            // meaningful data inconsistency, not something safe to
+            // silently let fail.
+            //
+            // 'delivery' (the form's "Home Pickup and Delivery" option)
+            // is genuinely two real-world events, not one - a
+            // groundworker collects the dirty laundry, then later a
+            // groundworker returns it clean. This creates one row per
+            // leg: a 'collection' row scheduled before the wash, and a
+            // 'delivery' row scheduled after. The form's other option,
+            // 'pickup' ("Self Drop off and Pickup"), correctly creates
+            // no rows at all here - no groundworker is ever involved.
+            if ($data['collection_method'] === 'delivery') {
+                $groundworker = $this->groundworkerRepo->getAnyGroundworker();
+                if ($groundworker === null) {
+                    throw new Exception('No groundworker available to assign this delivery');
+                }
+
+                $firstSlot = $this->slotRepo->getSlotById($data['slot_id']);
+                $lastSlot = $firstSlot;
+                if (!empty($data['second_slot_id'])) {
+                    $secondSlotData = $this->slotRepo->getSlotById((int)$data['second_slot_id']);
+                    if ($secondSlotData !== null) {
+                        $lastSlot = $secondSlotData;
+                    }
+                }
+
+                $slotStartTime = date('H:i:s', strtotime($firstSlot['start_time']));
+                $slotEndTime = date('H:i:s', strtotime($lastSlot['end_time']));
+
+                $collectionTime = date('Y-m-d H:i:s', strtotime($data['booking_date'] . ' ' . $slotStartTime . ' -1 hour'));
+                $deliveryTime = date('Y-m-d H:i:s', strtotime($data['booking_date'] . ' ' . $slotEndTime . ' +2 hours'));
+
+                $this->deliveryRepo->insert(
+                    $bookingId,
+                    $groundworker->getGroundworkerId(),
+                    'collection',
+                    $collectionTime
+                );
+
+                $this->deliveryRepo->insert(
+                    $bookingId,
+                    $groundworker->getGroundworkerId(),
+                    'delivery',
+                    $deliveryTime
+                );
+            }
+
             $this->db->commit();
         } catch (Exception $e) {
             $this->db->rollback();
@@ -132,8 +212,6 @@ class BookingService
 
             return ['success' => false, 'errors' => ['Booking could not be saved, please try again']];
         }
-
-        $reference = 'LB-' . str_pad((string)$bookingId, 5, '0', STR_PAD_LEFT);
 
         // Looked up here, after the transaction commits, purely for the
         // receipt page - none of this affects whether the booking
@@ -167,6 +245,8 @@ class BookingService
             'booking_id' => $bookingId,
             'booking_reference' => $reference,
             'total_price' => $service['price'],
+            'service_price' => $service['service_price'],
+            'home_service_fee' => $service['home_service_fee'],
             'wash_type' => $service['wash_type'],
             'load_type' => $service['load_type'],
             'duration_minutes' => $service['duration_minutes'],
@@ -174,5 +254,28 @@ class BookingService
             'slot_label' => $slot['slot_label'] ?? null,
             'second_slot_label' => $secondSlot['slot_label'] ?? null,
         ];
+    }
+
+    // The flat fee for Home Pickup and Delivery. Read from JS/prices.json,
+    // the same file the booking page reads to show it, so the number lives
+    // in one place. Throws if it's missing rather than quietly charging 0.
+    private function homeServiceFee(): float
+    {
+        $path = __DIR__ . '/../JS/prices.json';
+        $prices = is_readable($path) ? json_decode((string)file_get_contents($path), true) : null;
+
+        if (!is_array($prices)
+            || !isset($prices['home_delivery_fee'])
+            || !is_numeric($prices['home_delivery_fee'])
+            || $prices['home_delivery_fee'] < 0) {
+            throw new RuntimeException('home_delivery_fee is missing from JS/prices.json');
+        }
+
+        return (float)$prices['home_delivery_fee'];
+    }
+
+    public function getTodaysBookings(): int
+    {
+        return $this->bookingRepo->todaysBookings();
     }
 }

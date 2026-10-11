@@ -16,5 +16,9 @@ class GroundWorker{
     public function getGroundworkerId(){
         return $this->groundworker_id;
     }
-    
+
+    public function getGroundworkerName(){
+        return $this->groundworker_name;
+    }
+
 }

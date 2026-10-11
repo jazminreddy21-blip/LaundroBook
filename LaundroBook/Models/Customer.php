@@ -20,6 +20,22 @@ class Customer{
         return $this->customer_id;
     }
 
+    public function getCustomerName(){
+        return $this->customer_name;
+    }
+
+    public function getCustomerEmail(){
+        return $this->customer_email;
+    }
+
+    public function getCustomerPhone(){
+        return $this->customer_phone;
+    }
+
+    public function getAddress(){
+        return $this->customer_address;
+    }
+
     public function printCustomerDetails()
     {
         echo "Customer id: " . $this->customer_id . "<br>";

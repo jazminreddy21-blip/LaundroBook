@@ -191,7 +191,11 @@ ALTER TABLE `booking`
 ALTER TABLE `customer`
   ADD PRIMARY KEY (`customer_id`),
   ADD UNIQUE KEY `customer_email` (`customer_email`),
-  ADD UNIQUE KEY `customer_phone` (`customer_phone`);
+
+  /*Removed the constraint for phone number,
+    ALTER TABLE `customer` DROP INDEX `customer_phone`;
+    Run this query in phphMyAdmin to update the database on you locals
+  */  
 
 --
 -- Indexes for table `delivery`

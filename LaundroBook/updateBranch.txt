@@ -1,0 +1,77 @@
+What's Changed Since the Admin README
+
+This picks up where ADMIN_CHANGES.txt stopped, starting with the admin
+login fix. I haven't touched the Priority wash change in this branch.
+
+
+ADMIN LOGIN:
+
+When I typed a wrong username or password, the login page came back
+with no CSS or JavaScript at all. The form was being included from a
+different folder, so the paths to the stylesheet and script broke. Now
+the controller saves the error in the session and sends me back to the
+real login page, which shows "Invalid username or password" and looks
+the way it should.
+
+I also found that a password that was too short did nothing. The
+validation script was looking for an error box that wasn't on the page,
+so it crashed. It now creates the box when it's missing and removes it
+once the form is valid.
+
+
+BOOKING FORM:
+
+There's a small info icon next to Available Time Slot. It explains how
+slots work, including that a slot starting in less than 30 minutes
+can't be booked. It opens when you click or tap it and closes with
+Escape or a click anywhere else.
+
+The address field now lets the browser fill in a saved address.
+
+Changing the date, wash type, load type or collection method now hides
+the availability section, so old results can't be used for a different
+choice.
+
+
+TIME SLOTS:
+
+I added three more slots, so there are six now. While doing it I found
+a bug. Slots saved as plain times like 08:00:00 turn into 0000-00-00 in
+MySQL, and that broke availability. Slots are now saved with a full
+date and time, and only the time of day is used. The 30 minute rule for
+today's slots uses the time of day too.
+
+If you've already seeded your database, run add_more_slots.sql once. It
+fixes the old slots and adds the new ones, and it's safe to run twice.
+
+
+HOME PICKUP AND DELIVERY FEE:
+
+Home Pickup and Delivery now costs a flat R60. The amount lives in
+prices.json as home_delivery_fee, and the server adds it when the
+booking is made, so it can't be changed from the browser. It's added
+into the booking's total price, which means the admin pages, revenue
+and reports include it without any changes. Walk-ins don't pay it.
+
+The fee shows up in the booking summary, on the confirmation page and
+in the confirmation email.
+
+If prices.json can't be found, the booking is refused with a message
+that home delivery is unavailable, instead of going through without the
+fee.
+
+
+BOOKING CONFIRMATION:
+
+The confirmation page now shows the service price, the home pickup and
+delivery fee (when there is one) and the total. The booking controller
+saves those three values in the session after a booking.
+
+
+MOBILE LAYOUT:
+
+Home, About and Contact didn't fit on a phone. I added responsive rules
+for the header, hero, service cards and contact section. They're in
+responsive-public.css, pasted at the end of style.css. I also removed
+two stray closing div tags from index.html.
+

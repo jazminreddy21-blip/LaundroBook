@@ -223,7 +223,7 @@ class bookingController{
     public function getData(){
         return $this->data;
     }
-
+    
     /*
         The actual write endpoint, what "Confirm Booking" calls.
         Not to be confused with a read-only availability check, which
@@ -271,6 +271,9 @@ class bookingController{
         $_SESSION['second_slot_label'] = $result['second_slot_label'];
         $_SESSION['collection_method'] = $this->data['collection_method'];
         $_SESSION['delivery_address'] = $this->data['delivery_address'];
+        $_SESSION['total_price'] = $result['total_price'];
+        $_SESSION['service_price'] = $result['service_price'];
+        $_SESSION['home_service_fee'] = $result['home_service_fee'];
 
         header('Location: ../Views/BookingConfirm.php');
         exit;
@@ -289,6 +292,8 @@ if(($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && basename($_SERVER['SCRIPT_NA
     require_once __DIR__ . '/../Repositories/CustomerRepo.php';
     require_once __DIR__ . '/../Repositories/BookingRepo.php';
     require_once __DIR__ . '/../Repositories/ServiceRepo.php';
+    require_once __DIR__ . '/../Repositories/DeliveryRepo.php';
+    require_once __DIR__ . '/../Repositories/GroundworkerRepo.php';
     require_once __DIR__ . '/../Services/AvailabilityService.php';
     require_once __DIR__ . '/../Services/EmailService.php';
 
@@ -297,12 +302,13 @@ if(($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && basename($_SERVER['SCRIPT_NA
     $customerRepo = new CustomerRepo();
     $bookingRepo = new BookingRepo();
     $serviceRepo = new ServiceRepo();
-
+    $deliveryRepo = new DeliveryRepo();
+    $groundworkerRepo = new GroundworkerRepo();
     $emailConfig = require __DIR__ . '/../Config/EmailConfig.php';
     $emailService = new EmailService($emailConfig);
 
     $availability = new AvailabilityService($machineRepo, $slotRepo, $bookingRepo);
-    $bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability, $emailService);
+    $bookingService = new BookingService($machineRepo, $slotRepo, $customerRepo, $bookingRepo, $serviceRepo, $availability, $emailService, $deliveryRepo, $groundworkerRepo);
 
     $controller = new bookingController($bookingService);
     $controller->confirmBooking();
