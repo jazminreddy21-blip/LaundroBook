@@ -1,7 +1,7 @@
 {
-  "quick_clothes": 30.00,
-  "quick_towels": 35.00,
-  "quick_beddings": 40.00,
+  "priority_clothes": 50.00,
+  "priority_towels": 55.00,
+  "priority_beddings": 65.00,
   "normal_clothes": 40.00,
   "normal_towels": 45.00,
   "normal_beddings": 50.00,
