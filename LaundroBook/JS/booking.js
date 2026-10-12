@@ -186,11 +186,28 @@ document.addEventListener("DOMContentLoaded", function () {
     // =========================================================
     // SHOW/HIDE DELIVERY ADDRESS
     // =========================================================
+    // Payment note: tells the customer when and where to pay, based on
+    // the collection method. No online payment is taken at booking.
+    const paymentNote = document.getElementById("paymentNote");
+    const paymentMessages = {
+        delivery: "Payment: For Home Pickup and Delivery, you pay when your washed laundry is brought back to you.",
+        pickup: "Payment: For Self Drop off and Pickup, you pay in store."
+    };
+
     collectionMethod.addEventListener("change", function () {
         if (this.value === "delivery") {
             addressSection.classList.remove("hidden");
         } else {
             addressSection.classList.add("hidden");
+        }
+
+        if (paymentNote) {
+            if (paymentMessages[this.value]) {
+                paymentNote.textContent = paymentMessages[this.value];
+                paymentNote.classList.remove("hidden");
+            } else {
+                paymentNote.classList.add("hidden");
+            }
         }
     });
 
@@ -239,8 +256,8 @@ document.addEventListener("DOMContentLoaded", function () {
             errors.push("Phone number is required.");
         } else if (!phoneRegex.test(phone)) {
             errors.push("Phone number must contain numbers only (no letters or special characters).");
-        } else if (phone.length < 7 || phone.length > 15) {
-            errors.push("Phone number must be between 7 and 15 digits.");
+        } else if (phone.length !== 10) {
+            errors.push("Phone number must be 10 degits.");
         }
 
         // --- BOOKING INFORMATION ---
