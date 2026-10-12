@@ -47,6 +47,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             $controller->removeAdmin();
             break;
 
+        case 'add_groundworker':
+            $controller->addGroundworker();
+            break;
+
+        case 'remove_groundworker':
+            $controller->removeGroundworker();
+            break;
+
         default:
             http_response_code(400);
             echo 'Unknown action.';
