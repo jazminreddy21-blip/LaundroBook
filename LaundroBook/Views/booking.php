@@ -177,6 +177,8 @@ if ($hasErrors) {
                         <option value="delivery">Home Pickup and Delivery</option>
                     </select>
 
+                    <p id="paymentNote" class="hidden" style="margin:8px 0 14px;padding:10px 12px;border-left:4px solid #1e40af;background:#eff6ff;color:#1e3a8a;font-size:14px;line-height:1.5;border-radius:4px;"></p>
+
                     <div id="addressSection" class="hidden">
                         <label for="address">Delivery Address</label>
                         <textarea name="delivery_address" id="address"
