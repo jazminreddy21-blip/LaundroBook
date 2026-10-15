@@ -170,6 +170,12 @@ Track Order
 <span><?= htmlspecialchars($result['slot']['slot_label'] ?? 'Not available'); ?></span>
 </p>
 
+<?php if (!$isCancelled && !empty($result['estimate'])): ?>
+<p> <strong>Estimated Ready:</strong>
+<span><?= htmlspecialchars($result['estimate']['ready_text']); ?></span>
+</p>
+<?php endif; ?>
+
 </div>
 
 <div class="tracking-card">
