@@ -103,7 +103,7 @@ the groundworker with the fewest open jobs. When two are tied, the one
 with the lowest ID wins. It doesn't look at the role yet.
 
 
-AFTER PULLING, TEAMMATES NEED TO:
+AFTER PULLING, NEED TO:
 
 1. Replace JS/prices.json (it now has the priority prices).
 2. If your database already exists, run
