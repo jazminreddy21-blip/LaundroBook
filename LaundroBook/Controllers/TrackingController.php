@@ -6,6 +6,7 @@ require_once __DIR__ . '/../Repositories/DeliveryRepo.php';
 require_once __DIR__ . '/../Repositories/ServiceRepo.php';
 require_once __DIR__ . '/../Repositories/MachineRepo.php';
 require_once __DIR__ . '/../Repositories/SlotRepo.php';
+require_once __DIR__ . '/../Services/DeliveryEstimator.php';
 
 // TrackingController
 // This is what TrackingDel.php, TrackingPick.php, and TrackingOrder.php
@@ -70,8 +71,23 @@ class TrackingController
         $hasDelivery = $this->deliveryRepo->findByBookingId((int)$booking['booking_id'], 'delivery') !== null;
         $hasCollection = $this->deliveryRepo->findByBookingId((int)$booking['booking_id'], 'collection') !== null;
 
+        // Static estimate (Config/DeliveryTimes.php). A Heavy Wash holds
+        // two consecutive slots but this row only has the first, so the
+        // wash end is the first slot's end plus one more slot length.
+        $estimate = null;
+        if ($service !== null && $slot !== null) {
+            $slotLen = strtotime($slot['end_time']) - strtotime($slot['start_time']);
+            $extra = max(0, (int)($service['duration_slots'] ?? 1) - 1) * $slotLen;
+            $lastEnd = date('Y-m-d H:i:s', strtotime($slot['end_time']) + $extra);
+            $estimate = (new DeliveryEstimator())->estimate(
+                $service['wash_type'], $service['load_type'], $booking['booking_date'],
+                $slot['start_time'], $lastEnd
+            );
+        }
+
         return [
             'booking' => $booking,
+            'estimate' => $estimate,
             'service' => $service,
             'machine' => $machine,
             'slot' => $slot,
@@ -132,11 +148,16 @@ class TrackingController
         // already have returned the "no tracking" error instead.
         $collectionMethod = 'Home Pickup and Delivery';
 
+        // The stored scheduled_time is the START of the window; show it
+        // as a window rather than a single clock time.
+        $windowText = (new DeliveryEstimator())->windowFromScheduled($delivery['scheduled_time']);
+
         return [
             'booking' => $booking,
             'delivery' => $delivery,
             'service' => $service,
             'collection_method' => $collectionMethod,
+            'window_text' => $windowText,
         ];
     }
 }
