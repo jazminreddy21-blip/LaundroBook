@@ -190,6 +190,24 @@ private function buildEmailBody(
               </tr>";
         }
 
+        // Estimated times (static placeholders, see Config/DeliveryTimes.php).
+        // Home delivery shows pickup + delivery window; self drop-off shows
+        // when the laundry will be ready. Shown as estimates, not promises.
+        $est = $service['estimate'] ?? null;
+        $estimateRows = '';
+        if (is_array($est)) {
+            $cell = fn(string $label, string $value) => "<tr>
+                <td style='padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #6b7280; font-size: 14px;'>" . $label . "</td>
+                <td style='padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #111827; font-size: 14px; font-weight: 600; text-align: right;'>" . htmlspecialchars($value) . "</td>
+              </tr>";
+            if (!empty($est['is_delivery'])) {
+                $estimateRows = $cell('Estimated pickup', $est['pickup_text'] ?? '')
+                    . $cell('Estimated delivery', $est['window_text'] ?? '');
+            } else {
+                $estimateRows = $cell('Ready for collection from (estimate)', $est['ready_text'] ?? '');
+            }
+        }
+
         return "
         <div style='margin: 0; padding: 0; background-color: #f3f4f6; font-family: Arial, Helvetica, sans-serif;'>
             <table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background-color: #f3f4f6; padding: 30px 0;'>
@@ -266,6 +284,7 @@ private function buildEmailBody(
                                             <td style='padding: 10px 0; border-bottom: 1px solid #e5e7eb; color: #111827; font-size: 14px; font-weight: 600; text-align: right;'>" . htmlspecialchars($slotLabel) . "</td>
                                         </tr>
                                         {$secondSlotRow}
+                                        {$estimateRows}
                                         {$feeRows}
                                         <tr>
 <td style='padding: 14px 0 0 0; color: #111827; font-size: 15px; font-weight: 700;'>Total Price</td>
@@ -317,6 +336,15 @@ private function buildPlainTextBody(
         ];
         if ($secondSlotLabel) {
             $lines[] = "Second Slot: {$secondSlotLabel}";
+        }
+        $est = $service['estimate'] ?? null;
+        if (is_array($est)) {
+            if (!empty($est['is_delivery'])) {
+                $lines[] = "Estimated pickup: " . ($est['pickup_text'] ?? '');
+                $lines[] = "Estimated delivery: " . ($est['window_text'] ?? '');
+            } else {
+                $lines[] = "Ready for collection from (estimate): " . ($est['ready_text'] ?? '');
+            }
         }
         return implode("\n", $lines);
     }
