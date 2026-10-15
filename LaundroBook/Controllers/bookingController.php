@@ -274,6 +274,10 @@ class bookingController{
         $_SESSION['total_price'] = $result['total_price'];
         $_SESSION['service_price'] = $result['service_price'];
         $_SESSION['home_service_fee'] = $result['home_service_fee'];
+        $_SESSION['ready_text'] = $result['ready_text'];
+        $_SESSION['window_text'] = $result['window_text'];
+        $_SESSION['pickup_text'] = $result['pickup_text'];
+        $_SESSION['is_delivery'] = $result['is_delivery'];
 
         header('Location: ../Views/BookingConfirm.php');
         exit;
