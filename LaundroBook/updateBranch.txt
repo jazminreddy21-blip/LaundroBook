@@ -1,77 +1,120 @@
-What's Changed Since the Admin README
+What's Changed Since the Previous README
 
-This picks up where ADMIN_CHANGES.txt stopped, starting with the admin
-login fix. I haven't touched the Priority wash change in this branch.
+PRIORITY WASH (QUICK IS NOW PRIORITY):
 
+Quick Wash is now called Priority Wash everywhere. The wash types are
+priority, normal and heavy. The booking form, the price lookup in
+prices.json, the duration labels in booking.js and the server-side
+validation in bookingController.php all use the new name. The emails
+and tracking pages pick it up on their own because they print the wash
+type straight from the database.
 
-ADMIN LOGIN:
+Prices: Priority is R50 for clothes, R65 for beddings and R55 for
+towels.
 
-When I typed a wrong username or password, the login page came back
-with no CSS or JavaScript at all. The form was being included from a
-different folder, so the paths to the stylesheet and script broke. Now
-the controller saves the error in the session and sends me back to the
-real login page, which shows "Invalid username or password" and looks
-the way it should.
-
-I also found that a password that was too short did nothing. The
-validation script was looking for an error box that wasn't on the page,
-so it crashed. It now creates the box when it's missing and removes it
-once the form is valid.
-
-
-BOOKING FORM:
-
-There's a small info icon next to Available Time Slot. It explains how
-slots work, including that a slot starting in less than 30 minutes
-can't be booked. It opens when you click or tap it and closes with
-Escape or a click anywhere else.
-
-The address field now lets the browser fill in a saved address.
-
-Changing the date, wash type, load type or collection method now hides
-the availability section, so old results can't be used for a different
-choice.
+The database needed the change too. The service table's wash type check
+only allowed 'quick', so it had to be dropped and re-added. If you
+already have a database, run seeder/rename_quick_to_priority.sql once.
+It renames the existing rows in place, so old bookings keep working. It
+is safe to run twice.
 
 
-TIME SLOTS:
+DATABASE FILES (seeder FOLDER):
 
-I added three more slots, so there are six now. While doing it I found
-a bug. Slots saved as plain times like 08:00:00 turn into 0000-00-00 in
-MySQL, and that broke availability. Slots are now saved with a full
-date and time, and only the time of day is used. The 30 minute rule for
-today's slots uses the time of day too.
+The setup is now two files that you run one after the other in the SQL
+tab in phpMyAdmin: seeder/databaseQuery.sql first, then seeder/seed.sql.
 
-If you've already seeded your database, run add_more_slots.sql once. It
-fixes the old slots and adds the new ones, and it's safe to run twice.
+While getting the schema to import I fixed two problems. A stray comma
+before the next statement was a syntax error, the schema also allows 'priority' now.
 
-
-HOME PICKUP AND DELIVERY FEE:
-
-Home Pickup and Delivery now costs a flat R60. The amount lives in
-prices.json as home_delivery_fee, and the server adds it when the
-booking is made, so it can't be changed from the browser. It's added
-into the booking's total price, which means the admin pages, revenue
-and reports include it without any changes. Walk-ins don't pay it.
-
-The fee shows up in the booking summary, on the confirmation page and
-in the confirmation email.
-
-If prices.json can't be found, the booking is refused with a message
-that home delivery is unavailable, instead of going through without the
-fee.
+seed.sql adds the admin login (admin / Test@123), three machines, six
+slots with full date-times, the nine services with the new prices and
+three groundworkers. Run it only once, or you'll get duplicate rows.
 
 
-BOOKING CONFIRMATION:
+DELIVERY TIME ESTIMATES:
 
-The confirmation page now shows the service price, the home pickup and
-delivery fee (when there is one) and the total. The booking controller
-saves those three values in the session after a booking.
+Bookings now show estimated times. They are fixed placeholder numbers,
+not live scheduling, but they are set to look realistic for each
+service and load type. All of them live in Config/DeliveryTimes.php, so
+one file changes everything.
+
+Priority clothes and towels are same day. Everything else takes one or
+two days:
+
+  Priority: clothes same day, beddings 1 day, towels same day
+  Normal:   clothes 1 day, beddings 2 days, towels 1 day
+  Heavy:    clothes 1 day, beddings 2 days, towels 2 days
+
+Same day jobs are ready after the wash plus drying and folding time,
+with a one hour delivery window shortly after. Jobs that take a day or
+more are ready at 09:00 and delivered between 10:00 and 11:00 on that
+day. Pickup is an hour before the first slot. A Heavy Wash uses the end
+of its second slot.
+
+The work is done by the new Services/DeliveryEstimator.php.
+BookingService uses it for the pickup and delivery times saved with the
+booking, replacing the old fixed 1 hour and 2 hour offsets.
+
+Customers see it in four places: the confirmation page and the
+confirmation email show the estimated pickup and delivery window (or
+"ready for collection from" for self drop-off), the order tracking page
+shows an estimated ready time, and the delivery and pickup tracking
+pages now show a window instead of a single time.
 
 
-MOBILE LAYOUT:
+PAYMENT NOTE:
 
-Home, About and Contact didn't fit on a phone. I added responsive rules
-for the header, hero, service cards and contact section. They're in
-responsive-public.css, pasted at the end of style.css. I also removed
-two stray closing div tags from index.html.
+Under Collection Method on the booking form there is now a short note
+that changes with the choice. For Home Pickup and Delivery, the
+customer pays when the washed laundry is brought back. For Self Drop
+off and Pickup, they pay in store. No payment is taken online.
+
+
+CONFIRMATION PAGE (LATER CHANGE):
+
+I removed the Duration row from the confirmation page. It also shows
+the estimated times described above.
+
+
+PHONE NUMBER VALIDATION:
+
+The browser accepted 7 to 15 digits but the server needed exactly 10,
+so a number with 12 digits passed the form and was then rejected. The
+browser now checks for exactly 10 digits as well. I also fixed the
+typo "conatin" in the server's name error message.
+
+
+GROUNDWORKER MANAGEMENT (SUPER ADMIN ONLY):
+
+There is a new Groundworkers page where the super admin can add and
+remove drivers and collectors, with a link in the nav on every admin
+page. Other admins are sent back to the dashboard, and anyone who isn't
+logged in goes to the login page.
+
+Adding checks the name length, a valid phone number, that the phone
+number isn't already used, and that the role is driver or collector.
+Removing is blocked for the last groundworker and for anyone who has
+pickup or delivery records, because those rows point to them.
+
+I also changed automatic assignment. It used to pick the first
+groundworker, so anyone added later never got any work. It now picks
+the groundworker with the fewest open jobs. When two are tied, the one
+with the lowest ID wins. It doesn't look at the role yet.
+
+
+AFTER PULLING, TEAMMATES NEED TO:
+
+1. Replace JS/prices.json (it now has the priority prices).
+2. If your database already exists, run
+   seeder/rename_quick_to_priority.sql once. For a fresh start, drop
+   the database and run seeder/databaseQuery.sql and then
+   seeder/seed.sql instead.
+3. Copy the two new files, Config/DeliveryTimes.php and
+   Services/DeliveryEstimator.php. The names and the capital letters
+   matter.
+4. Check that bookingController.php has the session lines for the
+   estimated times (ready_text, window_text, pickup_text and
+   is_delivery).
+5. Hard refresh the browser, or the old CSS and JavaScript will show.
 
