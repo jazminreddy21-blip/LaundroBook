@@ -153,7 +153,12 @@ if ($hasErrors) {
 
             <p>
                 <i class="fa-solid fa-location-dot"></i>
-                Durban, South Africa
+                45 Electron Rd, Durban, South Africa
+            </p>
+
+            <p>
+                <i class="fa-solid fa-envelope-open-text"></i>
+                Postal code: 4001
             </p>
 
             <p>
