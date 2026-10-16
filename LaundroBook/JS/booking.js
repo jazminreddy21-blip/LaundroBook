@@ -257,7 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (!phoneRegex.test(phone)) {
             errors.push("Phone number must contain numbers only (no letters or special characters).");
         } else if (phone.length !== 10) {
-            errors.push("Phone number must be 10 degits.");
+            errors.push("Phone number must be 10 digits.");
         }
 
         // --- BOOKING INFORMATION ---
