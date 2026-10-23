@@ -41,6 +41,10 @@ $deliveryAddress = $_SESSION['delivery_address'] ?? null;
 $totalPrice = $_SESSION['total_price'] ?? null;
 $servicePrice = $_SESSION['service_price'] ?? null;
 $homeServiceFee = (float)($_SESSION['home_service_fee'] ?? 0);
+$readyText = $_SESSION['ready_text'] ?? null;
+$windowText = $_SESSION['window_text'] ?? null;
+$pickupText = $_SESSION['pickup_text'] ?? null;
+$isDelivery = !empty($_SESSION['is_delivery']);
 
 
 // If someone lands on this page directly (bookmarked it, refreshed
@@ -235,18 +239,6 @@ Thank you for choosing LaundroBook. Your booking has been successfully processed
 
 <p>
 
-<strong>Duration:</strong>
-
-<span id="service-duration">
-
-<?php echo $durationMinutes; ?>
-
-</span>
-
-</p>
-
-<p>
-
 <strong>Machine:</strong>
 
 <span id="machine-name">
@@ -268,6 +260,22 @@ Thank you for choosing LaundroBook. Your booking has been successfully processed
 </span>
 
 </p>
+
+<?php if ($isDelivery && $pickupText && $windowText): ?>
+<p>
+<strong>Estimated Pickup:</strong>
+<span id="estimated-pickup"><?php echo htmlspecialchars($pickupText); ?></span>
+</p>
+<p>
+<strong>Estimated Delivery:</strong>
+<span id="estimated-delivery"><?php echo htmlspecialchars($windowText); ?></span>
+</p>
+<?php elseif ($readyText): ?>
+<p>
+<strong>Ready For Collection From:</strong>
+<span id="estimated-ready"><?php echo htmlspecialchars($readyText); ?></span>
+</p>
+<?php endif; ?>
 
 <?php if ($showDeliveryAddress): ?>
 <p>

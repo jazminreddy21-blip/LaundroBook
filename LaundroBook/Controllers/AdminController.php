@@ -209,6 +209,13 @@
             return $this->groundworkerRepository->getAllGroundworkers();
         }
 
+        // Used by groundworkerManagement.php - the full list with job
+        // counts, for the super admin's add/remove page.
+        public function getGroundworkerList(): array
+        {
+            return $this->groundworkerRepository->getAllWithJobCounts();
+        }
+
         // Used by enquiryManagement.php.
         public function getEnquiries(string $search = ''): array
         {
@@ -551,6 +558,102 @@
 
             $_SESSION['admin_register_success'] = true;
             header('Location: ../Views/Admin/adminRegister.php');
+            exit;
+        }
+
+        // Super admin only. Checked here and not through
+        // requireSuperAdmin(), because that one redirects with a path
+        // meant for pages in Views/Admin, and these handlers run from
+        // Public/adminAction.php.
+        private function requireSuperAdminForAction(): void
+        {
+            $this->requireAuthentication();
+
+            if (!($_SESSION['is_super_admin'] ?? false)) {
+                header('Location: ../Views/Admin/adminDash.php?error=not_super_admin');
+                exit;
+            }
+        }
+
+        // Adds a groundworker. Only the super admin can reach this, same
+        // as adding an admin. Phone numbers must be unique (the
+        // database enforces that too), and the role is limited to the
+        // two the system already uses.
+        public function addGroundworker(): void
+        {
+            $this->requireSuperAdminForAction();
+
+            $name = trim($_POST['name'] ?? '');
+            $phone = preg_replace('/[\s\-()]/', '', trim($_POST['phone'] ?? ''));
+            $role = trim($_POST['role'] ?? '');
+
+            $errors = [];
+
+            if ($name === '') {
+                $errors[] = 'Name is required.';
+            } elseif (strlen($name) < 2 || strlen($name) > 30) {
+                $errors[] = 'Name must be between 2 and 30 characters.';
+            }
+
+            if ($phone === '') {
+                $errors[] = 'Phone number is required.';
+            } elseif (!preg_match('/^\+?[0-9]{10,14}$/', $phone)) {
+                $errors[] = 'Enter a valid phone number, for example 0821234567.';
+            } elseif ($this->groundworkerRepository->phoneExists($phone)) {
+                $errors[] = 'A groundworker with that phone number already exists.';
+            }
+
+            if (!in_array($role, ['driver', 'collector'], true)) {
+                $errors[] = 'Choose a role: driver or collector.';
+            }
+
+            if (!empty($errors)) {
+                $_SESSION['groundworker_errors'] = $errors;
+                header('Location: ../Views/Admin/groundworkerManagement.php');
+                exit;
+            }
+
+            $this->groundworkerRepository->createGroundworker($name, $phone, $role);
+
+            $_SESSION['groundworker_success'] = 'Groundworker added.';
+            header('Location: ../Views/Admin/groundworkerManagement.php');
+            exit;
+        }
+
+        // Super admin only. Two safety checks before deleting: never
+        // remove the last groundworker (home pickup and delivery
+        // bookings need someone to assign), and never remove one who
+        // is attached to pickup or delivery records, because those
+        // rows point to the groundworker and there is no reassignment
+        // for history yet.
+        public function removeGroundworker(): void
+        {
+            $this->requireSuperAdminForAction();
+
+            $groundworkerId = (int)($_POST['groundworker_id'] ?? 0);
+
+            if ($groundworkerId <= 0 || !$this->groundworkerRepository->exists($groundworkerId)) {
+                $_SESSION['groundworker_errors'] = ['That groundworker no longer exists.'];
+                header('Location: ../Views/Admin/groundworkerManagement.php');
+                exit;
+            }
+
+            if ($this->groundworkerRepository->countAll() <= 1) {
+                $_SESSION['groundworker_errors'] = ['Cannot remove the last groundworker. Home pickup and delivery bookings need at least one.'];
+                header('Location: ../Views/Admin/groundworkerManagement.php');
+                exit;
+            }
+
+            if ($this->groundworkerRepository->hasDeliveries($groundworkerId)) {
+                $_SESSION['groundworker_errors'] = ['This groundworker cannot be removed because they are linked to pickup or delivery records.'];
+                header('Location: ../Views/Admin/groundworkerManagement.php');
+                exit;
+            }
+
+            $this->groundworkerRepository->deleteGroundworker($groundworkerId);
+
+            $_SESSION['groundworker_success'] = 'Groundworker removed.';
+            header('Location: ../Views/Admin/groundworkerManagement.php');
             exit;
         }
     }

@@ -101,12 +101,6 @@ Track Delivery
 
 </a>
 
-<a href="TrackingOrder.php" id= "track-pickup-btn" class=" btn btn-primary">
-    
-Track Order
-
-</a>
-
 </div>
 
 </div>
@@ -200,7 +194,7 @@ Track Order
 </p>
 
 <p> <strong>Estimated Pickup Time:</strong>
-<span id="tracking-time"><?= htmlspecialchars(date('d M Y, H:i', strtotime($result['delivery']['scheduled_time']))); ?></span>
+<span id="tracking-time"><?= htmlspecialchars($result['window_text']); ?></span>
 </p>
 
 <p> <strong>Assigned Driver:</strong>
@@ -247,7 +241,7 @@ Track Order
 
         <p>
             <strong>Estimated Arrival:</strong>
-            <span id="estimatedArrival"><?= htmlspecialchars(date('d M Y, H:i', strtotime($result['delivery']['scheduled_time']))); ?></span>
+            <span id="estimatedArrival"><?= htmlspecialchars($result['window_text']); ?></span>
         </p>
 
     </div>

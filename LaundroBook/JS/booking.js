@@ -50,12 +50,12 @@ document.addEventListener("DOMContentLoaded", function () {
     //pricing data (static json, avoiding db calls)
     let pricingData = null; 
 
-    // ADDED: duration only depends on wash_type, not load_type (Quick is
+    // ADDED: duration only depends on wash_type, not load_type (Priority is
     // always 25 min/1 slot, Heavy is always 65 min/2 slots regardless of
     // whether it's clothes/towels/beddings), so this doesn't need to go
     // into prices.json, a small lookup here is enough.
     const DURATIONS = {
-        quick:  { label: "25 min", durationSlots: 1 },
+        priority: { label: "25 min", durationSlots: 1 },
         normal: { label: "35 min", durationSlots: 1 },
         heavy:  { label: "65 min", durationSlots: 2 },
     };
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if(pricingData) return pricingData;
 
         try {
-            const response = await fetch("../JS/prices.json", { cache: "no-cache" });
+            const response = await fetch("../JS/prices.json"); 
             //probably unnecessary check since a string can be written to console
             if(!response.ok) throw new Error(`HTTP ${response.status}`); 
             pricingData = await response.json(); 
@@ -186,11 +186,28 @@ document.addEventListener("DOMContentLoaded", function () {
     // =========================================================
     // SHOW/HIDE DELIVERY ADDRESS
     // =========================================================
+    // Payment note: tells the customer when and where to pay, based on
+    // the collection method. No online payment is taken at booking.
+    const paymentNote = document.getElementById("paymentNote");
+    const paymentMessages = {
+        delivery: "Payment: For Home Pickup and Delivery, you pay when your washed laundry is brought back to you.",
+        pickup: "Payment: For Self Drop off and Pickup, you pay in store."
+    };
+
     collectionMethod.addEventListener("change", function () {
         if (this.value === "delivery") {
             addressSection.classList.remove("hidden");
         } else {
             addressSection.classList.add("hidden");
+        }
+
+        if (paymentNote) {
+            if (paymentMessages[this.value]) {
+                paymentNote.textContent = paymentMessages[this.value];
+                paymentNote.classList.remove("hidden");
+            } else {
+                paymentNote.classList.add("hidden");
+            }
         }
     });
 
@@ -239,8 +256,8 @@ document.addEventListener("DOMContentLoaded", function () {
             errors.push("Phone number is required.");
         } else if (!phoneRegex.test(phone)) {
             errors.push("Phone number must contain numbers only (no letters or special characters).");
-        } else if (phone.length < 7 || phone.length > 15) {
-            errors.push("Phone number must be between 7 and 15 digits.");
+        } else if (phone.length !== 10) {
+            errors.push("Phone number must be 10 digits.");
         }
 
         // --- BOOKING INFORMATION ---

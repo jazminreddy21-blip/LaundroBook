@@ -5,6 +5,7 @@ require_once __DIR__ . '/../Interfaces/EmailServiceInterface.php';
 require_once __DIR__ . '/AvailabilityService.php';
 require_once __DIR__ . '/../Database/Connection.php';
 require_once __DIR__ . '/../Repositories/GroundworkerRepo.php';
+require_once __DIR__ . '/DeliveryEstimator.php';
 
 /**
  * BookingService
@@ -160,39 +161,43 @@ class BookingService
             // 'delivery' row scheduled after. The form's other option,
             // 'pickup' ("Self Drop off and Pickup"), correctly creates
             // no rows at all here - no groundworker is ever involved.
+            // Estimated times come from static placeholder numbers in
+            // Config/DeliveryTimes.php (see DeliveryEstimator). They use
+            // the LATER slot for a Heavy Wash, since that is when the
+            // wash really finishes. Worked out for every booking: a
+            // home delivery uses the pickup time and delivery window,
+            // a self drop-off customer sees the "ready from" time.
+            $firstSlot = $this->slotRepo->getSlotById($data['slot_id']);
+            $lastSlot = $firstSlot;
+            if (!empty($data['second_slot_id'])) {
+                $secondSlotData = $this->slotRepo->getSlotById((int)$data['second_slot_id']);
+                if ($secondSlotData !== null) {
+                    $lastSlot = $secondSlotData;
+                }
+            }
+            $estimate = (new DeliveryEstimator())->estimate(
+                $data['wash_type'], $data['load_type'], $data['booking_date'],
+                $firstSlot['start_time'], $lastSlot['end_time']
+            );
+
             if ($data['collection_method'] === 'delivery') {
                 $groundworker = $this->groundworkerRepo->getAnyGroundworker();
                 if ($groundworker === null) {
                     throw new Exception('No groundworker available to assign this delivery');
                 }
 
-                $firstSlot = $this->slotRepo->getSlotById($data['slot_id']);
-                $lastSlot = $firstSlot;
-                if (!empty($data['second_slot_id'])) {
-                    $secondSlotData = $this->slotRepo->getSlotById((int)$data['second_slot_id']);
-                    if ($secondSlotData !== null) {
-                        $lastSlot = $secondSlotData;
-                    }
-                }
-
-                $slotStartTime = date('H:i:s', strtotime($firstSlot['start_time']));
-                $slotEndTime = date('H:i:s', strtotime($lastSlot['end_time']));
-
-                $collectionTime = date('Y-m-d H:i:s', strtotime($data['booking_date'] . ' ' . $slotStartTime . ' -1 hour'));
-                $deliveryTime = date('Y-m-d H:i:s', strtotime($data['booking_date'] . ' ' . $slotEndTime . ' +2 hours'));
-
                 $this->deliveryRepo->insert(
                     $bookingId,
                     $groundworker->getGroundworkerId(),
                     'collection',
-                    $collectionTime
+                    $estimate['collection_time']
                 );
 
                 $this->deliveryRepo->insert(
                     $bookingId,
                     $groundworker->getGroundworkerId(),
                     'delivery',
-                    $deliveryTime
+                    $estimate['window_start']
                 );
             }
 
@@ -212,6 +217,10 @@ class BookingService
 
             return ['success' => false, 'errors' => ['Booking could not be saved, please try again']];
         }
+
+        $estimate['is_delivery'] = ($data['collection_method'] ?? '') === 'delivery';
+        $estimate['pickup_text'] = date('D, d M Y \a\t H:i', strtotime($estimate['collection_time']));
+        $service['estimate'] = $estimate;
 
         // Looked up here, after the transaction commits, purely for the
         // receipt page - none of this affects whether the booking
@@ -253,6 +262,10 @@ class BookingService
             'machine_name' => $machine['machine_name'] ?? null,
             'slot_label' => $slot['slot_label'] ?? null,
             'second_slot_label' => $secondSlot['slot_label'] ?? null,
+            'ready_text' => $estimate['ready_text'],
+            'window_text' => $estimate['window_text'],
+            'pickup_text' => $estimate['pickup_text'],
+            'is_delivery' => $estimate['is_delivery'],
         ];
     }
 

@@ -60,6 +60,7 @@
         <li><a href="reports.php">Reports</a></li>
         <?php if ($_SESSION['is_super_admin'] ?? false): ?>
             <li><a href="adminRegister.php" class="active">Add Admin</a></li>
+            <li><a href="groundworkerManagement.php">Groundworkers</a></li>
         <?php endif; ?>
         <li><a href="../../Public/adminLogout.php">Logout</a></li>
     </ul>
@@ -69,7 +70,7 @@
 
 <section class="page-heading">
     <h2>Manage Admins</h2>
-    <p>Only visible to the super admin. Create new admin accounts, or remove ones that are no longer needed.</p>
+    <p>Create new admin accounts, or remove ones that are no longer needed.</p>
 </section>
 
 <?php if ($success): ?>

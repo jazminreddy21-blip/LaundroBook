@@ -157,9 +157,9 @@ if ($hasErrors) {
                     <label for="wash_type">Wash Type</label>
                     <select name="wash_type" id="wash_type" required>
                         <option value="">Select Wash Type</option>
-                        <option value="quick">Quick (25 Min)</option>
-                        <option value="normal">Normal (35 Min)</option>
-                        <option value="heavy">Heavy (65 Min)</option>
+                        <option value="priority">Priority</option>
+                        <option value="normal">Normal</option>
+                        <option value="heavy">Heavy</option>
                     </select>
 
                     <label for="load_type">Load Type</label>
@@ -176,6 +176,8 @@ if ($hasErrors) {
                         <option value="pickup">Self Drop off and Pickup</option>
                         <option value="delivery">Home Pickup and Delivery</option>
                     </select>
+
+                    <p id="paymentNote" class="hidden" style="margin:8px 0 14px;padding:10px 12px;border-left:4px solid #1e40af;background:#eff6ff;color:#1e3a8a;font-size:14px;line-height:1.5;border-radius:4px;"></p>
 
                     <div id="addressSection" class="hidden">
                         <label for="address">Delivery Address</label>

@@ -57,6 +57,7 @@
         <li><a href="reports.php">Reports</a></li>
         <?php if ($_SESSION['is_super_admin'] ?? false): ?>
             <li><a href="adminRegister.php">Add Admin</a></li>
+            <li><a href="groundworkerManagement.php">Groundworkers</a></li>
         <?php endif; ?>
         <li><a href="../../Public/adminLogout.php">Logout</a></li>
     </ul>

@@ -6,13 +6,10 @@
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 --
--- Full script: builds the database, all tables, and seeds one real
--- admin account. Run this in phpMyAdmin's SQL tab from the main
--- dashboard (not from inside an existing database).
---
--- Login credentials after running this:
---   Username: admin
---   Password: Test@123
+-- Full script: builds the database and all tables. Run this in
+-- phpMyAdmin's SQL tab from the main dashboard (not from inside an
+-- existing database). Then run seed.sql to add the starting data
+-- (admin account, machines, slots, services and groundworkers).
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -190,12 +187,8 @@ ALTER TABLE `booking`
 --
 ALTER TABLE `customer`
   ADD PRIMARY KEY (`customer_id`),
-  ADD UNIQUE KEY `customer_email` (`customer_email`),
+  ADD UNIQUE KEY `customer_email` (`customer_email`);
 
-  /*Removed the constraint for phone number,
-    ALTER TABLE `customer` DROP INDEX `customer_phone`;
-    Run this query in phphMyAdmin to update the database on you locals
-  */  
 
 --
 -- Indexes for table `delivery`
@@ -350,7 +343,7 @@ ALTER TABLE `machine`
 --
 ALTER TABLE `service`
   ADD CONSTRAINT `service_ibfk_1` FOREIGN KEY (`manager_id`) REFERENCES `system_manager` (`manager_id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `check_wash_type` CHECK (`wash_type` IN ('quick', 'normal', 'heavy')),
+  ADD CONSTRAINT `check_wash_type` CHECK (`wash_type` IN ('priority', 'normal', 'heavy')),
   ADD CONSTRAINT `check_load_type` CHECK (`load_type` IN ('clothes', 'beddings', 'towels')),
   ADD CONSTRAINT `check_service_price` CHECK (`price` > 0);
 
