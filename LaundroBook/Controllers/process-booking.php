@@ -2,6 +2,7 @@
 
 // This code is used to call the booking controller and display
 // the errors found within the errors array in the booking controller.
+//This is a test controller to simulate booking with hard coded data, has no functionality now and is now redundant.
 
 
 require_once __DIR__ . '/../Interfaces/Repositoryinterfaces.php';
